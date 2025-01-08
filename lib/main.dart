@@ -1,6 +1,10 @@
+import 'package:calq_abiturnoten/ui/Screens/add_grade_screen.dart';
+import 'package:calq_abiturnoten/ui/Screens/exam_screen.dart';
+import 'package:calq_abiturnoten/ui/Screens/overview_screen.dart';
+import 'package:calq_abiturnoten/ui/Screens/subjects_screen.dart';
 import 'package:flutter/material.dart';
 
-import 'Screens/settings_screen.dart';
+import 'ui/Screens/settings_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Calq Abiturnotenrechner',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
@@ -32,23 +36,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
         length: 5,
         child: Scaffold(
-            /* appBar: AppBar(
-              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-               title: Text(widget.title),
-            ),*/
             bottomNavigationBar: Container(
                 color: Theme.of(context).colorScheme.inversePrimary,
                 child: const TabBar(
@@ -62,10 +54,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 )),
             body: TabBarView(
               children: [
-                SettingsScreen(),
-                SettingsScreen(),
-                SettingsScreen(),
-                SettingsScreen(),
+                OverviewScreen(),
+                SubjectsScreen(),
+                AddGradeScreen(),
+                ExamScreen(),
                 SettingsScreen(),
               ],
             )));

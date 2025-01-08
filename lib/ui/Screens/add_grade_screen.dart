@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 
-class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({super.key});
+class AddGradeScreen extends StatefulWidget {
+  const AddGradeScreen({super.key});
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  State<AddGradeScreen> createState() => _AddGradeScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _AddGradeScreenState extends State<AddGradeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text("Settings"),
+          title: Text("Overview"),
         ),
         body: ListView(
           children: [Text("Anzahl Prüfungen"), Text("Regenbogen")],
