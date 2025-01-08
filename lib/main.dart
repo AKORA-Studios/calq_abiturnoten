@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'Screens/settings_screen.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Calq'),
     );
   }
 }
@@ -40,30 +42,32 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
+    return DefaultTabController(
+        length: 5,
+        child: Scaffold(
+            /* appBar: AppBar(
+              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+               title: Text(widget.title),
+            ),*/
+            bottomNavigationBar: Container(
+                color: Theme.of(context).colorScheme.inversePrimary,
+                child: const TabBar(
+                  tabs: [
+                    Tab(icon: Icon(Icons.bar_chart)),
+                    Tab(icon: Icon(Icons.book_outlined)),
+                    Tab(icon: Icon(Icons.add)),
+                    Tab(icon: Icon(Icons.library_books)),
+                    Tab(icon: Icon(Icons.settings))
+                  ],
+                )),
+            body: TabBarView(
+              children: [
+                SettingsScreen(),
+                SettingsScreen(),
+                SettingsScreen(),
+                SettingsScreen(),
+                SettingsScreen(),
+              ],
+            )));
   }
 }
