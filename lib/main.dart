@@ -1,3 +1,4 @@
+import 'package:calq_abiturnoten/database/database.dart';
 import 'package:calq_abiturnoten/ui/Screens/add_grade_screen.dart';
 import 'package:calq_abiturnoten/ui/Screens/exam_screen.dart';
 import 'package:calq_abiturnoten/ui/Screens/overview_screen.dart';
@@ -6,12 +7,25 @@ import 'package:flutter/material.dart';
 
 import 'ui/Screens/settings_screen.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  DatabaseClass.initDb().then((value) {
+    // Force Database load before App starts
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+  @override
+  void initState() {
+    //  DatabaseClass.Shared.createSubject();
+    DatabaseClass.Shared.getSubjects().then((value) {
+      print(value);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
