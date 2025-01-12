@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   void initState() {
     //  DatabaseClass.Shared.createSubject();
     DatabaseClass.Shared.getSubjects().then((value) {
-      print(value);
+      // print(value);
     });
   }
 

@@ -18,6 +18,10 @@ class _OverviewScreenState extends State<OverviewScreen> {
 
     DatabaseClass.Shared.getSubjectsList().then((value) {
       print(value);
+      /*
+       DatabaseClass.Shared.createTest(1).then((value) {
+        print("ffffff");
+      });*/
       setState(() {
         subs[0] = value.toString();
       });

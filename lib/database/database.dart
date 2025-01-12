@@ -10,7 +10,7 @@ class DatabaseClass {
   static final String SUBJECT_SHEMA =
       "Subject (id INTEGER PRIMARY KEY, color TEXT, exampoints INTEGER, examtype INTEGER, lk INTEGER, inactiveYears TEXT, name TEXT, showinlinegraph INTEGER)";
   static final String TEST_SHEMA =
-      "Test (id INTEGER PRIMARY KEY, name TEXT, points INTEGER, type INTEGER, date TEXT, year INTEGER, subject INT FOREIGN KEY REFERENCES Subject(id))";
+      "Test (id INTEGER PRIMARY KEY, name TEXT, points INTEGER, type INTEGER, date TEXT, year INTEGER, subject INTEGER, FOREIGN KEY (subject) REFERENCES Subject(id))";
   static final String GRADETYPE_SHEMA =
       "Gradetype (id INTEGER PRIMARY KEY, name TEXT, weigth TEXT)";
   static final String APPSETTINGS_SHEMA =
@@ -56,8 +56,16 @@ class DatabaseClass {
   Future<void> createSubject() async {
     await db.transaction((txn) async {
       int id1 = await txn.rawInsert(
-          'INSERT INTO Subject(name, color, exampoints, examtype, lk,inactiveYears, showinlinegraph) VALUES("some name", "f0f0f0", 0, 0, 0, "", 1)');
+          'INSERT INTO Subject(name, color, exampoints, examtype, lk,inactiveYears, showinlinegraph) VALUES("some name", "3af4de", 0, 0, 0, "", 1)');
       print('inserted1: $id1');
+    });
+  }
+
+  Future<void> createTest(int subjectID) async {
+    await db.transaction((txn) async {
+      int id1 = await txn.rawInsert(
+          'INSERT INTO Test(name, points, type, date, year,subject) VALUES("some cool unique name", 12, 1, "", 1, $subjectID)');
+      print('Inserted Test: $id1');
     });
   }
 
@@ -77,13 +85,27 @@ print('updated: $count');
     return await db.rawQuery('SELECT * FROM Subject');
   }
 
+  Future<List<Map>?> getTests() async {
+    return await db.rawQuery('SELECT * FROM Test');
+  }
+
   Future<List<Data_Subject>> getSubjectsList() async {
     List<Map<dynamic, dynamic>>? res2 = await getSubjects();
+    List<Map<dynamic, dynamic>>? resTests = await getTests();
 
     return res2?.map((e) {
+          List<Map<dynamic, dynamic>>? subjectTests = resTests
+              ?.where((element) => element["subject"] == e["id"])
+              .toList();
+
+          List<Map<String, Object>> x = [];
+
+          print(e["id"]);
+          print(subjectTests);
+
           Map<String, Object> y =
               e.map((key, value) => MapEntry(key, value as Object));
-          return Data_Subject.fromMap(y);
+          return Data_Subject.fromMap(y, x);
         }).toList() ??
         [];
   }
