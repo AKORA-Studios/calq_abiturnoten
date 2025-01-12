@@ -1,3 +1,4 @@
+import 'package:calq_abiturnoten/util/color_extension.dart';
 import 'package:flutter/material.dart';
 
 class Data_Subject {
@@ -16,7 +17,7 @@ class Data_Subject {
   Data_Subject.fromMap(Map<String, Object?> map) {
     id = int.parse(map["id"].toString());
     name = map["name"].toString();
-    color = Colors.red; //map["color"]
+    color = fromHex(map["color"].toString()); //map["color"]
     exampoints = int.parse(map["exampoints"].toString());
     examtype = int.parse(map["examtype"].toString());
     lk = map["lk"] == 1;
@@ -28,7 +29,7 @@ class Data_Subject {
     var map = <String, Object?>{
       "id": id,
       "name": name,
-      "color": "0f0f0f",
+      "color": toHex(color),
       "exampoints": exampoints,
       "examtype": examtype,
       "lk": lk == true ? 1 : 0,

@@ -15,8 +15,10 @@ class _AddGradeScreenState extends State<AddGradeScreen> {
   Widget subjectEntry(Data_Subject sub) {
     return TextButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => NewGradeScreen()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => NewGradeScreen(sub: sub)));
         },
         child: Text(sub.name));
   }

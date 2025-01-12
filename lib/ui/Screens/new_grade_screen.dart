@@ -1,7 +1,11 @@
+import 'package:calq_abiturnoten/database/Data_Subject.dart';
+import 'package:calq_abiturnoten/ui/components/util.dart';
 import 'package:flutter/material.dart';
 
 class NewGradeScreen extends StatefulWidget {
-  const NewGradeScreen({super.key});
+  const NewGradeScreen({super.key, required this.sub});
+
+  final Data_Subject sub;
 
   @override
   State<NewGradeScreen> createState() => _NewGradeScreenState();
@@ -10,17 +14,21 @@ class NewGradeScreen extends StatefulWidget {
 class _NewGradeScreenState extends State<NewGradeScreen> {
   String gradeName = "";
   int selectedYear = 0; // TODO: int current halfyear
+  DateTime _selectedDate = DateTime.now();
 
-  Widget card(Widget content) {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: const BorderRadius.all(Radius.circular(8))),
-      child: SizedBox(
-        width: double.infinity,
-        child: Padding(padding: const EdgeInsets.all(5), child: content),
-      ),
-    );
+  Future _selectDate(BuildContext context) async => showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2000),
+        lastDate: DateTime(2050),
+      ).then((DateTime? selected) {
+        if (selected != null && selected != _selectedDate) {
+          setState(() => _selectedDate = selected);
+        }
+      });
+
+  void addGrade() {
+    // TODO: implement
   }
 
   @override
@@ -35,22 +43,26 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                 padding: const EdgeInsets.all(10),
                 child: Column(
                   children: [
-                    card(Text("f")),
-                    TextField(
-                      onChanged: (value) {
-                        setState(() {
-                          gradeName = value;
-                        });
-                      },
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        hintText: 'Neuer Notenname',
-                      ),
-                    ),
+                    card(Column(
+                      children: [
+                        const Text("Notenname"),
+                        TextField(
+                          onChanged: (value) {
+                            setState(() {
+                              gradeName = value;
+                            });
+                          },
+                          decoration: const InputDecoration(
+                            //  border: OutlineInputBorder(),
+                            hintText: 'Neuer Notenname',
+                          ),
+                        )
+                      ],
+                    )),
                     card(Text("Typ")),
                     card(Column(
                       children: [
-                        Text("Halbjahr"),
+                        const Text("Halbjahr"),
                         SegmentedButton<int>(
                           showSelectedIcon: false,
                           segments: [1, 2, 3, 4]
@@ -70,11 +82,22 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                             });
                           },
                         ),
+                        Row(
+                          children: [
+                            Text("Datum"),
+                            ElevatedButton(
+                                onPressed: () => _selectDate(context),
+                                child: Text(formatDate(_selectedDate)))
+                          ],
+                        )
                       ],
                     )),
                     card(Text("Punkte")),
                     ElevatedButton(
-                        onPressed: () {}, child: Text("Note hinzufügen"))
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: widget.sub.color),
+                        onPressed: addGrade,
+                        child: Text("Note hinzufügen"))
                   ],
                 ))));
   }
