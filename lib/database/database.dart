@@ -11,6 +11,10 @@ class DatabaseClass {
       "Subject (id INTEGER PRIMARY KEY, color TEXT, exampoints INTEGER, examtype INTEGER, lk INTEGER, inactiveYears TEXT, name TEXT, showinlinegraph INTEGER)";
   static final String TEST_SHEMA =
       "Test (id INTEGER PRIMARY KEY, name TEXT, points INTEGER, type INTEGER, date TEXT, year INTEGER, subject INT FOREIGN KEY REFERENCES Subject(id))";
+  static final String GRADETYPE_SHEMA =
+      "Gradetype (id INTEGER PRIMARY KEY, name TEXT, weigth TEXT)";
+  static final String APPSETTINGS_SHEMA =
+      "Appsettings (colorfulCharts INTEGER, weightBigGrades TEXT, hasFiveexams INTEGER)";
 
   DatabaseClass() {
     print("Init Datase....");
@@ -26,24 +30,22 @@ class DatabaseClass {
 
   // When creating the db, create the table
   static void _onCreate(Database db1, int version) async {
-    String checkExistTable =
-        "SELECT * FROM sqlite_master WHERE name ='Subject' and type='table'";
-    var checkExist = await db.rawQuery(checkExistTable);
+    Map<String, String> allTables = {
+      "Subject": SUBJECT_SHEMA,
+      "Test": TEST_SHEMA,
+      "Gradetype": GRADETYPE_SHEMA,
+      "Appsettings": APPSETTINGS_SHEMA
+    };
+    for (String tab in allTables.keys) {
+      String checkExistTable =
+          "SELECT * FROM sqlite_master WHERE name ='$tab' and type='table'";
+      var checkExist = await db.rawQuery(checkExistTable);
 
-    if (checkExist.isNotEmpty) {
-      // table exist
-    } else {
-      await db1.execute('CREATE TABLE $SUBJECT_SHEMA');
-    }
-    // Check 2
-    checkExistTable =
-        "SELECT * FROM sqlite_master WHERE name ='Test' and type='table'";
-    checkExist = await db.rawQuery(checkExistTable);
-
-    if (checkExist.isNotEmpty) {
-      // table exist
-    } else {
-      await db1.execute('CREATE TABLE $TEST_SHEMA');
+      if (checkExist.isNotEmpty) {
+      } else {
+        print("Table $tab was missing :c");
+        await db1.execute('CREATE TABLE ${allTables[tab]}');
+      }
     }
   }
 

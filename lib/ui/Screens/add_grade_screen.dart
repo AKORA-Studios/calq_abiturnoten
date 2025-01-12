@@ -1,4 +1,8 @@
+import 'package:calq_abiturnoten/database/Data_Subject.dart';
+import 'package:calq_abiturnoten/ui/Screens/new_grade_screen.dart';
 import 'package:flutter/material.dart';
+
+import '../../database/database.dart';
 
 class AddGradeScreen extends StatefulWidget {
   const AddGradeScreen({super.key});
@@ -8,15 +12,40 @@ class AddGradeScreen extends StatefulWidget {
 }
 
 class _AddGradeScreenState extends State<AddGradeScreen> {
+  Widget subjectEntry(Data_Subject sub) {
+    return TextButton(
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => NewGradeScreen()));
+        },
+        child: Text(sub.name));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text("Overview"),
+          title: const Text("Neue Note hinzufügen"),
         ),
-        body: ListView(
-          children: [Text("Anzahl Prüfungen"), Text("Regenbogen")],
-        ));
+        body: SingleChildScrollView(
+            child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    FutureBuilder(
+                        future: DatabaseClass.Shared.getSubjectsList(),
+                        builder: (ctx, snap) {
+                          if (snap.hasData) {
+                            return Column(
+                                children: snap.data!
+                                    .map((e) => subjectEntry(e))
+                                    .toList());
+                          } else {
+                            return const SizedBox();
+                          }
+                        }),
+                  ],
+                ))));
   }
 }
