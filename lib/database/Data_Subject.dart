@@ -18,7 +18,7 @@ class Data_Subject {
       this.lk, this.inactiveYears, this.showinlinegraph);
 
   Data_Subject.fromMap(
-      Map<String, Object?> map, List<Map<String, Object?>> tests) {
+      Map<String, Object?> map, List<Map<String, Object?>> testList) {
     id = int.parse(map["id"].toString());
     name = map["name"].toString();
     color = fromHex(map["color"].toString()); //map["color"]
@@ -27,7 +27,7 @@ class Data_Subject {
     lk = map["lk"] == 1;
     inactiveYears = map["inactiveYears"].toString();
     showinlinegraph = map["showinlinegraph"] == 1;
-    tests = [];
+    tests = testList.map((e) => Data_Test.fromMap(e)).toList();
   }
 
   Map<String, Object?> toMap() {
@@ -46,6 +46,6 @@ class Data_Subject {
 
   @override
   String toString() {
-    return 'Data_Subject{name: $name, id: $id}';
+    return 'Data_Subject{name: $name, id: $id [${tests.length}]}';
   }
 }

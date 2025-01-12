@@ -99,9 +99,10 @@ print('updated: $count');
               .toList();
 
           List<Map<String, Object>> x = [];
-
-          print(e["id"]);
-          print(subjectTests);
+          subjectTests?.forEach((element) {
+            element.map((key, value) => MapEntry(key, value as Object));
+            x.add(element.map((key, value) => MapEntry(key, value as Object)));
+          });
 
           Map<String, Object> y =
               e.map((key, value) => MapEntry(key, value as Object));
