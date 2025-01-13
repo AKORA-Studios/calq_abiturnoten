@@ -1,4 +1,5 @@
 import 'package:calq_abiturnoten/ui/Screens/subject_info_screen.dart';
+import 'package:calq_abiturnoten/ui/components/util.dart';
 import 'package:flutter/material.dart';
 
 import '../../database/database.dart';
@@ -26,7 +27,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                   if (snap.hasData) {
                     return Column(
                         children: snap.data!
-                            .map((e) => ElevatedButton(
+                            .map((e) => TextButton(
                                 onPressed: () {
                                   Navigator.push(
                                       context,
@@ -34,7 +35,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                                           builder: (context) =>
                                               SubjectInfoScreen(sub: e)));
                                 },
-                                child: Text("${e.name} ${e.tests.length}")))
+                                child: subjectRowWithHalfyears(e)))
                             .toList());
                   } else {
                     return const SizedBox();

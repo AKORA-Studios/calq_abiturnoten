@@ -12,7 +12,7 @@ class _ExamScreenState extends State<ExamScreen> {
 
   Widget examView(int i) {
     return Column(children: [
-      Text("Exam $i [${points[i]}]"),
+      Text("Exam $i [${points[i].toInt()}]"),
       Slider(
         //  activeColor: widget.sub.color, // TODO:
         min: 0,

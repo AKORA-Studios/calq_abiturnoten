@@ -10,7 +10,7 @@ class OverviewScreen extends StatefulWidget {
 }
 
 class _OverviewScreenState extends State<OverviewScreen> {
-  List<String> subs = ["x", "y"];
+  String subs = "xx";
 
   @override
   void initState() {
@@ -23,7 +23,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
         print("ffffff");
       });*/
       setState(() {
-        subs[0] = value.toString();
+        subs = value.toString().replaceAll("Data_Subject", "\nData_Subject");
       });
     });
   }
@@ -36,7 +36,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
           title: const Text("Overview"),
         ),
         body: ListView(
-          children: [Text(subs.join(", "))],
+          children: [Text(subs)],
         ));
   }
 }
