@@ -53,10 +53,11 @@ class DatabaseClass {
     await deleteDatabase(PATH);
   }
 
-  Future<void> createSubject() async {
+  Future<void> createSubject(String name, String color, int lk) async {
     await db.transaction((txn) async {
       int id1 = await txn.rawInsert(
-          'INSERT INTO Subject(name, color, exampoints, examtype, lk,inactiveYears, showinlinegraph) VALUES("some name", "3af4de", 0, 0, 0, "", 1)');
+          'INSERT INTO Subject(name, color, exampoints, examtype, lk,inactiveYears, showinlinegraph) VALUES(?,?,?,?,?,?,?)',
+          [name, color, 0, 0, lk, "", 1]);
       print('inserted1: $id1');
     });
   }
@@ -68,7 +69,8 @@ class DatabaseClass {
     }
     await db.transaction((txn) async {
       int id1 = await txn.rawInsert(
-          'INSERT INTO Test(name, points, type, date, year,subject) VALUES($name, $points, 1, "", 1, $subjectID)');
+          'INSERT INTO Test(name, points, type, date, year,subject) VALUES(?,?,?,?,?,?)',
+          [name, points, 1, "", 1, subjectID]);
       print('Inserted Test: $id1');
     });
   }

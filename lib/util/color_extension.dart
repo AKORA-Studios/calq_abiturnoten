@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 Color fromHex(String str) {
-  return Color(int.parse(str.replaceAll('#', '0xff'), radix: 16));
+  return Color(int.parse(str.replaceAll('#', '0xff'), radix: 16))
+      .withAlpha(255);
 }
 
 String toHex(Color col) {

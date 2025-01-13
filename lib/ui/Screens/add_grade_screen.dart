@@ -3,6 +3,7 @@ import 'package:calq_abiturnoten/ui/Screens/new_grade_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../database/database.dart';
+import '../components/util.dart';
 
 class AddGradeScreen extends StatefulWidget {
   const AddGradeScreen({super.key});
@@ -20,7 +21,7 @@ class _AddGradeScreenState extends State<AddGradeScreen> {
               MaterialPageRoute(
                   builder: (context) => NewGradeScreen(sub: sub)));
         },
-        child: Text(sub.name));
+        child: subjectRow(sub));
   }
 
   @override
