@@ -40,7 +40,14 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
         ),
         body: SingleChildScrollView(
           child: Column(
-            children: [Text("${widget.sub.tests.length} Tests")],
+            children: [
+              Text("${widget.sub.tests.length} Tests"),
+              Column(
+                children: widget.sub.tests
+                    .map((e) => Text(e.name + " ${e.points}"))
+                    .toList(),
+              )
+            ],
           ),
         ));
   }

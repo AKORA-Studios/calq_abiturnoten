@@ -34,7 +34,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                                           builder: (context) =>
                                               SubjectInfoScreen(sub: e)));
                                 },
-                                child: Text(e.name)))
+                                child: Text(e.name + " ${e.tests.length}")))
                             .toList());
                   } else {
                     return const SizedBox();

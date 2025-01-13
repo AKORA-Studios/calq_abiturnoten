@@ -19,6 +19,7 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
   int selectedYear = 0; // TODO: int current halfyear
   DateTime _selectedDate = DateTime.now();
   String errorText = "";
+  double _testPoints = 0; // TODO: init average points for this halfyear
 
   Future _selectDate(BuildContext context) async => showDatePicker(
         context: context,
@@ -38,8 +39,11 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
         return;
       });
     }
-    await DatabaseClass.Shared.createTest(widget.sub.id, gradeName, 12);
-    // TODO: implement
+    await DatabaseClass.Shared.createTest(
+            widget.sub.id, gradeName, _testPoints.toInt())
+        .then((value) {
+      Navigator.pop(context);
+    });
   }
 
   @override
@@ -104,7 +108,24 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                         )
                       ],
                     )),
-                    card(Text("Punkte")),
+                    card(Column(
+                      children: [
+                        Text("Punkte (${_testPoints.toInt()})"),
+                        Slider(
+                          activeColor: widget.sub.color,
+                          min: 0.0,
+                          label: '${_testPoints.round()}',
+                          divisions: 15,
+                          max: 15.0,
+                          value: _testPoints,
+                          onChanged: (value) {
+                            setState(() {
+                              _testPoints = value;
+                            });
+                          },
+                        )
+                      ],
+                    )),
                     ElevatedButton(
                         style: ElevatedButton.styleFrom(
                             backgroundColor: widget.sub.color),

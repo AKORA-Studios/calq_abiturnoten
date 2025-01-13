@@ -47,8 +47,18 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
         body: ListView(
           children: [
             Text(_errorText),
-            Text("Anzahl Prüfungen"),
-            Text("Regenbogen"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text("Ist LK?"),
+                Switch(
+                  activeColor: pickerColor,
+                  activeTrackColor: pickerColor.withAlpha(100),
+                  value: _isLK,
+                  onChanged: (value) => setState(() => _isLK = value),
+                ),
+              ],
+            ),
             ElevatedButton(
                 onPressed: () {
                   showDialog(
