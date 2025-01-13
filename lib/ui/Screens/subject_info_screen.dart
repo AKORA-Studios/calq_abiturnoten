@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 
+import '../../database/Data_Subject.dart';
 import '../../database/database.dart';
 
-class OverviewScreen extends StatefulWidget {
-  const OverviewScreen({super.key});
+class SubjectInfoScreen extends StatefulWidget {
+  const SubjectInfoScreen({super.key, required this.sub});
+
+  final Data_Subject sub;
 
   @override
-  State<OverviewScreen> createState() => _OverviewScreenState();
+  State<SubjectInfoScreen> createState() => _SubjectInfoScreenState();
 }
 
-class _OverviewScreenState extends State<OverviewScreen> {
+class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
   List<String> subs = ["x", "y"];
 
   @override
@@ -33,10 +36,12 @@ class _OverviewScreenState extends State<OverviewScreen> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text("Overview"),
+          title: Text(widget.sub.name),
         ),
-        body: ListView(
-          children: [Text(subs.join(", "))],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [Text("${widget.sub.tests.length} Tests")],
+          ),
         ));
   }
 }

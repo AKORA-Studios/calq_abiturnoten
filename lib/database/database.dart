@@ -61,10 +61,14 @@ class DatabaseClass {
     });
   }
 
-  Future<void> createTest(int subjectID) async {
+  Future<void> createTest(int subjectID, String name, int points) async {
+    if (name.isEmpty) {
+      print("No! Invalid Test Name");
+      return;
+    }
     await db.transaction((txn) async {
       int id1 = await txn.rawInsert(
-          'INSERT INTO Test(name, points, type, date, year,subject) VALUES("some cool unique name", 12, 1, "", 1, $subjectID)');
+          'INSERT INTO Test(name, points, type, date, year,subject) VALUES($name, $points, 1, "", 1, $subjectID)');
       print('Inserted Test: $id1');
     });
   }

@@ -13,7 +13,7 @@ class _ExamScreenState extends State<ExamScreen> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text("Overview"),
+          title: Text("Prüfungen"),
         ),
         body: ListView(
           children: [Text("Anzahl Prüfungen"), Text("Regenbogen")],

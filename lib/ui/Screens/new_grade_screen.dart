@@ -1,4 +1,5 @@
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
+import 'package:calq_abiturnoten/database/database.dart';
 import 'package:calq_abiturnoten/ui/components/util.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +18,7 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
   String gradeName = "";
   int selectedYear = 0; // TODO: int current halfyear
   DateTime _selectedDate = DateTime.now();
+  String errorText = "";
 
   Future _selectDate(BuildContext context) async => showDatePicker(
         context: context,
@@ -29,7 +31,14 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
         }
       });
 
-  void addGrade() {
+  Future<void> addGrade() async {
+    if (gradeName.isEmpty) {
+      setState(() {
+        errorText = "Invalid Grade Name";
+        return;
+      });
+    }
+    await DatabaseClass.Shared.createTest(widget.sub.id, gradeName, 12);
     // TODO: implement
   }
 
@@ -47,6 +56,7 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                   children: [
                     card(Column(
                       children: [
+                        Text(errorText),
                         const Text("Notenname"),
                         TextField(
                           onChanged: (value) {
