@@ -44,7 +44,7 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
               Text("${widget.sub.tests.length} Tests"),
               Column(
                 children: widget.sub.tests
-                    .map((e) => Text(e.name + " ${e.points}"))
+                    .map((e) => Text("${e.name} ${e.points}"))
                     .toList(),
               )
             ],

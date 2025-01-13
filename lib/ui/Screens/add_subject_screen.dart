@@ -11,8 +11,8 @@ class AddSubjectScreen extends StatefulWidget {
 }
 
 class _AddSubjectScreenState extends State<AddSubjectScreen> {
-  Color currentColor = Color(0xff443a49);
-  Color pickerColor = Color(0xff443a49);
+  Color currentColor = const Color(0xff443a49);
+  Color pickerColor = const Color(0xff443a49);
 
   void changeColor(Color color) {
     setState(() => pickerColor = color);
@@ -42,7 +42,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text("Neues Fach hinzufügen"),
+          title: const Text("Neues Fach hinzufügen"),
         ),
         body: ListView(
           children: [
@@ -50,7 +50,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text("Ist LK?"),
+                const Text("Ist LK?"),
                 Switch(
                   activeColor: pickerColor,
                   activeTrackColor: pickerColor.withAlpha(100),
@@ -74,7 +74,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
                             colorPickerWidth: 300,
                             pickerAreaHeightPercent: 0.7,
                             enableAlpha: false,
-                            labelTypes: [],
+                            labelTypes: const [],
                             displayThumbColor: true,
                             pickerAreaBorderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(2),
@@ -91,12 +91,12 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
                   children: [
                     Container(
                       color: pickerColor,
-                      child: SizedBox(
+                      child: const SizedBox(
                         width: 20,
                         height: 20,
                       ),
                     ),
-                    Text(
+                    const Text(
                       'Fach Farbe',
                     )
                   ],
@@ -113,7 +113,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
               ),
             ),
             ElevatedButton(
-                onPressed: addSubject, child: Text("Fach hinzufügen"))
+                onPressed: addSubject, child: const Text("Fach hinzufügen"))
           ],
         ));
   }

@@ -33,7 +33,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text("Overview"),
+          title: const Text("Overview"),
         ),
         body: ListView(
           children: [Text(subs.join(", "))],

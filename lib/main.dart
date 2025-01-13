@@ -66,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     Tab(icon: Icon(Icons.settings))
                   ],
                 )),
-            body: TabBarView(
+            body: const TabBarView(
               children: [
                 OverviewScreen(),
                 SubjectsScreen(),

@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 
-final calqDateformatter = new DateFormat('yyyy-MM-dd hh:mm');
+final calqDateformatter = DateFormat('yyyy-MM-dd hh:mm');
 
 String formatDate(DateTime date) {
   var inputFormat = DateFormat('yy-mm-dd hh:mm:ss');

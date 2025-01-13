@@ -75,7 +75,7 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                         )
                       ],
                     )),
-                    card(Text("Typ")),
+                    card(const Text("Typ")),
                     card(Column(
                       children: [
                         const Text("Halbjahr"),
@@ -100,7 +100,7 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                         ),
                         Row(
                           children: [
-                            Text("Datum"),
+                            const Text("Datum"),
                             ElevatedButton(
                                 onPressed: () => _selectDate(context),
                                 child: Text(formatDate(_selectedDate)))
@@ -130,7 +130,7 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                         style: ElevatedButton.styleFrom(
                             backgroundColor: widget.sub.color),
                         onPressed: addGrade,
-                        child: Text("Note hinzufügen"))
+                        child: const Text("Note hinzufügen"))
                   ],
                 ))));
   }

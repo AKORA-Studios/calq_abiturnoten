@@ -16,7 +16,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text("Subjects"),
+          title: const Text("Subjects"),
         ),
         body: ListView(
           children: [
@@ -34,7 +34,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                                           builder: (context) =>
                                               SubjectInfoScreen(sub: e)));
                                 },
-                                child: Text(e.name + " ${e.tests.length}")))
+                                child: Text("${e.name} ${e.tests.length}")))
                             .toList());
                   } else {
                     return const SizedBox();

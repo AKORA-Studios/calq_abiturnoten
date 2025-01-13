@@ -4,16 +4,16 @@ import 'package:sqflite/sqflite.dart';
 
 class DatabaseClass {
   static late final Database db;
-  static late String PATH = "calq.db";
+  static String PATH = "calq.db";
   static final DatabaseClass Shared = DatabaseClass();
 
-  static final String SUBJECT_SHEMA =
+  static const String SUBJECT_SHEMA =
       "Subject (id INTEGER PRIMARY KEY, color TEXT, exampoints INTEGER, examtype INTEGER, lk INTEGER, inactiveYears TEXT, name TEXT, showinlinegraph INTEGER)";
-  static final String TEST_SHEMA =
+  static const String TEST_SHEMA =
       "Test (id INTEGER PRIMARY KEY, name TEXT, points INTEGER, type INTEGER, date TEXT, year INTEGER, subject INTEGER, FOREIGN KEY (subject) REFERENCES Subject(id))";
-  static final String GRADETYPE_SHEMA =
+  static const String GRADETYPE_SHEMA =
       "Gradetype (id INTEGER PRIMARY KEY, name TEXT, weigth TEXT)";
-  static final String APPSETTINGS_SHEMA =
+  static const String APPSETTINGS_SHEMA =
       "Appsettings (colorfulCharts INTEGER, weightBigGrades TEXT, hasFiveexams INTEGER)";
 
   DatabaseClass() {

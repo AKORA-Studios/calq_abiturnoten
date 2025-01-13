@@ -17,30 +17,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text("Settings"),
+          title: const Text("Settings"),
         ),
         body: Padding(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: ListView(
             children: [
-              ListTile(
+              const ListTile(
                 title: Text("Anzahl Prüfungen"),
                 tileColor: Colors.orange,
               ),
-              ListTile(
+              const ListTile(
                 title: Text("Anzahl Prüfungen"),
                 tileColor: Colors.orange,
               ),
-              ListTile(
+              const ListTile(
                 title: Text("Regenbogen"),
                 tileColor: Colors.orange,
               ),
-              Text("Noten importieren"),
-              Text("Noten exportieren"),
+              const Text("Noten importieren"),
+              const Text("Noten exportieren"),
               Column(
                 children: [
-                  Text("Alle Fächer"),
-                  Divider(),
+                  const Text("Alle Fächer"),
+                  const Divider(),
                   FutureBuilder(
                       future: DatabaseClass.Shared.getSubjectsList(),
                       builder: (ctx, snap) {
@@ -58,9 +58,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => AddSubjectScreen()));
+                                builder: (context) => const AddSubjectScreen()));
                       },
-                      child: Text("Neues Fach hinzufügen"))
+                      child: const Text("Neues Fach hinzufügen"))
                 ],
               ),
             ],

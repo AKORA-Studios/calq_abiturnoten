@@ -34,7 +34,7 @@ class _ExamScreenState extends State<ExamScreen> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text("Prüfungen"),
+          title: const Text("Prüfungen"),
         ),
         body: SingleChildScrollView(
           child: Column(
