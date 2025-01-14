@@ -12,6 +12,8 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  bool _raionbowEnabled = false; // TODO: init correctly
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,20 +25,39 @@ class _SettingsScreenState extends State<SettingsScreen> {
           padding: const EdgeInsets.all(10),
           child: ListView(
             children: [
-              const ListTile(
-                title: Text("Anzahl Prüfungen"),
-                tileColor: Colors.orange,
+              Column(
+                children: [
+                  Text("Allgemein"),
+                  Divider(),
+                  settingsOptionWithWidget("Anzahl Abiturprüfungen",
+                      Colors.deepPurple, Icons.menu_book_sharp, Text("hh")),
+                  settingsOptionWithWidget(
+                      "Regenbogen",
+                      Colors.blue,
+                      Icons.bar_chart,
+                      Switch(
+                          value: _raionbowEnabled,
+                          onChanged: (value) {
+                            // TODO update rainbow setting
+                            setState(() {
+                              _raionbowEnabled = value;
+                            });
+                          })),
+                  settingsOption("Noten importieren", Colors.blue,
+                      Icons.folder_open, () {}),
+                  settingsOption(
+                      "Noten exportieren", Colors.green, Icons.share, () {}),
+                  settingsOption("Wertung änmdern", Colors.yellow,
+                      Icons.filter_frames, () {}),
+                  settingsOption("Demo Daten laden", Colors.orange,
+                      Icons.warning_amber, () {}),
+                  settingsOption(
+                      "Daten löschen", Colors.red, Icons.delete, () {}),
+                  settingsOption("Github", Colors.pink, Icons.info, () {}),
+                  settingsOption("PDF Export", Colors.deepPurpleAccent,
+                      Icons.file_copy_outlined, () {})
+                ],
               ),
-              const ListTile(
-                title: Text("Anzahl Prüfungen"),
-                tileColor: Colors.orange,
-              ),
-              const ListTile(
-                title: Text("Regenbogen"),
-                tileColor: Colors.orange,
-              ),
-              const Text("Noten importieren"),
-              const Text("Noten exportieren"),
               Column(
                 children: [
                   const Text("Alle Fächer"),
@@ -47,7 +68,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         if (snap.hasData) {
                           return Column(
                               children: snap.data!
-                                  .map((e) => subjectRow(e))
+                                  .map((e) => subjectRowWithAction(e, () {
+                                        print("eee");
+                                        // TODO: delete subject
+                                      }))
                                   .toList());
                         } else {
                           return const SizedBox();
@@ -58,11 +82,24 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const AddSubjectScreen()));
+                                builder: (context) =>
+                                    const AddSubjectScreen()));
                       },
                       child: const Text("Neues Fach hinzufügen"))
                 ],
               ),
+              Column(
+                children: [
+                  const Text("Sonstiges"),
+                  const Divider(),
+                  const Text("Version: ??, Build: ??"),
+                  TextButton(
+                      onPressed: () {
+                        showLicensePage(context: context);
+                      },
+                      child: const Text("Lizenzen"))
+                ],
+              )
             ],
           ),
         ));

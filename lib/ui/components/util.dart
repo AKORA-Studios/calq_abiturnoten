@@ -13,6 +13,49 @@ Widget card(Widget content) {
   );
 }
 
+Widget settingsOption(
+    String title, Color color, IconData icon, Function onTap) {
+  // TODO: realize on tap
+  return Row(
+    children: [
+      IconButton.filled(
+        style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+            backgroundColor: MaterialStateProperty.all<Color>(color)),
+        onPressed: null,
+        icon: Icon(
+          icon,
+          color: Colors.white,
+        ),
+      ),
+      Text(title)
+    ],
+  );
+}
+
+Widget settingsOptionWithWidget(
+    String title, Color color, IconData icon, Widget child) {
+  return Row(
+    children: [
+      IconButton.filled(
+        style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+            backgroundColor: MaterialStateProperty.all<Color>(color)),
+        onPressed: null,
+        icon: Icon(
+          icon,
+          color: Colors.white,
+        ),
+      ),
+      Text(title),
+      const Spacer(),
+      child
+    ],
+  );
+}
+
 Widget subjectRow(Data_Subject sub) {
   return Row(
     children: [
@@ -57,6 +100,31 @@ Widget subjectRowWithHalfyears(Data_Subject sub) {
           )
         ],
       ))
+    ],
+  );
+}
+
+Widget subjectRowWithAction(Data_Subject sub, Function onTap) {
+  return Row(
+    children: [
+      IconButton.filled(
+        style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+            backgroundColor: MaterialStateProperty.all<Color>(sub.color)),
+        onPressed: null,
+        icon: const Icon(
+          Icons.ac_unit,
+          color: Colors.white,
+        ),
+      ),
+      Text(sub.name),
+      Spacer(),
+      IconButton(
+          onPressed: () {
+            onTap();
+          },
+          icon: Icon(Icons.delete, color: Colors.red))
     ],
   );
 }
