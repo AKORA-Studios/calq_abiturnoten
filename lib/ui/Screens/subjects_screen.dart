@@ -40,7 +40,8 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                   } else {
                     return const SizedBox();
                   }
-                })
+                }),
+            Center(child: Text("? von ? Halbjahren aktiv"))
           ],
         ));
   }

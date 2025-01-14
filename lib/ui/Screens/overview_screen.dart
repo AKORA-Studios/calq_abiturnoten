@@ -11,6 +11,8 @@ class OverviewScreen extends StatefulWidget {
 
 class _OverviewScreenState extends State<OverviewScreen> {
   String subs = "xx";
+  late List<String> xAxisList;
+  late List<double> yAxisList;
 
   @override
   void initState() {
@@ -35,7 +37,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: const Text("Overview"),
         ),
-        body: ListView(
+        body: Column(
           children: [Text(subs)],
         ));
   }

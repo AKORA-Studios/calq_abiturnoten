@@ -1,4 +1,5 @@
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
+import 'package:calq_abiturnoten/database/Data_Test.dart';
 import 'package:flutter/material.dart';
 
 Widget card(Widget content) {
@@ -125,6 +126,28 @@ Widget subjectRowWithAction(Data_Subject sub, Function onTap) {
             onTap();
           },
           icon: Icon(Icons.delete, color: Colors.red))
+    ],
+  );
+}
+
+// TODO: color test different if favorised GradeType
+Widget testRow(Data_Test test, Data_Subject sub) {
+  return Row(
+    children: [
+      IconButton.filled(
+        style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+            backgroundColor: MaterialStateProperty.all<Color>(sub.color)),
+        onPressed: null,
+        icon: const Icon(
+          Icons.ac_unit,
+          color: Colors.white,
+        ),
+      ),
+      Text(test.name),
+      Spacer(),
+      Text("${test.points}")
     ],
   );
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../database/Data_Subject.dart';
 import '../../database/database.dart';
+import '../components/util.dart';
 
 class SubjectInfoScreen extends StatefulWidget {
   const SubjectInfoScreen({super.key, required this.sub});
@@ -31,6 +32,23 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
     });
   }
 
+  List<Widget> halfYearWidget() {
+    List<Widget> result = [];
+    [1, 2, 3, 4].map((e) {
+      var tests =
+          widget.sub.tests.where((element) => element.year == e).toList();
+      if (tests.isEmpty) {
+        return;
+      }
+      result.add(Column(children: [
+        Text("$e. Halbjahr"),
+        Divider(),
+        ...tests.map((e) => testRow(e, widget.sub)).toList()
+      ]));
+    }).toList();
+    return result;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,15 +57,14 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
           title: Text(widget.sub.name),
         ),
         body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Text("${widget.sub.tests.length} Tests"),
-              Column(
-                children: widget.sub.tests
-                    .map((e) => Text("${e.name} ${e.points}"))
-                    .toList(),
-              )
-            ],
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              children: [
+                Text("${widget.sub.tests.length} Tests"),
+                ...halfYearWidget(),
+              ],
+            ),
           ),
         ));
   }
