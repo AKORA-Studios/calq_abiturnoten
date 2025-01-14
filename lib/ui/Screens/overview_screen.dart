@@ -16,7 +16,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
   void initState() {
     // TODO: implement initState
 
-    DatabaseClass.Shared.getSubjectsList().then((value) {
+    DatabaseClass.Shared.getSubjects().then((value) {
       print(value);
       /*
        DatabaseClass.Shared.createTest(1).then((value) {

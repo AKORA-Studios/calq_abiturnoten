@@ -11,6 +11,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   DatabaseClass.initDb().then((value) {
+    DatabaseClass.Shared.getSettings(); // Init Settings
     // Force Database load before App starts
     runApp(const MyApp());
   });
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
   @override
   void initState() {
     //  DatabaseClass.Shared.createSubject();
-    DatabaseClass.Shared.getSubjects().then((value) {
+    DatabaseClass.Shared.fetchSubjects().then((value) {
       // print(value);
     });
   }

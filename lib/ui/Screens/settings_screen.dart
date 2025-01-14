@@ -12,7 +12,16 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool _raionbowEnabled = false; // TODO: init correctly
+  bool _rainbowEnabled = false;
+  bool _hasFiveexams = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Sync app settings from Database
+    _rainbowEnabled = DatabaseClass.Shared.rainbowEnabled;
+    _hasFiveexams = DatabaseClass.Shared.hasFiveexams;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +45,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Colors.blue,
                       Icons.bar_chart,
                       Switch(
-                          value: _raionbowEnabled,
+                          value: _rainbowEnabled,
                           onChanged: (value) {
                             // TODO update rainbow setting
                             setState(() {
-                              _raionbowEnabled = value;
+                              _rainbowEnabled = value;
+                              DatabaseClass.Shared.updateSettings(
+                                  value, _hasFiveexams);
                             });
                           })),
                   settingsOption("Noten importieren", Colors.blue,
@@ -63,7 +74,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const Text("Alle Fächer"),
                   const Divider(),
                   FutureBuilder(
-                      future: DatabaseClass.Shared.getSubjectsList(),
+                      future: DatabaseClass.Shared.getSubjects(),
                       builder: (ctx, snap) {
                         if (snap.hasData) {
                           return Column(

@@ -22,7 +22,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
         body: ListView(
           children: [
             FutureBuilder(
-                future: DatabaseClass.Shared.getSubjectsList(),
+                future: DatabaseClass.Shared.getSubjects(),
                 builder: (ctx, snap) {
                   if (snap.hasData) {
                     return Column(

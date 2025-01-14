@@ -37,7 +37,7 @@ class _AddGradeScreenState extends State<AddGradeScreen> {
                 child: Column(
                   children: [
                     FutureBuilder(
-                        future: DatabaseClass.Shared.getSubjectsList(),
+                        future: DatabaseClass.Shared.getSubjects(),
                         builder: (ctx, snap) {
                           if (snap.hasData) {
                             return Column(
