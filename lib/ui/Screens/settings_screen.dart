@@ -21,7 +21,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
     // Sync app settings from Database
     _rainbowEnabled = DatabaseClass.Shared.rainbowEnabled;
     _hasFiveexams = DatabaseClass.Shared.hasFiveexams;
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      onAppear(); // TODO: maybe remove, maybe update subject list?
+    });
   }
+
+  void onAppear() {}
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +44,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   Text("Allgemein"),
                   Divider(),
-                  settingsOptionWithWidget("Anzahl Abiturprüfungen",
-                      Colors.deepPurple, Icons.menu_book_sharp, Text("hh")),
+                  settingsOptionWithWidget(
+                      "Anzahl Abiturprüfungen",
+                      Colors.deepPurple,
+                      Icons.menu_book_sharp,
+                      SegmentedButton<bool>(
+                        showSelectedIcon: false,
+                        segments: [true, false]
+                            .map((e) => ButtonSegment<bool>(
+                                  value: e,
+                                  label: Text(
+                                    e ? "5" : "4",
+                                  ),
+                                ))
+                            .toList(),
+                        selected: <bool>{_hasFiveexams},
+                        onSelectionChanged: (Set<bool> newSelection) {
+                          setState(() {
+                            _hasFiveexams = newSelection.first;
+                            DatabaseClass.Shared.updateSettings(
+                                _rainbowEnabled, _hasFiveexams);
+                          });
+                        },
+                      )),
                   settingsOptionWithWidget(
                       "Regenbogen",
                       Colors.blue,

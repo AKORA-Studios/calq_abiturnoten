@@ -145,12 +145,13 @@ class DatabaseClass {
   }
 
   // UPDATE DATA
-  Future<void> updateSettings(bool colorfulCharts, bool hasFiveexams) async {
+  Future<void> updateSettings(
+      bool colorfulCharts, bool hasFiveExamsValue) async {
     int count = await db.rawUpdate(
         'UPDATE Appsettings SET colorfulCharts = ?, hasFiveexams = ?',
-        [colorfulCharts ? 1 : 0, hasFiveexams ? 1 : 0]);
+        [colorfulCharts ? 1 : 0, hasFiveExamsValue ? 1 : 0]);
     print('Updated Settings: $count');
-    hasFiveexams = hasFiveexams;
+    hasFiveexams = hasFiveExamsValue;
     rainbowEnabled = colorfulCharts;
   }
 /*
