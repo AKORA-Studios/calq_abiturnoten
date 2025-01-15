@@ -37,8 +37,44 @@ class _OverviewScreenState extends State<OverviewScreen> {
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: const Text("Overview"),
         ),
-        body: Column(
-          children: [Text(subs)],
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Text(subs),
+              Center(
+                  child: Container(
+                      color: Colors.grey,
+                      width: MediaQuery.of(context).size.width - 20,
+                      height: 250)),
+              SizedBox(height: 20),
+              Center(
+                  child: Container(
+                      color: Colors.grey,
+                      width: MediaQuery.of(context).size.width - 20,
+                      height: 150)),
+              SizedBox(height: 20),
+              Center(
+                  child: Container(
+                      color: Colors.grey,
+                      width: MediaQuery.of(context).size.width - 20,
+                      height: 150)),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Container(
+                      color: Colors.grey,
+                      width: (MediaQuery.of(context).size.width / 2) - 20,
+                      height: 150),
+                  Container(
+                      color: Colors.grey,
+                      width: (MediaQuery.of(context).size.width / 2) - 20,
+                      height: 150)
+                ],
+              ),
+              SizedBox(height: 20),
+            ],
+          ),
         ));
   }
 }
