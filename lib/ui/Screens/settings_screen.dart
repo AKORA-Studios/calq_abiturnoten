@@ -1,3 +1,4 @@
+import 'package:calq_abiturnoten/database/Data_Subject.dart';
 import 'package:calq_abiturnoten/ui/Screens/settings/edit_subject_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +16,7 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _rainbowEnabled = false;
   bool _hasFiveexams = false;
+  bool _shouldUpdateView = false;
 
   @override
   void initState() {
@@ -26,6 +28,45 @@ class _SettingsScreenState extends State<SettingsScreen> {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       onAppear(); // TODO: maybe remove, maybe update subject list?
     });
+  }
+
+  Future<dynamic> createDialogue(Data_Subject sub) {
+    return showDialog(
+        context: context,
+        builder: (BuildContext ctx) => Dialog(
+            child: Container(
+                margin: const EdgeInsets.all(10),
+                width: MediaQuery.sizeOf(context).width - 50,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('${sub.name} löschen',
+                        style: Theme.of(context).textTheme.titleMedium),
+                    const SizedBox(height: 10),
+                    const Text('Möchtest du dieses Fach wirklich löschen?'),
+                    const SizedBox(height: 10),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Doch nicht')),
+                        TextButton(
+                            onPressed: () {
+                              DatabaseClass.Shared.deleteSubject(sub.id);
+                              setState(() {
+                                _shouldUpdateView = !_shouldUpdateView;
+                              });
+                              Navigator.pop(context);
+                            },
+                            child: const Text('Löschen'),
+                            style: TextButton.styleFrom(
+                                backgroundColor: Colors.red))
+                      ],
+                    )
+                  ],
+                ))));
   }
 
   void onAppear() {}
@@ -114,8 +155,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                 builder: (context) =>
                                                     EditSubjectScreen(sub: e)));
                                       }, () {
-                                        print("eee");
-                                        // TODO: delete subject
+                                        createDialogue(e);
                                       }))
                                   .toList());
                         } else {

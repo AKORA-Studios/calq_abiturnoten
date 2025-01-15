@@ -108,6 +108,7 @@ Widget subjectRowWithHalfyears(Data_Subject sub) {
 Widget subjectRowWith2Action(
     Data_Subject sub, Function onTap, Function onDelete) {
   return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
       IconButton.filled(
         style: ButtonStyle(
@@ -115,7 +116,7 @@ Widget subjectRowWith2Action(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
             backgroundColor: MaterialStateProperty.all<Color>(sub.color)),
         onPressed: () {
-          onDelete();
+          onTap();
         },
         icon: const Icon(
           Icons.ac_unit,
@@ -134,7 +135,7 @@ Widget subjectRowWith2Action(
       Spacer(),
       IconButton(
           onPressed: () {
-            onTap();
+            onDelete();
           },
           icon: Icon(Icons.delete, color: Colors.red))
     ],

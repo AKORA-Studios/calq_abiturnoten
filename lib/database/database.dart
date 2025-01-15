@@ -161,21 +161,14 @@ class DatabaseClass {
         newSub.toMapUpdate());
     print('Updated Settings: $count');
   }
-/*
- // Delete a record
-count = await database
-    .rawDelete('DELETE FROM Test WHERE name = ?', ['another name']);
-assert(count == 1);
-
-// Update some record
-int count = await database.rawUpdate(
-    'UPDATE Test SET name = ?, value = ? WHERE name = ?',
-    ['updated name', '9876', 'some name']);
-print('updated: $count');
-**/
 
 // DELETE DATA
   Future<void> deleteData() async {
     await deleteDatabase(PATH);
+  }
+
+  Future<void> deleteSubject(int id) async {
+    int count = await db.rawDelete('DELETE FROM Subject WHERE id = ?', [id]);
+    assert(count == 1);
   }
 }
