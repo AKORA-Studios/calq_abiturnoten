@@ -1,3 +1,4 @@
+import 'package:calq_abiturnoten/ui/Screens/settings/edit_subject_screen.dart';
 import 'package:flutter/material.dart';
 
 import '../../database/database.dart';
@@ -106,7 +107,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         if (snap.hasData) {
                           return Column(
                               children: snap.data!
-                                  .map((e) => subjectRowWithAction(e, () {
+                                  .map((e) => subjectRowWith2Action(e, () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    EditSubjectScreen(sub: e)));
+                                      }, () {
                                         print("eee");
                                         // TODO: delete subject
                                       }))

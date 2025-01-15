@@ -105,7 +105,8 @@ Widget subjectRowWithHalfyears(Data_Subject sub) {
   );
 }
 
-Widget subjectRowWithAction(Data_Subject sub, Function onTap) {
+Widget subjectRowWith2Action(
+    Data_Subject sub, Function onTap, Function onDelete) {
   return Row(
     children: [
       IconButton.filled(
@@ -113,13 +114,23 @@ Widget subjectRowWithAction(Data_Subject sub, Function onTap) {
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
             backgroundColor: MaterialStateProperty.all<Color>(sub.color)),
-        onPressed: null,
+        onPressed: () {
+          onDelete();
+        },
         icon: const Icon(
           Icons.ac_unit,
           color: Colors.white,
         ),
       ),
-      Text(sub.name),
+      TextButton(
+          onPressed: () {
+            onTap();
+          },
+          child: Row(
+            children: [
+              Text(sub.name),
+            ],
+          )),
       Spacer(),
       IconButton(
           onPressed: () {

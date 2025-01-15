@@ -11,11 +11,10 @@ class AddSubjectScreen extends StatefulWidget {
 }
 
 class _AddSubjectScreenState extends State<AddSubjectScreen> {
-  Color currentColor = const Color(0xff443a49);
-  Color pickerColor = const Color(0xff443a49);
+  Color _pickerColor = const Color(0xff443a49);
 
   void changeColor(Color color) {
-    setState(() => pickerColor = color);
+    setState(() => _pickerColor = color);
   }
 
   String _subjectName = "";
@@ -29,8 +28,8 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
       });
     }
 
-    DatabaseClass.Shared.createSubject(
-            _subjectName, toHex(pickerColor).replaceAll("#", ""), _isLK ? 1 : 0)
+    DatabaseClass.Shared.createSubject(_subjectName,
+            toHex(_pickerColor).replaceAll("#", ""), _isLK ? 1 : 0)
         .then((value) {
       Navigator.pop(context);
     });
@@ -44,77 +43,83 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: const Text("Neues Fach hinzufügen"),
         ),
-        body: ListView(
-          children: [
-            Text(_errorText),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(
               children: [
-                const Text("Ist LK?"),
-                Switch(
-                  activeColor: pickerColor,
-                  activeTrackColor: pickerColor.withAlpha(100),
-                  value: _isLK,
-                  onChanged: (value) => setState(() => _isLK = value),
+                Text(_errorText),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    const Text("Ist LK?"),
+                    Switch(
+                      activeColor: _pickerColor,
+                      activeTrackColor: _pickerColor.withAlpha(100),
+                      value: _isLK,
+                      onChanged: (value) => setState(() => _isLK = value),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-            ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        titlePadding: const EdgeInsets.all(0),
-                        contentPadding: const EdgeInsets.all(0),
-                        content: SingleChildScrollView(
-                          child: ColorPicker(
-                            pickerColor: pickerColor,
-                            onColorChanged: changeColor,
-                            colorPickerWidth: 300,
-                            pickerAreaHeightPercent: 0.7,
-                            enableAlpha: false,
-                            labelTypes: const [],
-                            displayThumbColor: true,
-                            pickerAreaBorderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(2),
-                              topRight: Radius.circular(2),
+                ElevatedButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            titlePadding: const EdgeInsets.all(0),
+                            contentPadding: const EdgeInsets.all(0),
+                            content: SingleChildScrollView(
+                              child: ColorPicker(
+                                pickerColor: _pickerColor,
+                                onColorChanged: changeColor,
+                                colorPickerWidth: 300,
+                                pickerAreaHeightPercent: 0.7,
+                                enableAlpha: false,
+                                labelTypes: const [],
+                                displayThumbColor: true,
+                                pickerAreaBorderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(2),
+                                  topRight: Radius.circular(2),
+                                ),
+                                hexInputBar: true,
+                              ),
                             ),
-                            hexInputBar: true,
-                          ),
-                        ),
+                          );
+                        },
                       );
                     },
-                  );
-                },
-                child: Row(
-                  children: [
-                    Container(
-                      color: pickerColor,
-                      child: const SizedBox(
-                        width: 20,
-                        height: 20,
-                      ),
-                    ),
-                    const Text(
-                      'Fach Farbe',
-                    )
-                  ],
-                )),
-            TextField(
-              onChanged: (value) {
-                setState(() {
-                  _subjectName = value;
-                });
-              },
-              decoration: const InputDecoration(
-                //  border: OutlineInputBorder(),
-                hintText: 'Name des neuen Fachs',
-              ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          color: _pickerColor,
+                          child: const SizedBox(
+                            width: 20,
+                            height: 20,
+                          ),
+                        ),
+                        const Text(
+                          'Fach Farbe',
+                        )
+                      ],
+                    )),
+                TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      _subjectName = value;
+                    });
+                  },
+                  decoration: const InputDecoration(
+                    //  border: OutlineInputBorder(),
+                    hintText: 'Name des neuen Fachs',
+                  ),
+                ),
+                ElevatedButton(
+                    onPressed: addSubject, child: const Text("Fach hinzufügen"))
+              ],
             ),
-            ElevatedButton(
-                onPressed: addSubject, child: const Text("Fach hinzufügen"))
-          ],
+          ),
         ));
   }
 }

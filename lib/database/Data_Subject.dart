@@ -44,6 +44,19 @@ class Data_Subject {
     return map;
   }
 
+  List<dynamic> toMapUpdate() {
+    return [
+      toHex(color),
+      exampoints,
+      examtype,
+      lk ? 1 : 0,
+      inactiveYears,
+      name,
+      showinlinegraph ? 1 : 0,
+      id
+    ];
+  }
+
   @override
   String toString() {
     return 'Data_Subject{name: $name, id: $id [${tests.length}]}';

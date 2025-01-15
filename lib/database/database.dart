@@ -154,6 +154,13 @@ class DatabaseClass {
     hasFiveexams = hasFiveExamsValue;
     rainbowEnabled = colorfulCharts;
   }
+
+  Future<void> updateSubject(Data_Subject newSub) async {
+    int count = await db.rawUpdate(
+        'UPDATE Subject SET color = ?, exampoints = ?, examtype = ?, lk = ?, inactiveYears = ?, name = ?, showinlinegraph = ? WHERE id = ?',
+        newSub.toMapUpdate());
+    print('Updated Settings: $count');
+  }
 /*
  // Delete a record
 count = await database
