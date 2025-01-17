@@ -1,6 +1,7 @@
 import 'package:calq_abiturnoten/util/color_extension.dart';
 import 'package:flutter/material.dart';
 
+import '../util/averages.dart';
 import 'Data_Test.dart';
 
 class Data_Subject {
@@ -55,6 +56,40 @@ class Data_Subject {
       showinlinegraph ? 1 : 0,
       id
     ];
+  }
+
+  List<String> getinactiveYears() {
+    if (inactiveYears.isEmpty) {
+      return [];
+    }
+    return inactiveYears.split(" ");
+  }
+
+  void removeYear(int num) {
+    inactiveYears = Averages.arrToString(getinactiveYears()
+        .where((element) => element != num.toString())
+        .toList());
+  }
+
+  void addYear(int num) {
+    if (inactiveYears.contains(num.toString())) {
+      return;
+    }
+    List<String> years = getinactiveYears();
+    years.add(num.toString());
+    inactiveYears = Averages.arrToString(years);
+  }
+
+  int lastActiveYear() {
+    var num = 1;
+    for (var i = 0; i < 5; i++) {
+      var filteredTests = tests.where((element) => element.year == i);
+
+      if (filteredTests.isNotEmpty) {
+        num = i;
+      }
+    }
+    return num;
   }
 
   @override

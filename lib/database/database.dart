@@ -144,6 +144,73 @@ class DatabaseClass {
     });
   }
 
+  Future<void> createType(String name, double weigth) {
+    /*
+    *   let existingTypes = getTypes().map { $0.id }
+
+  let newType = GradeType(context: getContext())
+  newType.name = name
+  newType.weigth = weigth
+  newType.id = getNewIDQwQ(existingTypes)
+
+  let new = getTypes().map {$0.weigth}.reduce(0.0, +)
+  if new + weigth > 100.0 {
+  newType.weigth = 0.0
+  }
+  let settings = Util.getSettings()
+  settings.addToGradetypes(newType)
+  saveCoreData()
+
+  return newType*/
+  }
+
+  /*
+
+  // MARK: Managed GradeTypes
+  static func addSecondType(_ firstID: Int16) {
+  let newType = GradeType(context: getContext())
+  newType.name = "new default type"
+  newType.weigth = 0.0
+  newType.id = getNewIDQwQ([firstID])
+
+  let settings = Util.getSettings()
+  settings.addToGradetypes(newType)
+  saveCoreData()
+  }
+
+
+
+    private static func getNewIDQwQ(_ ids: [Int16]) -> Int16 {
+  for i in 0...(ids.max() ?? Int16(ids.count)) {
+  if !ids.contains(Int16(i)) { return Int16(i) }
+  }
+  return Int16(ids.count + 1)
+  }
+
+
+  static func getTypes() -> [GradeType] {
+  var types = getSettings().getAllGradeTypes()
+
+  if types.count >= 2 { return types }
+
+  if types.count == 1 {
+  addSecondType(types[0].id)
+  } else if types.isEmpty {
+  setTypes(Util.getSettings())
+  }
+
+    static func getTypeGrades(_ type: Int16) -> [UserTest] {
+  var arr: [UserTest] = []
+  for sub in Util.getAllSubjects() {
+  for test in Util.getAllSubjectTests(sub) {
+  if test.type != type { continue }
+  arr.append(test)
+  }
+  }
+  return arr
+  }
+  * */
+
   // UPDATE DATA
   Future<void> updateSettings(
       bool colorfulCharts, bool hasFiveExamsValue) async {
@@ -162,6 +229,13 @@ class DatabaseClass {
     print('Updated Settings: $count');
   }
 
+  Future<void> updatesubjectYear(Data_Subject sub) async {
+    int count = await db.rawUpdate(
+        'UPDATE Subject SET inactiveYears = ?, WHERE id = ?',
+        [sub.inactiveYears, sub.id]);
+    print('Updated Settings: $count');
+  }
+
 // DELETE DATA
   Future<void> deleteData() async {
     await deleteDatabase(PATH);
@@ -170,5 +244,9 @@ class DatabaseClass {
   Future<void> deleteSubject(int id) async {
     int count = await db.rawDelete('DELETE FROM Subject WHERE id = ?', [id]);
     assert(count == 1);
+  }
+
+  Future<void> deleteType(int id) async {
+    // TODO: IMPLEMENT Tpes
   }
 }
