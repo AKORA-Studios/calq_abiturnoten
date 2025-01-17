@@ -54,34 +54,40 @@ return averageInt(res);
 }
 
 
-
-
   /// Returns the average of an array of tests.
 // TODO: add when types
-  /*
-  static double testAverage(List<Data_Test> tests) {
+
+  static Future<double> testAverage(List<Data_Test> tests)async  {
     double gradeWeights = 0.0;
   List<double> avgArr = [];
+ // return 0.0;
 
-  for type in getTypes() {
-  let filteredTests = tests.filter {$0.type == type.id}
-  if !filteredTests.isEmpty {
-  let weight = Double(Double(type.weigth)/100)
-  gradeWeights += weight
-  let avg = Util.average(filteredTests.map {Int($0.grade)})
-  avgArr.append(Double(avg * weight))
-  }
-  }
+    List<Data_Type> allTypes = await DatabaseClass.Shared.getTypes();
+
+    for(var type in allTypes) {
+      var filteredTests = tests.where((element) => element.type == type.id);
+
+
+      if (filteredTests.isNotEmpty) {
+      var weight = (type.weigth)/100;
+      gradeWeights += weight;
+
+      
+      var avg = average(filteredTests.map((e) => e.points));
+      avgArr.add(avg * weight);
+      }
+    }
+
 
   if (avgArr.isEmpty) { return 0.0; }
-  let num = avgArr.reduce(0, +)/gradeWeights
+  var num = (avgArr.reduce((a, b) => a + b))/gradeWeights;
 
-  if num.isNaN { return 0.0; }
+  if (num == double.nan) { return 0.0; }
   return num;
   }
-*/
+
   /// Returns the average of all grades from one subject
-  static double getSubjectAverages(List<Data_Subject> sub) {
+  static double getSubjectAverages(Data_Subject sub) {
     List<Data_Test> tests = getAllSubjectTests(sub, TestSortCriteria.onlyActiveHalfyears);
     if (tests.isEmpty) { return 0.0; }
 
@@ -117,12 +123,12 @@ return averageInt(res);
   var a = 0.0;
   var subjectCount = allSubjects.length;
 
-  allSubjects.forEach((sub) {
+  for (var sub in allSubjects) {
   if (sub.tests.isEmpty) { subjectCount-=1; continue; }
   List<Data_Test> tests = getAllSubjectTests(sub, TestSortCriteria.onlyActiveHalfyears);
   if (tests.isEmpty) { subjectCount-=1; continue; }
   a += getSubjectAverage(sub).round();
-  });
+  }
 
 
   if( subjectCount == 0) { return 0.0; }
@@ -138,7 +144,7 @@ return averageInt(res);
   double count = 0.0;
   double grades = 0.0;
 
-  allSubjects.forEach((sub) {
+  for (var sub in allSubjects) {
     if (sub.tests.isEmpty) { continue; }
     List<Data_Test> tests = getAllSubjectTests(sub, TestSortCriteria.onlyActiveHalfyears).where((element) => element.year == year).toList();
 
@@ -146,8 +152,8 @@ return averageInt(res);
     var multiplier = sub.lk ? 2.0 : 1.0;
 
     count += multiplier * 1;
-    grades += multiplier * round(testAverage(tests));
-  });
+    grades += multiplier * testAverage(tests).round();
+  }
 
   if (grades == 0.0) { return 0.0; }
   return grades / count;
@@ -168,7 +174,7 @@ return averageInt(res);
   for (var i = 0; i < 5; i++) {
   final arr = sub.tests..where((element) => element.year == i);
   if (arr.isEmpty) { str += "-- "; continue; }
-  str += String(Int(round(testAverage(arr))));
+  str += int.parse(testAverage(arr).round().toString()).toString();
   if (i != 4) { str += " ";}
   }
   return str;
@@ -187,34 +193,13 @@ return averageInt(res);
   if (arr.isEmpty) { continue; }
 
   if (!checkinactiveYears(subject.getinactiveYears(), i+1)) { continue; }
-  var points = Int(round(testAverage(arr)));
+  var points = int.parse(testAverage(arr).round().toString());
 
   str[i] = points.toString();
   sum += points;
   }
   str[4] = (subject.lk ? sum*2 : sum).toString();
   return str;
-  }
-
-// MARK: Get Settings
-  /// add default grade types
-  static void setTypes(_ settings: AppSettings, _ deleted: Bool = false) {
-  let type1 = GradeType(context: getContext())
-  type1.id = 0
-  type1.name = "Test"
-  type1.weigth = 50
-
-  let type2 = GradeType(context: getContext())
-  type2.id = 1
-  type2.name = "Klausur"
-  type2.weigth = 50
-
-  settings.addToGradetypes(type1)
-  settings.addToGradetypes(type2)
-
-  setPrimaryType(type2.id)
-
-  saveCoreData()
   }
 
 // MARK: Years
@@ -249,16 +234,15 @@ return averageInt(res);
   }
 
 
-
-
-
-  static bool isPrimaryType(Data_Type type)  {
-  return isPrimaryType(type.id);
+  static Future<bool> isPrimaryType(Data_Type type)  {
+  return isPrimaryTypeInt(type.id);
   }
 
-  static bool isPrimaryType(int type)  {
-  let types = getTypes().map { $0.id}
-  if !types.contains(type) {setPrimaryType(types[0])}
+  static Future<bool> isPrimaryTypeInt(int type)  async {
+  List<Data_Type> allTypes = await DatabaseClass.Shared.getTypes();
+  List<int> typeIDs = allTypes.map((e) => e.id).toList();
+
+  if (!typeIDs.contains(type) ){setPrimaryType(typeIDs[0]);}
   return type == UserDefaults.standard.integer(forKey: UD_primaryType)
   }
 
@@ -297,11 +281,18 @@ return averageInt(res);
   var tests = subject.tests;
   switch (sortedBy) {
   case TestSortCriteria.name:
-  return tests.sorted(by: {$0.name < $1.name})
+
+  tests.sort((b, a) => b.name.compareTo(a.name));
+  return tests;
+  //return tests.sorted(by: {$0.name < $1.name})
   case TestSortCriteria.grade:
-  return tests.sorted(by: {$0.grade < $1.grade})
+  tests.sort((b, a) => b.points.compareTo(a.points));
+  return tests;
+  //return tests.sorted(by: {$0.grade < $1.grade})
   case TestSortCriteria.date:
-  return tests.sorted(by: {$0.date < $1.date})
+  tests.sort((b, a) => b.date.compareTo(a.date));
+  return tests;
+  //return tests.sorted(by: {$0.date < $1.date})
   case TestSortCriteria.onlyActiveHalfyears:
   return filterTests(tests, subject);
   }

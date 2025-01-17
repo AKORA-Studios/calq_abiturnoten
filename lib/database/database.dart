@@ -1,4 +1,8 @@
+import 'dart:math';
+
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
+import 'package:calq_abiturnoten/database/Data_Type.dart';
+import 'package:calq_abiturnoten/util/averages.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -14,7 +18,7 @@ class DatabaseClass {
   static const String TEST_SHEMA =
       "Test (id INTEGER PRIMARY KEY, name TEXT, points INTEGER, type INTEGER, date TEXT, year INTEGER, subject INTEGER, FOREIGN KEY (subject) REFERENCES Subject(id))";
   static const String GRADETYPE_SHEMA =
-      "Gradetype (id INTEGER PRIMARY KEY, name TEXT, weigth TEXT)";
+      "Gradetype (id INTEGER PRIMARY KEY, name TEXT, weigth TEXT, assignedID INTEGER)";
   static const String APPSETTINGS_SHEMA =
       "Appsettings (colorfulCharts INTEGER, weightBigGrades TEXT, hasFiveexams INTEGER)";
 
@@ -68,6 +72,10 @@ class DatabaseClass {
     return await db.rawQuery('SELECT * FROM Test');
   }
 
+  Future<List<Map>?> fetchTypes() async {
+    return await db.rawQuery('SELECT * FROM Gradetype');
+  }
+
   // GET DATA
   Future<Data_Settings> getSettings() async {
     List<Map<dynamic, dynamic>>? res = await fetchSettings();
@@ -112,6 +120,17 @@ class DatabaseClass {
         [];
   }
 
+  Future<List<Data_Type>> getTypes() async {
+    List<Map<dynamic, dynamic>>? res2 = await fetchTypes();
+
+    return res2?.map((e) {
+          Map<String, Object> y =
+              e.map((key, value) => MapEntry(key, value as Object));
+          return Data_Type.fromMap(y);
+        }).toList() ??
+        [];
+  }
+
   // CREATE DATA
   Future<void> createSubject(String name, String color, int lk) async {
     await db.transaction((txn) async {
@@ -144,24 +163,39 @@ class DatabaseClass {
     });
   }
 
-  Future<void> createType(String name, double weigth) {
-    /*
-    *   let existingTypes = getTypes().map { $0.id }
+  // Assigned id == -1 automatically assign id
+  Future<void> createType(String name, double weigth, int assignedID) async {
+    List<Data_Type> existingTypes = await getTypes();
+    List<int> existingIDs = existingTypes.map((e) => e.id).toList();
+    double existingWeights =
+        existingTypes.map((e) => e.weigth).toList().reduce((a, b) => a + b);
 
-  let newType = GradeType(context: getContext())
-  newType.name = name
-  newType.weigth = weigth
-  newType.id = getNewIDQwQ(existingTypes)
+    int assignedID_new = assignedID;
+    double weight_new = weigth;
+    if (assignedID < 0) {
+      assignedID_new = getNewIDQwQ(existingIDs);
+    }
+    if (weight_new + existingWeights > 100.0) {
+      weight_new = 0.0;
+    }
 
-  let new = getTypes().map {$0.weigth}.reduce(0.0, +)
-  if new + weigth > 100.0 {
-  newType.weigth = 0.0
+    await db.transaction((txn) async {
+      int id1 = await txn.rawInsert(
+          'INSERT INTO Gradetype(name, weigth, assignedID)  VALUES(?,?,?)',
+          [name, weight_new, assignedID_new]);
+      print('Inserted Gradetype: $id1');
+    });
   }
-  let settings = Util.getSettings()
-  settings.addToGradetypes(newType)
-  saveCoreData()
 
-  return newType*/
+  int getNewIDQwQ(List<int> ids) {
+    final yMax = ids.cast<num>().reduce(max);
+
+    for (var i = 0; i < yMax; i++) {
+      if (!ids.contains(i)) {
+        return i;
+      }
+    }
+    return ids.length + 1;
   }
 
   /*
@@ -177,16 +211,6 @@ class DatabaseClass {
   settings.addToGradetypes(newType)
   saveCoreData()
   }
-
-
-
-    private static func getNewIDQwQ(_ ids: [Int16]) -> Int16 {
-  for i in 0...(ids.max() ?? Int16(ids.count)) {
-  if !ids.contains(Int16(i)) { return Int16(i) }
-  }
-  return Int16(ids.count + 1)
-  }
-
 
   static func getTypes() -> [GradeType] {
   var types = getSettings().getAllGradeTypes()
@@ -248,5 +272,23 @@ class DatabaseClass {
 
   Future<void> deleteType(int id) async {
     // TODO: IMPLEMENT Tpes
+  }
+
+  Future<void> deleteAllTypes() async {
+    int count = await db.rawDelete(
+      'DELETE FROM Gradetype',
+    );
+    assert(count == 1);
+  }
+
+  // RESET DATA
+  /// add default grade types
+  Future<void> resetTypes() async {
+    await deleteAllTypes();
+
+    createType("Test", 50, 0);
+    createType("Klausur", 50, 1);
+
+    Averages.setPrimaryType(1);
   }
 }
