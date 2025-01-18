@@ -34,31 +34,35 @@ class Averages {
 
   static double average(List<int> values, [int from = 0, int to = -1]) {
     List<int> res = [];
-    for (final (index, item) in values.indexed) {
+
+    /* for (final (index, item) in values.indexed) {
       if (index >= from && index <= to) {
         res.add(item);
       }
     }
-    return averageInt(res);
+    print("averages $res");*/
+    return averageInt(values);
   }
 
   /// Returns the average of an array of tests.
 // TODO: check when types
   static Future<double> testAverage(List<Data_Test> tests) async {
+    if (tests.length == 1) {
+      return double.parse(tests[0].points.toString());
+    }
     double gradeWeights = 0.0;
     List<double> avgArr = [];
-    // return 0.0;
 
     List<Data_Type> allTypes = await DatabaseClass.Shared.getTypes();
 
     for (var type in allTypes) {
-      var filteredTests = tests.where((element) => element.type == type.id);
-
+      List<Data_Test> filteredTests =
+          tests.where((element) => element.type == type.id).toList();
       if (filteredTests.isNotEmpty) {
-        var weight = (type.weigth) / 100;
+        double weight = (type.weigth) / 100;
         gradeWeights += weight;
 
-        var avg = average(filteredTests.map((e) => e.points).toList());
+        double avg = average(filteredTests.map((e) => e.points).toList());
         avgArr.add(avg * weight);
       }
     }
@@ -66,6 +70,7 @@ class Averages {
     if (avgArr.isEmpty || gradeWeights <= 0.0) {
       return 0.0;
     }
+
     var num = (avgArr.reduce((a, b) => a + b)) / gradeWeights;
 
     if (num < 0.0) {
@@ -193,8 +198,9 @@ class Averages {
       return "-- -- -- -- ";
     }
 
-    for (var i = 0; i < 5; i++) {
-      final arr = sub.tests..where((element) => element.year == i);
+    for (var i = 1; i < 5; i++) {
+      List<Data_Test> arr =
+          sub.tests.where((element) => element.year == i).toList();
       if (arr.isEmpty) {
         str += "-- ";
         continue;

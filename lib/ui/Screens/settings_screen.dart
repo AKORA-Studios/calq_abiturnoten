@@ -175,6 +175,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               Column(
                 children: [
+                  const Text("Types"),
+                  const Divider(),
+                  const Text("Version: ??, Build: ??"),
+                  FutureBuilder(
+                      future: DatabaseClass.Shared.getTypes(),
+                      builder: (ctx, snap) {
+                        if (snap.hasData) {
+                          return Column(
+                              children: snap.data!
+                                  .map((e) => Text("${e.name}: ${e.weigth}"))
+                                  .toList());
+                        } else {
+                          return SizedBox();
+                        }
+                      })
+                ],
+              ),
+              Column(
+                children: [
                   const Text("Sonstiges"),
                   const Divider(),
                   const Text("Version: ??, Build: ??"),

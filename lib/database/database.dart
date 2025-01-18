@@ -125,6 +125,12 @@ class DatabaseClass {
   Future<List<Data_Type>> getTypes() async {
     List<Map<dynamic, dynamic>>? res2 = await fetchTypes();
 
+    if (res2!.isEmpty) {
+      resetTypes();
+    }
+
+    res2 = await fetchTypes();
+
     return res2?.map((e) {
           Map<String, Object> y =
               e.map((key, value) => MapEntry(key, value as Object));
@@ -174,13 +180,10 @@ class DatabaseClass {
   Future<void> createType(String name, double weigth, int assignedID) async {
     List<Data_Type> existingTypes = await getTypes();
 
-    if (existingTypes.isEmpty) {
-      resetTypes();
-    }
-
     List<int> existingIDs = existingTypes.map((e) => e.id).toList();
-    double existingWeights =
-        existingTypes.map((e) => e.weigth).toList().reduce((a, b) => a + b);
+    double existingWeights = existingTypes.isNotEmpty
+        ? existingTypes.map((e) => e.weigth).toList().reduce((a, b) => a + b)
+        : 0.0;
 
     int assignedID_new = assignedID;
     double weight_new = weigth;
@@ -297,7 +300,7 @@ class DatabaseClass {
     int count = await db.rawDelete(
       'DELETE FROM Gradetype',
     );
-    assert(count == 1);
+    //assert(count == 1);
   }
 
   // RESET DATA
@@ -305,8 +308,8 @@ class DatabaseClass {
   Future<void> resetTypes() async {
     await deleteAllTypes();
 
-    createType("Test", 50, 0);
-    createType("Klausur", 50, 1);
+    await createType("Test", 50, 0);
+    await createType("Klausur", 50, 1);
 
     Averages.setPrimaryType(1);
   }
