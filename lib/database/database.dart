@@ -20,11 +20,12 @@ class DatabaseClass {
   static const String GRADETYPE_SHEMA =
       "Gradetype (id INTEGER PRIMARY KEY, name TEXT, weigth TEXT, assignedID INTEGER)";
   static const String APPSETTINGS_SHEMA =
-      "Appsettings (colorfulCharts INTEGER, weightBigGrades TEXT, hasFiveexams INTEGER)";
+      "Appsettings (colorfulCharts INTEGER, weightBigGrades TEXT, hasFiveexams INTEGER, primaryType INTEGER)";
 
   // Loaded AppSettings
   bool rainbowEnabled = true;
   bool hasFiveexams = true;
+  int primaryType = -1;
 
   DatabaseClass() {
     print("Init Datase....");
@@ -95,6 +96,7 @@ class DatabaseClass {
         .first;
     rainbowEnabled = result.colorfulCharts;
     hasFiveexams = result.hasFiveexams;
+    primaryType = result.primaryType;
     return result;
   }
 
@@ -236,6 +238,13 @@ class DatabaseClass {
   * */
 
   // UPDATE DATA
+  Future<void> updateSettings_PrimaryType(int primaryType) async {
+    int count = await db
+        .rawUpdate('UPDATE Appsettings SET primaryType = ?', [primaryType]);
+    print('Updated Settings: $count');
+    primaryType = primaryType;
+  }
+
   Future<void> updateSettings(
       bool colorfulCharts, bool hasFiveExamsValue) async {
     int count = await db.rawUpdate(
