@@ -50,7 +50,7 @@ class DatabaseClass {
     for (String tab in allTables.keys) {
       String checkExistTable =
           "SELECT * FROM sqlite_master WHERE name ='$tab' and type='table'";
-      var checkExist = await db.rawQuery(checkExistTable);
+      var checkExist = await db1.rawQuery(checkExistTable);
 
       if (checkExist.isNotEmpty) {
       } else {
@@ -143,7 +143,12 @@ class DatabaseClass {
     });
   }
 
-  Future<void> createTest(int subjectID, String name, int points) async {
+  Future<void> createTest(
+      // TODO: add types
+      int subjectID,
+      String name,
+      int points,
+      int year) async {
     if (name.isEmpty) {
       print("No! Invalid Test Name");
       return;
@@ -151,7 +156,7 @@ class DatabaseClass {
     await db.transaction((txn) async {
       int id1 = await txn.rawInsert(
           'INSERT INTO Test(name, points, type, date, year,subject) VALUES(?,?,?,?,?,?)',
-          [name, points, 1, "", 1, subjectID]);
+          [name, points, 1, "", year, subjectID]);
       print('Inserted Test: $id1');
     });
   }
@@ -168,6 +173,11 @@ class DatabaseClass {
   // Assigned id == -1 automatically assign id
   Future<void> createType(String name, double weigth, int assignedID) async {
     List<Data_Type> existingTypes = await getTypes();
+
+    if (existingTypes.isEmpty) {
+      resetTypes();
+    }
+
     List<int> existingIDs = existingTypes.map((e) => e.id).toList();
     double existingWeights =
         existingTypes.map((e) => e.weigth).toList().reduce((a, b) => a + b);

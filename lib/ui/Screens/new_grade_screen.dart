@@ -36,11 +36,11 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
     if (gradeName.isEmpty) {
       setState(() {
         errorText = "Invalid Grade Name";
-        return;
       });
+      return;
     }
     await DatabaseClass.Shared.createTest(
-            widget.sub.id, gradeName, _testPoints.toInt())
+            widget.sub.id, gradeName, _testPoints.toInt(), selectedYear)
         .then((value) {
       Navigator.pop(context);
     });

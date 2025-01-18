@@ -26,6 +26,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
       setState(() {
         _errorText = "Invalid Subject Name";
       });
+      return;
     }
 
     DatabaseClass.Shared.createSubject(_subjectName,

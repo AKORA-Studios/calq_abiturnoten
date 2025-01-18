@@ -32,19 +32,6 @@ class Averages {
     return (avg / values.length);
   }
 
-  static double averageDouble(List<double> values) {
-    if (values.isEmpty) {
-      return 0.0;
-    }
-
-    double avg = 0;
-    for (var i = 0; i < values.length; i++) {
-      avg += values[i];
-    }
-    return (avg / values.length);
-  }
-
-// TODO: is same func for doubles needed?
   static double average(List<int> values, [int from = 0, int to = -1]) {
     List<int> res = [];
     for (final (index, item) in values.indexed) {
@@ -56,8 +43,7 @@ class Averages {
   }
 
   /// Returns the average of an array of tests.
-// TODO: add when types
-
+// TODO: check when types
   static Future<double> testAverage(List<Data_Test> tests) async {
     double gradeWeights = 0.0;
     List<double> avgArr = [];
@@ -89,9 +75,9 @@ class Averages {
   }
 
   /// Returns the average of all grades from one subject
-  static double getSubjectAverages(Data_Subject sub) {
+  static Future<double> getSubjectAverages(Data_Subject sub) async {
     List<Data_Test> tests =
-        getAllSubjectTests(sub, TestSortCriteria.onlyActiveHalfyears);
+        getAllSubjectTests(sub, TestSortCriteria.onlyActiveTerm);
     if (tests.isEmpty) {
       return 0.0;
     }
@@ -107,7 +93,7 @@ class Averages {
         continue;
       }
       count += 1;
-      subaverage += testAverage(yearTests);
+      subaverage += await testAverage(yearTests);
     }
     var average = (subaverage / count);
     var rounded = average.toStringAsFixed(2).padLeft(4, "0");
@@ -115,17 +101,17 @@ class Averages {
   }
 
   /// Returns the average of all grades from one subject
-  static double getSubjectAverage(Data_Subject sub, int year,
-      [bool filterinactve = true]) {
+  static Future<double> getSubjectAverage(Data_Subject sub, int year,
+      [bool filterinactve = true]) async {
     var tests = filterinactve
         ? sub.tests
-        : getAllSubjectTests(sub, TestSortCriteria.onlyActiveHalfyears);
+        : getAllSubjectTests(sub, TestSortCriteria.onlyActiveTerm);
     tests = tests.where((element) => element.year == year).toList();
 
     if (tests.isEmpty) {
       return 0.0;
     }
-    return testAverage(tests);
+    return await testAverage(tests);
   }
 
   /// Returns the average of all grades from all subjects.
@@ -144,12 +130,12 @@ class Averages {
         continue;
       }
       List<Data_Test> tests =
-          getAllSubjectTests(sub, TestSortCriteria.onlyActiveHalfyears);
+          getAllSubjectTests(sub, TestSortCriteria.onlyActiveTerm);
       if (tests.isEmpty) {
         subjectCount -= 1;
         continue;
       }
-      a += getSubjectAverage(sub).round();
+      a += (await getSubjectAverages(sub)).round();
     }
 
     if (subjectCount == 0) {
@@ -172,7 +158,7 @@ class Averages {
         continue;
       }
       List<Data_Test> tests =
-          getAllSubjectTests(sub, TestSortCriteria.onlyActiveHalfyears)
+          getAllSubjectTests(sub, TestSortCriteria.onlyActiveTerm)
               .where((element) => element.year == year)
               .toList();
 
@@ -182,7 +168,7 @@ class Averages {
       var multiplier = sub.lk ? 2.0 : 1.0;
 
       count += multiplier * 1;
-      grades += (multiplier * testAverage(tests)).round();
+      grades += (multiplier * await testAverage(tests)).round();
     }
 
     if (grades == 0.0) {
@@ -200,7 +186,7 @@ class Averages {
   }
 
   /// Generates a convient String that shows the grades of the subject.
-  static String averageString(Data_Subject sub) {
+  static Future<String> averageString(Data_Subject sub) async {
     String str = "";
 
     if (sub.tests.isEmpty) {
@@ -213,7 +199,7 @@ class Averages {
         str += "-- ";
         continue;
       }
-      str += int.parse(testAverage(arr).round().toString()).toString();
+      str += int.parse((await testAverage(arr)).round().toString()).toString();
       if (i != 4) {
         str += " ";
       }
@@ -221,8 +207,8 @@ class Averages {
     return str;
   }
 
-  /// Generates a convient String that shows the grades of the subject.
-  static List<String> getSubjectYearString(Data_Subject subject) {
+  /// Generates a convenient String that shows the grades of the subject.
+  static Future<List<String>> getSubjectYearString(Data_Subject subject) async {
     List<String> str = ["-", "-", "-", "-", "#"];
     var tests = subject.tests;
     if (tests.isEmpty) {
@@ -232,7 +218,7 @@ class Averages {
     var sum = 0.0;
 
     for (var i = 0; i < 4; i++) {
-      var arr = tests.where((element) => element.year == i + 1);
+      var arr = tests.where((element) => element.year == i + 1).toList();
       if (arr.isEmpty) {
         continue;
       }
@@ -240,7 +226,7 @@ class Averages {
       if (!checkinactiveYears(subject.getinactiveYears(), i + 1)) {
         continue;
       }
-      var points = int.parse(testAverage(arr).round().toString());
+      var points = int.parse((await testAverage(arr)).round().toString());
 
       str[i] = points.toString();
       sum += points;
@@ -250,30 +236,21 @@ class Averages {
   }
 
 // MARK: Years
-  static void getinactiveYears() {
-    // TODO: delete moved to subject self
-  }
-
   /// Check if year is inactive
   static bool checkinactiveYears(List<String> arr, int num) {
     return !arr.contains(num.toString());
   }
 
-  /// Remove  inactive halfyear
+  /// Remove  inactive term
   static void removeYear(Data_Subject sub, int num) {
     sub.removeYear(num);
     DatabaseClass.Shared.updatesubjectYear(sub); // TODO: check if works
   }
 
-  /// Add inactive halfyear
+  /// Add inactive term
   static void addYear(Data_Subject sub, int num) {
     sub.addYear(num);
     DatabaseClass.Shared.updatesubjectYear(sub); // TODO: check if works
-  }
-
-  /// returns last active year of a subject
-  static void lastActiveYear() {
-    // TODO: delete and moved to subject self
   }
 
   static String arrToString(List<String> arr) {
@@ -342,12 +319,12 @@ class Averages {
         tests.sort((b, a) => b.date.compareTo(a.date));
         return tests;
       //return tests.sorted(by: {$0.date < $1.date})
-      case TestSortCriteria.onlyActiveHalfyears:
+      case TestSortCriteria.onlyActiveTerm:
         return filterTests(tests, subject);
     }
   }
 
-  /// Filters out every inactive Halfyear Grades for subject grade calculations
+  /// Filters out every inactive term Grades for subject grade calculations
   static List<Data_Test> filterTests(
       List<Data_Test> tests, Data_Subject subject) {
     var filteredTests = tests;
@@ -366,7 +343,7 @@ enum TestSortCriteria {
   name,
   grade,
   date,
-  onlyActiveHalfyears;
+  onlyActiveTerm;
 
   @override
   String toString() {
@@ -377,7 +354,7 @@ enum TestSortCriteria {
         return "sortGrade";
       case TestSortCriteria.date:
         return "sortGradeDatum";
-      case TestSortCriteria.onlyActiveHalfyears:
+      case TestSortCriteria.onlyActiveTerm:
         return "sortHalfyears";
     }
   }

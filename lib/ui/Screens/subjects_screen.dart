@@ -1,5 +1,6 @@
 import 'package:calq_abiturnoten/ui/Screens/subject_info_screen.dart';
 import 'package:calq_abiturnoten/ui/components/util.dart';
+import 'package:calq_abiturnoten/util/averages.dart';
 import 'package:flutter/material.dart';
 
 import '../../database/database.dart';
@@ -35,7 +36,17 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                                           builder: (context) =>
                                               SubjectInfoScreen(sub: e)));
                                 },
-                                child: subjectRowWithHalfyears(e)))
+                                child: FutureBuilder(
+                                  future: Averages.averageString(e),
+                                  builder: (ctx, snap) {
+                                    if (snap.hasData) {
+                                      return subjectRowWithHalfyears2(
+                                          e, snap.data ?? "?");
+                                    } else {
+                                      return const SizedBox();
+                                    }
+                                  },
+                                )))
                             .toList());
                   } else {
                     return const SizedBox();

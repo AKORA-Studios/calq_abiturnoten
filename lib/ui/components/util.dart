@@ -105,6 +105,35 @@ Widget subjectRowWithHalfyears(Data_Subject sub) {
   );
 }
 
+Widget subjectRowWithHalfyears2(Data_Subject sub, String b) {
+  return Row(
+    children: [
+      IconButton.filled(
+        style: ButtonStyle(
+            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
+            backgroundColor: MaterialStateProperty.all<Color>(sub.color)),
+        onPressed: null,
+        icon: const Icon(
+          Icons.ac_unit,
+          color: Colors.white,
+        ),
+      ),
+      Expanded(
+          child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(sub.name),
+          SizedBox(
+            width: 100,
+            child: Text(b),
+          )
+        ],
+      ))
+    ],
+  );
+}
+
 Widget subjectRowWith2Action(
     Data_Subject sub, Function onTap, Function onDelete) {
   return Row(
