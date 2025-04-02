@@ -52,7 +52,16 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                     return const SizedBox();
                   }
                 }),
-            Center(child: Text("? von ? Halbjahren aktiv"))
+            Center(
+                child: FutureBuilder(
+                    future: getActiveTermsGeneral(),
+                    builder: (ctx, snap) {
+                      if (snap.hasData) {
+                        return Text(snap.data!);
+                      } else {
+                        return Text("? von ? Halbjahren aktiv");
+                      }
+                    }))
           ],
         ));
   }

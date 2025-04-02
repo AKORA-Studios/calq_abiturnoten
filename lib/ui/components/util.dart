@@ -2,6 +2,8 @@ import 'package:calq_abiturnoten/database/Data_Subject.dart';
 import 'package:calq_abiturnoten/database/Data_Test.dart';
 import 'package:flutter/material.dart';
 
+import '../../database/database.dart';
+
 Widget card(Widget content) {
   return Container(
     decoration: BoxDecoration(
@@ -191,4 +193,37 @@ Widget testRow(Data_Test test, Data_Subject sub) {
       Text("${test.points}")
     ],
   );
+}
+
+// Terms
+
+Future<String> getActiveTermsGeneral() async {
+  var subjects = await DatabaseClass.Shared.getSubjects();
+
+  var inactiveCount = 0;
+  if (!subjects.isEmpty) {
+    for (var sub in subjects) {
+      var arr = getinactiveYears(sub);
+      for (var num in arr) {
+        if (num == "") {
+          continue;
+        }
+        if (int.parse(num) > 0 && int.parse(num) < 5) {
+          inactiveCount += 1;
+        }
+      }
+    }
+  }
+  var activeCount = subjects.length * 4 - inactiveCount;
+
+  return "$activeCount von ${subjects.length * 4} Halbjahren aktiv";
+}
+
+List<String> getinactiveYears(Data_Subject sub) {
+  List<String> result = [];
+  if (sub.inactiveYears.isEmpty) {
+    return result;
+  }
+  result = sub.inactiveYears.split(" ");
+  return result;
 }
