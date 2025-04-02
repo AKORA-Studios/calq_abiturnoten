@@ -40,11 +40,18 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
       if (tests.isEmpty) {
         return;
       }
-      result.add(Column(children: [
-        Text("$e. Halbjahr"),
-        Divider(),
-        ...tests.map((e) => testRow(e, widget.sub)).toList()
-      ]));
+      result.add(Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(4),
+          ),
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          child: Padding(
+              padding: const EdgeInsets.all(5),
+              child: Column(children: [
+                Text("$e. Halbjahr"),
+                Divider(),
+                ...tests.map((e) => testRow(e, widget.sub)).toList()
+              ]))));
     }).toList();
     return result;
   }
@@ -62,7 +69,44 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
             child: Column(
               children: [
                 Text("${widget.sub.tests.length} Tests"),
+                Text("Notenverlauf"),
+                Text("Halbjahre"),
+                Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    // Define how the card's content should be clipped
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [Text("?. Halbjahr"), Text("Aktiv")],
+                        ),
+                        Text("TODO Hier Segmentpicker"),
+                        ElevatedButton(
+                            onPressed: () {
+                              print("TODO Deactivate Term");
+                            },
+                            child: Text("Halbjahr deaktivieren"))
+                      ],
+                    )),
                 ...halfYearWidget(),
+                TextButton(
+                    style: ButtonStyle(
+                      backgroundColor:
+                          MaterialStateProperty.all<Color>(Colors.red),
+                      foregroundColor:
+                          MaterialStateProperty.all<Color>(Colors.white),
+                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(18.0),
+                              side: BorderSide(color: Colors.red))),
+                    ),
+                    onPressed: () {
+                      print("TODO: delete all grades");
+                    },
+                    child: Text("Alle Noten löschen")),
               ],
             ),
           ),

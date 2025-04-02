@@ -1,8 +1,20 @@
+import 'dart:math';
+
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
 import 'package:calq_abiturnoten/database/Data_Test.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../../database/database.dart';
+
+String dateFormater(DateTime inputDate) {
+  //var inputFormat = DateFormat('yyyy-MM-dd hh:mm:ss a');
+  //var inputDate = inputFormat.parse('31/12/2000 23:59'); // <-- dd/MM 24H format
+
+  var outputFormat = DateFormat('dd.MM.yy');
+  var outputDate = outputFormat.format(inputDate);
+  return outputDate; // 12/31/2000 11:59 PM <-- MM/dd 12H format
+}
 
 Widget card(Widget content) {
   return Container(
@@ -175,24 +187,39 @@ Widget subjectRowWith2Action(
 
 // TODO: color test different if favorised GradeType
 Widget testRow(Data_Test test, Data_Subject sub) {
-  return Row(
-    children: [
-      IconButton.filled(
-        style: ButtonStyle(
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-            backgroundColor: MaterialStateProperty.all<Color>(sub.color)),
-        onPressed: null,
-        icon: const Icon(
-          Icons.ac_unit,
-          color: Colors.white,
-        ),
-      ),
-      Text(test.name),
-      Spacer(),
-      Text("${test.points}")
-    ],
-  );
+  bool result = Random().nextDouble() <= 0.7;
+
+  var isPrimaryTpe = result; // TODO
+  return TextButton(
+      onPressed: () {
+        print("TODO go to edit grade");
+      },
+      child: Row(
+        children: [
+          InkWell(
+            splashColor: Colors.transparent,
+            highlightColor: Colors.transparent,
+            onTap: () {},
+            child: SizedBox(
+              width: 40.0,
+              height: 40.0,
+              child: Container(
+                decoration: BoxDecoration(
+                    color: isPrimaryTpe ? sub.color : Colors.transparent,
+                    shape: BoxShape.rectangle,
+                    borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+                    border: Border.all(
+                        color: sub.color, width: isPrimaryTpe ? 0 : 2)),
+                child: Center(child: Text("${test.points}")),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Text(test.name),
+          const Spacer(),
+          Text(dateFormater(test.date))
+        ],
+      ));
 }
 
 // Terms
