@@ -15,6 +15,7 @@ class _ExamScreenState extends State<ExamScreen> {
   List<double> _points = [0, 0, 0, 0, 0];
   double _block1Value = 0.5;
   double _block2Value = 0.3;
+  bool _shouldUpdate = false;
 
   List<Data_Subject> examOptions = [];
 
@@ -35,12 +36,10 @@ class _ExamScreenState extends State<ExamScreen> {
     });
   }
 
-  // Initial Selected Value
-  String? _dropdownvalue0 = null;
-  String? _dropdownvalue1 = null;
-  String? _dropdownvalue2 = null;
-  String? _dropdownvalue3 = null;
-  String? _dropdownvalue4 = null;
+  void updateBlock2Values() {
+    _block2Value = 0.3;
+    // TODO: update blockpoints
+  }
 
   Widget examView(int i) {
     return FutureBuilder(
@@ -48,56 +47,44 @@ class _ExamScreenState extends State<ExamScreen> {
         if (snap.hasData) {
           // Subject set
           var sub = snap.data!;
-          return Column(children: [
-            Text("${sub.name} $i [${_points[i].toInt()}]"),
+          return Card(
+              child: Column(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text("${sub.name} $i [${_points[i].toInt()}]"),
+                ElevatedButton(
+                    onPressed: () {},
+                    child: Text("X")) // TODO: remove exam subject
+              ],
+            ),
             Slider(
-              //  activeColor: widget.sub.color, // TODO:
-              min: 0,
-              label: '${_points[i].round()}',
-              divisions: 15,
-              max: 15,
-              value: _points[i],
-              onChanged: (value) {
-                setState(() {
-                  _points[i] = value;
-                });
-              },
-            )
-          ]);
+                thumbColor: sub.color,
+                activeColor: sub.color, // TODO:
+                min: 0,
+                label: '${_points[i].round()}',
+                divisions: 15,
+                max: 15,
+                value: _points[i],
+                onChanged: (value) {
+                  updateBlock2Values();
+                  setState(() {
+                    _points[i] = value;
+                  });
+                }),
+          ]));
         }
         if (!snap.hasError) {
           // No error -> no subject set
 
           return Card(
             child: Column(children: [
-              Container(
-                  width: double.infinity,
-                  child: Padding(
-                    padding: EdgeInsets.only(left: 8, right: 8),
-                    child: DropdownButton(
-                      key: UniqueKey(),
-                      // Initial Value
-                      value: _dropdownvalue0,
-
-                      // Down Arrow Icon
-                      icon: const Icon(Icons.keyboard_arrow_down),
-
-                      // Array list of items
-                      items: examOptions.map((Data_Subject items) {
-                        return DropdownMenuItem(
-                          value: items.id.toString(),
-                          child: Text(items.name),
-                        );
-                      }).toList(),
-                      // After selecting the desired option,it will
-                      // change button value to selected value
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          _dropdownvalue0 = newValue!;
-                        });
-                      },
-                    ),
-                  )),
+              ElevatedButton(
+                  onPressed: () {
+                    print("Naviagte pls");
+                    _showModal(i);
+                  },
+                  child: Text("Fach asuwählen")),
               Slider(
                 //  activeColor: widget.sub.color, // TODO:
                 min: 0,
@@ -114,6 +101,50 @@ class _ExamScreenState extends State<ExamScreen> {
       },
       future: getExam(i + 1),
     );
+  }
+
+  void _showModal(int type) {
+    Future<void> future = showModalBottomSheet<void>(
+      context: context,
+      //isDismissible: false,
+      builder: (BuildContext context) {
+        return SizedBox(
+          height: 260.0,
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              children: [
+                Text("Exam NR: $type"),
+                ...examOptions
+                    .map((e) => ElevatedButton(
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Text(e.name),
+                          ),
+                          onPressed: () {
+                            DatabaseClass.Shared.updateSubjectExam(e, type + 1);
+
+                            Navigator.pop(
+                              context,
+                              "This string will be passed back to the parent",
+                            );
+                          },
+                        ))
+                    .toList(),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    future.then((void value) => _closeModal(value));
+  }
+
+  void _closeModal(void value) {
+    print('modal closed');
+    setState(() {
+      _shouldUpdate = !_shouldUpdate;
+    });
   }
 
   Widget blockView() {

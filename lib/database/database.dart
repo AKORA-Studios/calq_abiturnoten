@@ -287,7 +287,7 @@ class DatabaseClass {
     await resetExams(year: type); // reset exams before in this year
 
     int count = await db.rawUpdate(
-        'UPDATE Subject SET examtype = ?, WHERE id = ?', [type, sub.id]);
+        'UPDATE Subject SET examtype = ? WHERE id = ?', [type, sub.id]);
     print('Updated Exam: $count');
   }
 
