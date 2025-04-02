@@ -2,6 +2,8 @@ import 'package:calq_abiturnoten/database/database.dart';
 import 'package:calq_abiturnoten/ui/components/util.dart';
 import 'package:flutter/material.dart';
 
+import '../../database/Data_Subject.dart';
+
 class ExamScreen extends StatefulWidget {
   const ExamScreen({super.key});
 
@@ -11,9 +13,34 @@ class ExamScreen extends StatefulWidget {
 
 class _ExamScreenState extends State<ExamScreen> {
   List<double> _points = [0, 0, 0, 0, 0];
-
   double _block1Value = 0.5;
   double _block2Value = 0.3;
+
+  List<Data_Subject> examOptions = [];
+
+  @override
+  void initState() {
+    getExamOptions().then((value) {
+      setState(() {
+        examOptions = value;
+      });
+    });
+  }
+
+  void chooseExam(int year, Data_Subject sub) {
+    // TODO: udpate database
+    setState(() {
+      examOptions =
+          examOptions.where((element) => element.id != sub.id).toList();
+    });
+  }
+
+  // Initial Selected Value
+  String? _dropdownvalue0 = null;
+  String? _dropdownvalue1 = null;
+  String? _dropdownvalue2 = null;
+  String? _dropdownvalue3 = null;
+  String? _dropdownvalue4 = null;
 
   Widget examView(int i) {
     return FutureBuilder(
@@ -40,23 +67,52 @@ class _ExamScreenState extends State<ExamScreen> {
         }
         if (!snap.hasError) {
           // No error -> no subject set
-          return Column(children: [
-            Text("Exam $i [${_points[i].toInt()}]"),
-            Slider(
-              //  activeColor: widget.sub.color, // TODO:
-              min: 0,
 
-              label: '${_points[i].round()}',
-              divisions: 15,
-              max: 15,
-              value: _points[i],
-              onChanged: null,
-            )
-          ]);
+          return Card(
+            child: Column(children: [
+              Container(
+                  width: double.infinity,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 8, right: 8),
+                    child: DropdownButton(
+                      key: UniqueKey(),
+                      // Initial Value
+                      value: _dropdownvalue0,
+
+                      // Down Arrow Icon
+                      icon: const Icon(Icons.keyboard_arrow_down),
+
+                      // Array list of items
+                      items: examOptions.map((Data_Subject items) {
+                        return DropdownMenuItem(
+                          value: items.id.toString(),
+                          child: Text(items.name),
+                        );
+                      }).toList(),
+                      // After selecting the desired option,it will
+                      // change button value to selected value
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          _dropdownvalue0 = newValue!;
+                        });
+                      },
+                    ),
+                  )),
+              Slider(
+                //  activeColor: widget.sub.color, // TODO:
+                min: 0,
+                label: '${_points[i].round()}',
+                divisions: 15,
+                max: 15,
+                value: _points[i],
+                onChanged: null,
+              )
+            ]),
+          );
         }
         return Text("Smth went wrong ${snap.error}");
       },
-      future: getExam(i),
+      future: getExam(i + 1),
     );
   }
 

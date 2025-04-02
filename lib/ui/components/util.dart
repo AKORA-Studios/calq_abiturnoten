@@ -260,6 +260,11 @@ Future<Data_Subject?> getExam(int type) async {
   List<Data_Subject> subjects = await DatabaseClass.Shared.getSubjects();
   return subjects.where((element) => element.examtype == type).firstOrNull;
 }
+
+Future<List<Data_Subject>> getExamOptions() async {
+  List<Data_Subject> subjects = await DatabaseClass.Shared.getSubjects();
+  return subjects.where((element) => element.examtype == 0).toList();
+}
 /*
 func setExamPoints(_ points: Int, _ subject: UserSubject) {
 subject.exampoints = Int16(points)
