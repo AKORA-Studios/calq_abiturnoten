@@ -254,3 +254,19 @@ List<String> getinactiveYears(Data_Subject sub) {
   result = sub.inactiveYears.split(" ");
   return result;
 }
+
+// Final Exams
+Future<Data_Subject?> getExam(int type) async {
+  List<Data_Subject> subjects = await DatabaseClass.Shared.getSubjects();
+  return subjects.where((element) => element.examtype == type).firstOrNull;
+}
+/*
+func setExamPoints(_ points: Int, _ subject: UserSubject) {
+subject.exampoints = Int16(points)
+saveCoreData()
+}
+
+func removeExam(_ type: Int, _ subject: UserSubject) {
+subject.examtype = Int16(0)
+saveCoreData()
+}*/

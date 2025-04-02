@@ -282,6 +282,15 @@ class DatabaseClass {
     print('Updated Settings: $count');
   }
 
+  Future<void> updateSubjectExam(Data_Subject sub, int type) async {
+    // TODO: Validate
+    await resetExams(year: type); // reset exams before in this year
+
+    int count = await db.rawUpdate(
+        'UPDATE Subject SET examtype = ?, WHERE id = ?', [type, sub.id]);
+    print('Updated Exam: $count');
+  }
+
 // DELETE DATA
   Future<void> deleteData() async {
     await deleteDatabase(PATH);
@@ -312,5 +321,16 @@ class DatabaseClass {
     await createType("Klausur", 50, 1);
 
     Averages.setPrimaryType(1);
+  }
+
+  Future<void> resetExams({int year = -1}) async {
+    //  TODO: validate
+    var args = year < 0
+        ? [0, 0]
+        : [0, 0, year]; // remove all exams if no year specified
+    int count = await db.rawUpdate(
+        'UPDATE Subject SET examtype = ?, exampoints = ? WHERE examtype = ?',
+        args);
+    print('Reseted Exams: $count');
   }
 }
