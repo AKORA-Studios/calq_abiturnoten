@@ -46,19 +46,19 @@ class _OverviewScreenState extends State<OverviewScreen> {
                       color: Colors.grey,
                       width: MediaQuery.of(context).size.width - 20,
                       height: 250)),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Center(
                   child: Container(
                       color: Colors.grey,
                       width: MediaQuery.of(context).size.width - 20,
                       height: 150)),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Center(
                   child: Container(
                       color: Colors.grey,
                       width: MediaQuery.of(context).size.width - 20,
                       height: 150)),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -72,7 +72,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                       height: 150)
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
             ],
           ),
         ));

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class AddSubjectScreen extends StatefulWidget {
-  AddSubjectScreen({super.key, required this.callbackFunc});
+  const AddSubjectScreen({super.key, required this.callbackFunc});
   final VoidCallback callbackFunc;
 
   @override
@@ -48,7 +48,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
         ),
         body: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: Column(
               children: [
                 Text(_errorText),

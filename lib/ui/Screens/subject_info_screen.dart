@@ -49,7 +49,7 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
               padding: const EdgeInsets.all(5),
               child: Column(children: [
                 Text("$e. Halbjahr"),
-                Divider(),
+                const Divider(),
                 ...tests.map((e) => testRow(e, widget.sub)).toList()
               ]))));
     }).toList();
@@ -65,11 +65,11 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
         ),
         body: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: Column(
               children: [
                 Text("${widget.sub.tests.length} Tests"),
-                Text("Notenverlauf"),
+                const Text("Notenverlauf"),
                 Center(
                     child: Container(
                         color: Colors.grey,
@@ -83,16 +83,16 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     child: Column(
                       children: [
-                        Row(
+                        const Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [Text("?. Halbjahr"), Text("Aktiv")],
                         ),
-                        Text("TODO Hier Segmentpicker"),
+                        const Text("TODO Hier Segmentpicker"),
                         ElevatedButton(
                             onPressed: () {
                               print("TODO Deactivate Term");
                             },
-                            child: Text("Halbjahr deaktivieren"))
+                            child: const Text("Halbjahr deaktivieren"))
                       ],
                     )),
                 ...halfYearWidget(),
@@ -105,12 +105,12 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
                       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                           RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18.0),
-                              side: BorderSide(color: Colors.red))),
+                              side: const BorderSide(color: Colors.red))),
                     ),
                     onPressed: () {
                       print("TODO: delete all grades");
                     },
-                    child: Text("Alle Noten löschen")),
+                    child: const Text("Alle Noten löschen")),
               ],
             ),
           ),

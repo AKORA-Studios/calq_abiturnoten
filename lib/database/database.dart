@@ -185,19 +185,19 @@ class DatabaseClass {
         ? existingTypes.map((e) => e.weigth).toList().reduce((a, b) => a + b)
         : 0.0;
 
-    int assignedID_new = assignedID;
-    double weight_new = weigth;
+    int assignedidNew = assignedID;
+    double weightNew = weigth;
     if (assignedID < 0) {
-      assignedID_new = getNewIDQwQ(existingIDs);
+      assignedidNew = getNewIDQwQ(existingIDs);
     }
-    if (weight_new + existingWeights > 100.0) {
-      weight_new = 0.0;
+    if (weightNew + existingWeights > 100.0) {
+      weightNew = 0.0;
     }
 
     await db.transaction((txn) async {
       int id1 = await txn.rawInsert(
           'INSERT INTO Gradetype(name, weigth, assignedID)  VALUES(?,?,?)',
-          [name, weight_new, assignedID_new]);
+          [name, weightNew, assignedidNew]);
       print('Inserted Gradetype: $id1');
     });
   }

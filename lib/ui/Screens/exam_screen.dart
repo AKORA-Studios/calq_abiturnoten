@@ -12,8 +12,8 @@ class ExamScreen extends StatefulWidget {
 }
 
 class _ExamScreenState extends State<ExamScreen> {
-  List<double> _points = [0, 0, 0, 0, 0];
-  double _block1Value = 0.5;
+  final List<double> _points = [0, 0, 0, 0, 0];
+  final double _block1Value = 0.5;
   double _block2Value = 0.3;
   bool _shouldUpdate = false;
 
@@ -55,7 +55,7 @@ class _ExamScreenState extends State<ExamScreen> {
                 Text("${sub.name} $i [${_points[i].toInt()}]"),
                 ElevatedButton(
                     onPressed: () {},
-                    child: Text("X")) // TODO: remove exam subject
+                    child: const Text("X")) // TODO: remove exam subject
               ],
             ),
             Slider(
@@ -84,7 +84,7 @@ class _ExamScreenState extends State<ExamScreen> {
                     print("Naviagte pls");
                     _showModal(i);
                   },
-                  child: Text("Fach asuwählen")),
+                  child: const Text("Fach asuwählen")),
               Slider(
                 //  activeColor: widget.sub.color, // TODO:
                 min: 0,
@@ -150,19 +150,19 @@ class _ExamScreenState extends State<ExamScreen> {
   Widget blockView() {
     return Card(
         child: Padding(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           const Row(
             children: [
               Expanded(
-                child: Text("Block 1"),
                 flex: 2,
+                child: Text("Block 1"),
               ),
               Expanded(
-                child: Text("Block 2"),
                 flex: 1,
+                child: Text("Block 2"),
               ),
             ],
           ),
@@ -171,14 +171,14 @@ class _ExamScreenState extends State<ExamScreen> {
               Expanded(
                 flex: 2,
                 child: LinearProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(Colors.green),
+                  valueColor: const AlwaysStoppedAnimation(Colors.green),
                   value: _block1Value,
                 ),
               ),
               Expanded(
                 flex: 1,
                 child: LinearProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation(Colors.green),
+                  valueColor: const AlwaysStoppedAnimation(Colors.green),
                   value: _block2Value,
                 ),
               ),
@@ -188,12 +188,12 @@ class _ExamScreenState extends State<ExamScreen> {
             children: [
               //    LinearProgressIndicator(),
               Expanded(
-                child: Text("? von 600"),
                 flex: 2,
+                child: Text("? von 600"),
               ),
               Expanded(
-                child: Text("? von 300"),
                 flex: 1,
+                child: Text("? von 300"),
               ),
             ],
           )
@@ -213,7 +213,7 @@ class _ExamScreenState extends State<ExamScreen> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 child: blockView(),
               ),
               FutureBuilder(

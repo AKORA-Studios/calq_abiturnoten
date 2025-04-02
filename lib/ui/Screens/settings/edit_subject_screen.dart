@@ -60,7 +60,7 @@ class _EditSubjectScreenState extends State<EditSubjectScreen> {
         ),
         body: SingleChildScrollView(
             child: Padding(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
           child: Column(
             children: [
               Text(_errorText),

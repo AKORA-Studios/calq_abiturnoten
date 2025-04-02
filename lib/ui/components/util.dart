@@ -178,12 +178,12 @@ Widget subjectRowWith2Action(
               Text(sub.name),
             ],
           )),
-      Spacer(),
+      const Spacer(),
       IconButton(
           onPressed: () {
             onDelete();
           },
-          icon: Icon(Icons.delete, color: Colors.red))
+          icon: const Icon(Icons.delete, color: Colors.red))
     ],
   );
 }
@@ -231,7 +231,7 @@ Future<String> getActiveTermsGeneral() async {
   var subjects = await DatabaseClass.Shared.getSubjects();
 
   var inactiveCount = 0;
-  if (!subjects.isEmpty) {
+  if (subjects.isNotEmpty) {
     for (var sub in subjects) {
       var arr = getinactiveYears(sub);
       for (var num in arr) {

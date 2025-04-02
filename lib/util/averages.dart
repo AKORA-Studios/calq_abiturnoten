@@ -366,8 +366,8 @@ enum TestSortCriteria {
   }
 
   static List<Pair<String, TestSortCriteria>> array = [
-    Pair("sortName", TestSortCriteria.name),
-    Pair("sortGrade", TestSortCriteria.grade),
-    Pair("sortGradeDatum", TestSortCriteria.date)
+    const Pair("sortName", TestSortCriteria.name),
+    const Pair("sortGrade", TestSortCriteria.grade),
+    const Pair("sortGradeDatum", TestSortCriteria.date)
   ];
 }

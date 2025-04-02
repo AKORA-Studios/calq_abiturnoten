@@ -30,7 +30,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                         children: snap.data!
                             .map((e) => TextButton(
                                 style: TextButton.styleFrom(
-                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0)),
+                                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0)),
                                 onPressed: () {
                                   Navigator.push(
                                       context,
@@ -63,7 +63,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                       if (snap.hasData) {
                         return Text(snap.data!);
                       } else {
-                        return Text("? von ? Halbjahren aktiv");
+                        return const Text("? von ? Halbjahren aktiv");
                       }
                     }))
           ],

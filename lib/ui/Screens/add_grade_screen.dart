@@ -15,7 +15,7 @@ class AddGradeScreen extends StatefulWidget {
 class _AddGradeScreenState extends State<AddGradeScreen> {
   Widget subjectEntry(Data_Subject sub) {
     return TextButton(
-        style: TextButton.styleFrom(padding: EdgeInsets.fromLTRB(0, 0, 0, 0)),
+        style: TextButton.styleFrom(padding: const EdgeInsets.fromLTRB(0, 0, 0, 0)),
         onPressed: () {
           Navigator.push(
               context,

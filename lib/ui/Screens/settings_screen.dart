@@ -25,7 +25,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _rainbowEnabled = DatabaseClass.Shared.rainbowEnabled;
     _hasFiveexams = DatabaseClass.Shared.hasFiveexams;
 
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       onAppear(); // TODO: maybe remove, maybe update subject list?
     });
   }
@@ -60,9 +60,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               });
                               Navigator.pop(context);
                             },
-                            child: const Text('Löschen'),
                             style: TextButton.styleFrom(
-                                backgroundColor: Colors.red))
+                                backgroundColor: Colors.red),
+                            child: const Text('Löschen'))
                       ],
                     )
                   ],
@@ -84,8 +84,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               Column(
                 children: [
-                  Text("Allgemein"),
-                  Divider(),
+                  const Text("Allgemein"),
+                  const Divider(),
                   settingsOptionWithWidget(
                       "Anzahl Abiturprüfungen",
                       Colors.deepPurple,
@@ -193,7 +193,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   .map((e) => Text("${e.name}: ${e.weigth}"))
                                   .toList());
                         } else {
-                          return SizedBox();
+                          return const SizedBox();
                         }
                       })
                 ],
