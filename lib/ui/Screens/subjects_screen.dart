@@ -29,6 +29,8 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                     return Column(
                         children: snap.data!
                             .map((e) => TextButton(
+                                style: TextButton.styleFrom(
+                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0)),
                                 onPressed: () {
                                   Navigator.push(
                                       context,
@@ -36,16 +38,18 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                                           builder: (context) =>
                                               SubjectInfoScreen(sub: e)));
                                 },
-                                child: FutureBuilder(
-                                  future: Averages.averageString(e),
-                                  builder: (ctx, snap) {
-                                    if (snap.hasData) {
-                                      return subjectRowWithHalfyears2(
-                                          e, snap.data ?? "?");
-                                    } else {
-                                      return const SizedBox();
-                                    }
-                                  },
+                                child: Card(
+                                  child: FutureBuilder(
+                                    future: Averages.averageString(e),
+                                    builder: (ctx, snap) {
+                                      if (snap.hasData) {
+                                        return subjectRowWithHalfyears2(
+                                            e, snap.data ?? "?");
+                                      } else {
+                                        return const SizedBox();
+                                      }
+                                    },
+                                  ),
                                 )))
                             .toList());
                   } else {

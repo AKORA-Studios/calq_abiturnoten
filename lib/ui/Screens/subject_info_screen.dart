@@ -70,7 +70,11 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
               children: [
                 Text("${widget.sub.tests.length} Tests"),
                 Text("Notenverlauf"),
-                Text("Halbjahre"),
+                Center(
+                    child: Container(
+                        color: Colors.grey,
+                        width: MediaQuery.of(context).size.width - 20,
+                        height: 150)),
                 Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4),

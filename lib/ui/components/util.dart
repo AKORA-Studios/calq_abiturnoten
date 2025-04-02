@@ -72,21 +72,24 @@ Widget settingsOptionWithWidget(
 }
 
 Widget subjectRow(Data_Subject sub) {
-  return Row(
-    children: [
-      IconButton.filled(
-        style: ButtonStyle(
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-            backgroundColor: MaterialStateProperty.all<Color>(sub.color)),
-        onPressed: null,
-        icon: const Icon(
-          Icons.ac_unit,
-          color: Colors.white,
+  return Card(
+    child: Row(
+      children: [
+        IconButton.filled(
+          style: ButtonStyle(
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8))),
+              backgroundColor: MaterialStateProperty.all<Color>(sub.color)),
+          onPressed: null,
+          icon: const Icon(
+            Icons.ac_unit,
+            color: Colors.white,
+          ),
         ),
-      ),
-      Text(sub.name)
-    ],
+        Text(sub.name)
+      ],
+    ),
   );
 }
 
@@ -140,7 +143,7 @@ Widget subjectRowWithHalfyears2(Data_Subject sub, String b) {
           Text(sub.name),
           SizedBox(
             width: 100,
-            child: Text(b),
+            child: Text(b.replaceAll(" ", "   ")),
           )
         ],
       ))
