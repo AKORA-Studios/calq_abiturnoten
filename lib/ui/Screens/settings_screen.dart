@@ -163,12 +163,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         }
                       }),
                   ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
+                      onPressed: () async {
+                        await Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    const AddSubjectScreen()));
+                                builder: (context) => AddSubjectScreen(
+                                      callbackFunc: () {
+                                        setState(() {
+                                          _shouldUpdateView =
+                                              !_shouldUpdateView;
+                                        });
+                                      },
+                                    )));
                       },
                       child: const Text("Neues Fach hinzufügen"))
                 ],

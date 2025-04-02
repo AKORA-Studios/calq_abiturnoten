@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class AddSubjectScreen extends StatefulWidget {
-  const AddSubjectScreen({super.key});
+  AddSubjectScreen({super.key, required this.callbackFunc});
+  final VoidCallback callbackFunc;
 
   @override
   State<AddSubjectScreen> createState() => _AddSubjectScreenState();
@@ -32,6 +33,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
     DatabaseClass.Shared.createSubject(_subjectName,
             toHex(_pickerColor).replaceAll("#", ""), _isLK ? 1 : 0)
         .then((value) {
+      widget.callbackFunc();
       Navigator.pop(context);
     });
     return;
