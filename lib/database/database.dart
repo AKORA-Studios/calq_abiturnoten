@@ -282,6 +282,7 @@ class DatabaseClass {
     print('Updated Settings: $count');
   }
 
+  // FINAL EXAMS
   Future<void> updateSubjectExam(Data_Subject sub, int type) async {
     // TODO: Validate
     await resetExams(year: type); // reset exams before in this year
@@ -289,6 +290,22 @@ class DatabaseClass {
     int count = await db.rawUpdate(
         'UPDATE Subject SET examtype = ? WHERE id = ?', [type, sub.id]);
     print('Updated Exam: $count');
+  }
+
+  /// Remove Exam of type [type]
+  Future<void> removeExam(int type) async {
+    await resetExams(year: type);
+  }
+
+  /// Update the Exam [points] of a [subject]
+  Future<void> updateExamPoints(int points, Data_Subject sub) async {
+    if (points > 15 || points < 0) {
+      print("Error updating Exampoints for _${sub.name}_! Out of range");
+      return;
+    }
+    int count = await db.rawUpdate(
+        'UPDATE Subject SET exampoints = ? WHERE id = ?', [points, sub.id]);
+    print('Updated Exam points: $count');
   }
 
 // DELETE DATA

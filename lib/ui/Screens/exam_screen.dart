@@ -28,8 +28,7 @@ class _ExamScreenState extends State<ExamScreen> {
     });
   }
 
-  void chooseExam(int year, Data_Subject sub) {
-    // TODO: udpate database
+  void chooseExam(Data_Subject sub) {
     setState(() {
       examOptions =
           examOptions.where((element) => element.id != sub.id).toList();
@@ -39,6 +38,21 @@ class _ExamScreenState extends State<ExamScreen> {
   void updateBlock2Values() {
     _block2Value = 0.3;
     // TODO: update blockpoints
+  }
+
+  void removeExam(Data_Subject sub, int i) async {
+    await DatabaseClass.Shared.removeExam(i + 1);
+    setState(() {
+      _shouldUpdate = !_shouldUpdate;
+      examOptions.add(sub);
+    });
+  }
+
+  void updateSlider(int value, Data_Subject sub) async {
+    // TODO: save points
+
+    await DatabaseClass.Shared.updateExamPoints(value, sub);
+    updateBlock2Values();
   }
 
   Widget examView(int i) {
@@ -54,8 +68,13 @@ class _ExamScreenState extends State<ExamScreen> {
               children: [
                 Text("${sub.name} $i [${_points[i].toInt()}]"),
                 ElevatedButton(
-                    onPressed: () {},
-                    child: const Text("X")) // TODO: remove exam subject
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white),
+                    onPressed: () async {
+                      removeExam(sub, i);
+                    },
+                    child: const Text("X"))
               ],
             ),
             Slider(
@@ -81,7 +100,6 @@ class _ExamScreenState extends State<ExamScreen> {
             child: Column(children: [
               ElevatedButton(
                   onPressed: () {
-                    print("Naviagte pls");
                     _showModal(i);
                   },
                   child: const Text("Fach asuwählen")),
@@ -111,29 +129,32 @@ class _ExamScreenState extends State<ExamScreen> {
         return SizedBox(
           height: 260.0,
           child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              children: [
-                Text("Exam NR: $type"),
-                ...examOptions
-                    .map((e) => ElevatedButton(
-                          child: SizedBox(
-                            width: double.infinity,
-                            child: Text(e.name),
-                          ),
-                          onPressed: () {
-                            DatabaseClass.Shared.updateSubjectExam(e, type + 1);
+              padding: const EdgeInsets.all(8),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Text("Exam NR: $type"),
+                    ...examOptions
+                        .map((e) => ElevatedButton(
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: Text(e.name),
+                              ),
+                              onPressed: () {
+                                DatabaseClass.Shared.updateSubjectExam(
+                                    e, type + 1);
+                                chooseExam(e);
 
-                            Navigator.pop(
-                              context,
-                              "This string will be passed back to the parent",
-                            );
-                          },
-                        ))
-                    .toList(),
-              ],
-            ),
-          ),
+                                Navigator.pop(
+                                  context,
+                                  "This string will be passed back to the parent",
+                                );
+                              },
+                            ))
+                        .toList(),
+                  ],
+                ),
+              )),
         );
       },
     );
@@ -141,7 +162,6 @@ class _ExamScreenState extends State<ExamScreen> {
   }
 
   void _closeModal(void value) {
-    print('modal closed');
     setState(() {
       _shouldUpdate = !_shouldUpdate;
     });

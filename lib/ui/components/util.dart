@@ -268,13 +268,7 @@ Future<List<Data_Subject>> getExamOptions() async {
   List<Data_Subject> subjects = await DatabaseClass.Shared.getSubjects();
   return subjects.where((element) => element.examtype == 0).toList();
 }
-/*
-func setExamPoints(_ points: Int, _ subject: UserSubject) {
-subject.exampoints = Int16(points)
-saveCoreData()
-}
 
-func removeExam(_ type: Int, _ subject: UserSubject) {
-subject.examtype = Int16(0)
-saveCoreData()
-}*/
+Future<double> calculateBlock2() async {
+  return 0.0;
+}
