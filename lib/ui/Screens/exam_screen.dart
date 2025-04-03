@@ -37,8 +37,9 @@ class _ExamScreenState extends State<ExamScreen> {
   }
 
   void updateBlock2Values() {
-    _block2Value = 0.3;
-    // TODO: update blockpoints
+    setState(() {
+      _block2Value = calculateBlock2();
+    });
   }
 
   void removeExam(Data_Subject sub, int i) async {
@@ -47,6 +48,7 @@ class _ExamScreenState extends State<ExamScreen> {
       _shouldUpdate = !_shouldUpdate;
       examOptions.add(sub);
     });
+    updateBlock2Values();
   }
 
   void updateSlider(double value, Data_Subject sub) async {
@@ -220,7 +222,7 @@ class _ExamScreenState extends State<ExamScreen> {
               ),
             ],
           ),
-          const Row(
+          Row(
             children: [
               //    LinearProgressIndicator(),
               Expanded(
@@ -229,7 +231,7 @@ class _ExamScreenState extends State<ExamScreen> {
               ),
               Expanded(
                 flex: 1,
-                child: Text("? von 300"),
+                child: Text("${(_block2Value * 300).round()} von 300"),
               ),
             ],
           )

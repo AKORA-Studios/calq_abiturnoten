@@ -283,6 +283,7 @@ class DatabaseClass {
   }
 
   // FINAL EXAMS
+  List<int> examPoints = [0, 0, 0, 0, 0];
   Future<void> updateSubjectExam(Data_Subject sub, int type) async {
     // TODO: Validate
     await resetExams(year: type); // reset exams before in this year
@@ -295,6 +296,7 @@ class DatabaseClass {
   /// Remove Exam of type [type]
   Future<void> removeExam(int type) async {
     await resetExams(year: type);
+    examPoints[type - 1] = 0;
   }
 
   /// Update the Exam [points] of a [subject]
@@ -306,6 +308,7 @@ class DatabaseClass {
     int count = await db.rawUpdate(
         'UPDATE Subject SET exampoints = ? WHERE id = ?', [points, sub.id]);
     print('Updated Exam points: $count');
+    examPoints[sub.examtype - 1] = points;
   }
 
 // DELETE DATA

@@ -269,9 +269,24 @@ Future<Data_Subject?> getExam(int type) async {
 
 Future<List<Data_Subject>> getExamOptions() async {
   List<Data_Subject> subjects = await DatabaseClass.Shared.getSubjects();
+
+  // set ExamPoints
+  List<Data_Subject> examSubjects =
+      subjects.where((element) => element.examtype != 0).toList();
+  for (Data_Subject sub in examSubjects) {
+    DatabaseClass.Shared.examPoints[sub.examtype - 1] = sub.exampoints;
+  }
+
   return subjects.where((element) => element.examtype == 0).toList();
 }
 
-Future<double> calculateBlock2() async {
-  return 0.0;
+double calculateBlock2() {
+  var value = 0;
+  var arr = DatabaseClass.Shared.examPoints;
+
+  for (var e in arr) {
+    value += (4 * e);
+  }
+
+  return value / 300.0;
 }
