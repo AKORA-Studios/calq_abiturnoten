@@ -62,7 +62,7 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                       children: [
                         Text(
                           errorText,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Colors.red, fontWeight: FontWeight.bold),
                         ),
                         const Text("Notenname"),

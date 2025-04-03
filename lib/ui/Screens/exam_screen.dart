@@ -12,7 +12,7 @@ class ExamScreen extends StatefulWidget {
 }
 
 class _ExamScreenState extends State<ExamScreen> {
-  double _block1Value = 0.5;
+  final double _block1Value = 0.5;
   double _block2Value = 0.3;
   bool _shouldUpdate = false;
 
@@ -225,7 +225,7 @@ class _ExamScreenState extends State<ExamScreen> {
           Row(
             children: [
               //    LinearProgressIndicator(),
-              Expanded(
+              const Expanded(
                 flex: 2,
                 child: Text("? von 600"),
               ),
