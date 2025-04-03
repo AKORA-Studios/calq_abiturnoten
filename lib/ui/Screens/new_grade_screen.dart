@@ -16,7 +16,7 @@ class NewGradeScreen extends StatefulWidget {
 
 class _NewGradeScreenState extends State<NewGradeScreen> {
   String gradeName = "";
-  int selectedYear = 0; // TODO: int current halfyear
+  int selectedYear = 1; // TODO: int current halfyear
   DateTime _selectedDate = DateTime.now();
   String errorText = "";
   double _testPoints = 0; // TODO: init average points for this halfyear
@@ -60,7 +60,11 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                   children: [
                     card(Column(
                       children: [
-                        Text(errorText),
+                        Text(
+                          errorText,
+                          style: TextStyle(
+                              color: Colors.red, fontWeight: FontWeight.bold),
+                        ),
                         const Text("Notenname"),
                         TextField(
                           onChanged: (value) {
@@ -126,11 +130,14 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                         )
                       ],
                     )),
-                    ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                            backgroundColor: widget.sub.color),
-                        onPressed: addGrade,
-                        child: const Text("Note hinzufügen"))
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: widget.sub.color),
+                          onPressed: addGrade,
+                          child: const Text("Note hinzufügen")),
+                    )
                   ],
                 ))));
   }

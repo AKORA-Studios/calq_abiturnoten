@@ -17,13 +17,16 @@ String dateFormater(DateTime inputDate) {
 }
 
 Widget card(Widget content) {
-  return Container(
-    decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
-        borderRadius: const BorderRadius.all(Radius.circular(8))),
-    child: SizedBox(
-      width: double.infinity,
-      child: Padding(padding: const EdgeInsets.all(5), child: content),
+  return Padding(
+    padding: const EdgeInsets.all(4),
+    child: Container(
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey),
+          borderRadius: const BorderRadius.all(Radius.circular(8))),
+      child: SizedBox(
+        width: double.infinity,
+        child: Padding(padding: const EdgeInsets.all(5), child: content),
+      ),
     ),
   );
 }

@@ -11,3 +11,9 @@ This is a work-in-progress so not much works
 * [] Variable Grade Types
 * [] Final Exams
 * [] Charts
+
+### TODO
++ edit grades
++ delete grades
++ delete all grades
++ types
