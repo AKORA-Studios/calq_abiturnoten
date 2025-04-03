@@ -1,3 +1,5 @@
+import 'package:calq_abiturnoten/database/Data_Subject.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../../database/database.dart';
@@ -11,20 +13,15 @@ class OverviewScreen extends StatefulWidget {
 
 class _OverviewScreenState extends State<OverviewScreen> {
   String subs = "xx";
+  List<Data_Subject> subjects = [];
   late List<String> xAxisList;
   late List<double> yAxisList;
 
   @override
   void initState() {
-    // TODO: implement initState
-
     DatabaseClass.Shared.getSubjects().then((value) {
-      print(value);
-      /*
-       DatabaseClass.Shared.createTest(1).then((value) {
-        print("ffffff");
-      });*/
       setState(() {
+        subjects = value;
         subs = value.toString().replaceAll("Data_Subject", "\nData_Subject");
       });
     });
@@ -40,13 +37,52 @@ class _OverviewScreenState extends State<OverviewScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              Text(subs),
+              //  Text(subs),
               Center(
                   child: Container(
                       color: Colors.grey,
                       width: MediaQuery.of(context).size.width - 20,
                       height: 250)),
               const SizedBox(height: 20),
+              Container(
+                padding: const EdgeInsets.all(10),
+                width: double.infinity,
+                height: 150,
+                child: LineChart(
+                  LineChartData(
+                    minY: 0,
+                    maxY: 15,
+                    gridData: const FlGridData(
+                        drawVerticalLine: false, horizontalInterval: 5),
+                    titlesData: const FlTitlesData(
+                        bottomTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false)),
+                        topTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false)),
+                        leftTitles: AxisTitles(
+                            sideTitles: SideTitles(
+                                interval: 5,
+                                showTitles: true,
+                                reservedSize: 30)),
+                        rightTitles: AxisTitles(
+                            sideTitles: SideTitles(showTitles: false))),
+                    borderData: FlBorderData(show: true),
+                    lineBarsData: subjects
+                        .map((sub) => LineChartBarData(
+                            spots: sub.tests.asMap().entries.map((entry) {
+                              int idx =
+                                  entry.key; // TODO: later replace with date
+
+                              return FlSpot(
+                                  idx + 0.0, entry.value.points + 0.0);
+                            }).toList(),
+                            color: sub.color,
+                            dotData: const FlDotData(show: false)))
+                        .toList(),
+                  ),
+                ),
+              ),
+
               Center(
                   child: Container(
                       color: Colors.grey,

@@ -1,3 +1,4 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../../database/Data_Subject.dart';
@@ -70,11 +71,49 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
               children: [
                 Text("${widget.sub.tests.length} Tests"),
                 const Text("Notenverlauf"),
-                Center(
-                    child: Container(
-                        color: Colors.grey,
-                        width: MediaQuery.of(context).size.width - 20,
-                        height: 150)),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  width: double.infinity,
+                  height: 150,
+                  child: LineChart(
+                    LineChartData(
+                        minY: 0,
+                        maxY: 15,
+                        gridData: const FlGridData(
+                            drawVerticalLine: false, horizontalInterval: 5),
+                        titlesData: const FlTitlesData(
+                            bottomTitles: AxisTitles(
+                                sideTitles: SideTitles(showTitles: false)),
+                            topTitles: AxisTitles(
+                                sideTitles: SideTitles(showTitles: false)),
+                            leftTitles: AxisTitles(
+                                sideTitles: SideTitles(
+                                    interval: 5,
+                                    showTitles: true,
+                                    reservedSize: 30)),
+                            rightTitles: AxisTitles(
+                                sideTitles: SideTitles(showTitles: false))),
+                        borderData: FlBorderData(show: true),
+                        lineBarsData: [
+                          LineChartBarData(
+                              spots:
+                                  widget.sub.tests.asMap().entries.map((entry) {
+                                int idx =
+                                    entry.key; // TODO: later replace with date
+
+                                return FlSpot(
+                                    idx + 0.0, entry.value.points + 0.0);
+                              }).toList()
+
+                              /*widget.sub.tests.asMap().forEach(
+                                  (index, test) =>
+                                      FlSpot(index + 0.0, test.points + 0.0))*/
+                              ,
+                              color: widget.sub.color,
+                              dotData: const FlDotData(show: false))
+                        ]),
+                  ),
+                ),
                 Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4),
