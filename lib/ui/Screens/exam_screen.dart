@@ -12,8 +12,7 @@ class ExamScreen extends StatefulWidget {
 }
 
 class _ExamScreenState extends State<ExamScreen> {
-  final List<double> _points = [0, 0, 0, 0, 0];
-  final double _block1Value = 0.5;
+  double _block1Value = 0.5;
   double _block2Value = 0.3;
   bool _shouldUpdate = false;
 
@@ -26,6 +25,8 @@ class _ExamScreenState extends State<ExamScreen> {
         examOptions = value;
       });
     });
+
+    //  _shouldUpdate = !_shouldUpdate;
   }
 
   void chooseExam(Data_Subject sub) {
@@ -48,10 +49,10 @@ class _ExamScreenState extends State<ExamScreen> {
     });
   }
 
-  void updateSlider(int value, Data_Subject sub) async {
+  void updateSlider(double value, Data_Subject sub) async {
     // TODO: save points
 
-    await DatabaseClass.Shared.updateExamPoints(value, sub);
+    await DatabaseClass.Shared.updateExamPoints(value.round(), sub);
     updateBlock2Values();
   }
 
@@ -62,54 +63,70 @@ class _ExamScreenState extends State<ExamScreen> {
           // Subject set
           var sub = snap.data!;
           return Card(
-              child: Column(children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text("${sub.name} $i [${_points[i].toInt()}]"),
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white),
-                    onPressed: () async {
-                      removeExam(sub, i);
-                    },
-                    child: const Text("X"))
-              ],
-            ),
-            Slider(
-                thumbColor: sub.color,
-                activeColor: sub.color, // TODO:
-                min: 0,
-                label: '${_points[i].round()}',
-                divisions: 15,
-                max: 15,
-                value: _points[i],
-                onChanged: (value) {
-                  updateBlock2Values();
-                  setState(() {
-                    _points[i] = value;
-                  });
-                }),
-          ]));
+              child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+                  child: Column(children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          sub.name,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                foregroundColor: Colors.white),
+                            onPressed: () async {
+                              removeExam(sub, i);
+                            },
+                            child: const Text("Remove"))
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 1,
+                          child: Center(
+                            child: Text(sub.exampoints.toString()),
+                          ),
+                        ),
+                        Expanded(
+                          flex: 19,
+                          child: Slider(
+                              thumbColor: sub.color,
+                              activeColor: sub.color,
+                              min: 0,
+                              label: '${sub.exampoints}',
+                              divisions: 15,
+                              max: 15,
+                              value: sub.exampoints + 0.0,
+                              onChangeEnd: (value) {
+                                updateSlider(value, sub);
+                                setState(() {
+                                  _shouldUpdate = !_shouldUpdate;
+                                });
+                              },
+                              onChanged: (value) {}),
+                        )
+                      ],
+                    ),
+                  ])));
         }
         if (!snap.hasError) {
           // No error -> no subject set
-
           return Card(
             child: Column(children: [
               ElevatedButton(
                   onPressed: () {
                     _showModal(i);
                   },
-                  child: const Text("Fach asuwählen")),
-              Slider(
-                //  activeColor: widget.sub.color, // TODO:
+                  child: const Text("Prüfung hinzufügen")),
+              const Slider(
                 min: 0,
-                label: '${_points[i].round()}',
                 divisions: 15,
                 max: 15,
-                value: _points[i],
+                value: 0.0,
                 onChanged: null,
               )
             ]),
@@ -147,7 +164,6 @@ class _ExamScreenState extends State<ExamScreen> {
 
                                 Navigator.pop(
                                   context,
-                                  "This string will be passed back to the parent",
                                 );
                               },
                             ))
@@ -239,13 +255,24 @@ class _ExamScreenState extends State<ExamScreen> {
               FutureBuilder(
                 builder: (ctx, snap) {
                   if (snap.hasData && snap.data!.hasFiveexams) {
-                    return Column(
-                      children:
-                          [0, 1, 2, 3, 4].map((i) => examView(i)).toList(),
+                    return Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        children:
+                            [0, 1, 2, 3, 4].map((i) => examView(i)).toList(),
+                      ),
                     );
                   } else {
-                    return Column(
-                      children: [0, 1, 2, 3].map((i) => examView(i)).toList(),
+                    return Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        children: [
+                          0,
+                          1,
+                          2,
+                          3,
+                        ].map((i) => examView(i)).toList(),
+                      ),
                     );
                   }
                 },
