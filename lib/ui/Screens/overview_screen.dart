@@ -89,23 +89,62 @@ class _OverviewScreenState extends State<OverviewScreen> {
                       width: MediaQuery.of(context).size.width - 20,
                       height: 150)),
               const SizedBox(height: 20),
-              Center(
-                  child: Container(
-                      color: Colors.grey,
-                      width: MediaQuery.of(context).size.width - 20,
-                      height: 150)),
-              const SizedBox(height: 20),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
+                  SizedBox(
+                    width: (MediaQuery.of(context).size.width / 2) - 20,
+                    height: 150,
+                    child: const Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        SizedBox.square(
+                          dimension: 112,
+                          child: CircularProgressIndicator(
+                            value: 0.5,
+                            color: Colors.green,
+                            strokeWidth: 20.0,
+                            backgroundColor: Colors.grey,
+                            strokeCap: StrokeCap.round,
+                          ),
+                        ),
+                        Text(
+                          'xx.xx\nx.xx',
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   Container(
-                      color: Colors.grey,
-                      width: (MediaQuery.of(context).size.width / 2) - 20,
-                      height: 150),
-                  Container(
-                      color: Colors.grey,
-                      width: (MediaQuery.of(context).size.width / 2) - 20,
-                      height: 150)
+                    width: (MediaQuery.of(context).size.width / 2) - 20,
+                    height: 150,
+                    child: const Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        SizedBox.square(
+                          dimension: 112,
+                          child: CircularProgressIndicator(
+                            value: 0.5,
+                            color: Colors.green,
+                            strokeWidth: 20.0,
+                            backgroundColor: Colors.grey,
+                            strokeCap: StrokeCap.round,
+                          ),
+                        ),
+                        Text(
+                          'x.xx\nØ',
+                          style: const TextStyle(
+                            fontSize: 18.0,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
               const SizedBox(height: 20),
