@@ -79,21 +79,21 @@ class _OverviewScreenState extends State<OverviewScreen> {
         future: getOverviewChartData(),
         builder: (ctx, snap) {
           if (snap.hasError) {
-            return Text("Smth went wrong :c");
+            return const Text("Smth went wrong :c");
           } else {
             return BarChart(BarChartData(
               maxY: 15,
               minY: 0,
               borderData: FlBorderData(show: false),
               //  groupsSpace: 10,
-              gridData: FlGridData(show: false),
+              gridData: const FlGridData(show: false),
               titlesData: FlTitlesData(
-                  topTitles:
-                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  leftTitles:
-                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                  rightTitles:
-                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  topTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false)),
+                  leftTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false)),
+                  rightTitles: const AxisTitles(
+                      sideTitles: SideTitles(showTitles: false)),
                   show: true,
                   bottomTitles: AxisTitles(
                       sideTitles: SideTitles(
@@ -117,7 +117,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                       .map((e) => BarChartGroupData(x: e.key, barRods: [
                             BarChartRodData(
                                 backDrawRodData: backgroundBar(),
-                                gradient: LinearGradient(
+                                gradient: const LinearGradient(
                                     colors: [Colors.blue, Colors.purple]),
                                 toY: e.value.value,
                                 width: 60,
@@ -172,11 +172,14 @@ class _OverviewScreenState extends State<OverviewScreen> {
         minY: 0,
         borderData: FlBorderData(show: false),
         //  groupsSpace: 10,
-        gridData: FlGridData(show: false),
+        gridData: const FlGridData(show: false),
         titlesData: FlTitlesData(
-            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
-            rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            topTitles:
+                const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            leftTitles:
+                const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            rightTitles:
+                const AxisTitles(sideTitles: SideTitles(showTitles: false)),
             show: true,
             bottomTitles: AxisTitles(
                 sideTitles: SideTitles(
@@ -192,7 +195,8 @@ class _OverviewScreenState extends State<OverviewScreen> {
           BarChartGroupData(x: 1, barRods: [
             BarChartRodData(
                 backDrawRodData: backgroundBar(),
-                gradient: LinearGradient(colors: [Colors.blue, Colors.purple]),
+                gradient:
+                    const LinearGradient(colors: [Colors.blue, Colors.purple]),
                 toY: _termValues[0],
                 width: 60,
                 color: Colors.amber,
@@ -240,60 +244,68 @@ class _OverviewScreenState extends State<OverviewScreen> {
         future: updateBlocks(),
         builder: (ctx, snap) {
           if (!snap.hasError) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            return Column(
               children: [
-                SizedBox(
-                  width: (MediaQuery.of(context).size.width / 2) - 20,
-                  height: 150,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      SizedBox.square(
-                        dimension: 112,
-                        child: CircularProgressIndicator(
-                          value: _averagePercent,
-                          color: Colors.green,
-                          strokeWidth: 20.0,
-                          backgroundColor: Colors.grey,
-                          strokeCap: StrokeCap.round,
-                        ),
-                      ),
-                      Text(
-                        '$_averageText\n$_gradeText',
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [Text("Fächerschnitt"), Text("Abischnitt")],
                 ),
-                Container(
-                  width: (MediaQuery.of(context).size.width / 2) - 20,
-                  height: 150,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      SizedBox.square(
-                        dimension: 112,
-                        child: CircularProgressIndicator(
-                          value: _blockPercent,
-                          color: Colors.green,
-                          strokeWidth: 20.0,
-                          backgroundColor: Colors.grey,
-                          strokeCap: StrokeCap.round,
-                        ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      width: (MediaQuery.of(context).size.width / 2) - 20,
+                      height: 150,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          SizedBox.square(
+                            dimension: 112,
+                            child: CircularProgressIndicator(
+                              value: _averagePercent,
+                              color: Colors.green,
+                              strokeWidth: 20.0,
+                              backgroundColor: Colors.grey.withOpacity(0.5),
+                              strokeCap: StrokeCap.round,
+                            ),
+                          ),
+                          Text(
+                            '$_averageText\n$_gradeText',
+                            style: const TextStyle(
+                              fontSize: 20.0,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(
-                        '$_blockCircleText\nØ',
-                        style: const TextStyle(
-                          fontSize: 18.0,
-                          color: Colors.black,
-                        ),
+                    ),
+                    SizedBox(
+                      width: (MediaQuery.of(context).size.width / 2) - 20,
+                      height: 150,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          SizedBox.square(
+                            dimension: 112,
+                            child: CircularProgressIndicator(
+                              value: _blockPercent,
+                              color: Colors.green,
+                              strokeWidth: 20.0,
+                              backgroundColor: Colors.grey.withOpacity(0.5),
+                              strokeCap: StrokeCap.round,
+                            ),
+                          ),
+                          Text(
+                            '$_blockCircleText\nØ',
+                            style: const TextStyle(
+                              fontSize: 18.0,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    )
+                  ],
                 )
               ],
             );

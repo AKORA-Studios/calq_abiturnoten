@@ -13,7 +13,7 @@ class ExamScreen extends StatefulWidget {
 
 class _ExamScreenState extends State<ExamScreen> {
   final double _block1Value = 0.5;
-  double _block2Value = 0.3;
+  double _block2Value = 0.0;
   bool _shouldUpdate = false;
 
   List<Data_Subject> examOptions = [];
@@ -25,7 +25,7 @@ class _ExamScreenState extends State<ExamScreen> {
         examOptions = value;
       });
     });
-
+    updateBlock2Values();
     //  _shouldUpdate = !_shouldUpdate;
   }
 
