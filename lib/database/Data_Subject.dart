@@ -1,6 +1,7 @@
 import 'package:calq_abiturnoten/util/color_extension.dart';
 import 'package:flutter/material.dart';
 
+import '../ui/components/util.dart';
 import '../util/averages.dart';
 import 'Data_Test.dart';
 
@@ -136,6 +137,28 @@ class Data_Subject {
       }
     }
     return tests;
+  }
+
+  /// Returns the average of all grades from one subject
+  Future<double> getSubjectAverage() async {
+    if (tests.isEmpty) {
+      return 0.0;
+    }
+
+    double count = 0.0;
+    double subAverage = 0.0;
+
+    for (int e in [1, 2, 3, 4]) {
+      var yearTests = tests.where((element) => element.year == e).toList();
+      if (yearTests.isEmpty) {
+        continue;
+      }
+      count += 1;
+      subAverage += await testAverage(yearTests);
+    }
+    double average = (subAverage / count);
+    //var rounded = String(format: "%.2f", average)//.padding(toLength: 4, withPad: "0", startingAt: 0)
+    return double.parse(average.toStringAsFixed(2)) ?? 0.0;
   }
 
   @override

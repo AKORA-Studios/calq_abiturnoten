@@ -1,6 +1,7 @@
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:pair/pair.dart';
 
 import '../../database/database.dart';
 import '../components/util.dart';
@@ -51,13 +52,13 @@ class _OverviewScreenState extends State<OverviewScreen> {
         body: SingleChildScrollView(
           child: Column(
             children: [
+              const SizedBox(height: 10),
               //  Text(subs),
-              Center(
-                  child: Container(
-                      color: Colors.grey,
-                      width: MediaQuery.of(context).size.width - 20,
-                      height: 250)),
-              const SizedBox(height: 20),
+              card(SizedBox(
+                  width: MediaQuery.of(context).size.width - 20,
+                  height: 250,
+                  child: overviewChart())),
+              const SizedBox(height: 10),
               card(lineChart()),
               card(Center(
                   child: SizedBox(
@@ -70,6 +71,67 @@ class _OverviewScreenState extends State<OverviewScreen> {
             ],
           ),
         ));
+  }
+
+  // MARK: Subviews
+  Widget overviewChart() {
+    return FutureBuilder(
+        future: getOverviewChartData(),
+        builder: (ctx, snap) {
+          if (snap.hasError) {
+            return Text("Smth went wrong :c");
+          } else {
+            return BarChart(BarChartData(
+                maxY: 15,
+                minY: 0,
+                borderData: FlBorderData(show: false),
+                //  groupsSpace: 10,
+                gridData: FlGridData(show: false),
+                titlesData: FlTitlesData(
+                    topTitles:
+                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    leftTitles:
+                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    rightTitles:
+                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    show: true,
+                    bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                            showTitles: true,
+                            reservedSize: 30,
+                            getTitlesWidget: (value, meta) {
+                              if (snap.data == null) {
+                                return Text("?\n?");
+                              }
+                              return Text(
+                                  snap.data![value.toInt() - 1].value
+                                          .round()
+                                          .toString() +
+                                      "\n" +
+                                      snap.data![value.toInt() - 1].key
+                                          .substring(0, 3),
+                                  style: TextStyle(height: 1),
+                                  textAlign: TextAlign.center);
+                            }))),
+                // add bars
+                barGroups: [
+                  BarChartGroupData(
+                      x: 1,
+                      barRods: snap.data == null
+                          ? []
+                          : snap.data!
+                              .map((e) => BarChartRodData(
+                                  backDrawRodData: backgroundBar(),
+                                  gradient: LinearGradient(
+                                      colors: [Colors.blue, Colors.purple]),
+                                  toY: e.value,
+                                  width: 60,
+                                  color: Colors.amber,
+                                  borderRadius: barRadiusTerms()))
+                              .toList()),
+                ]));
+          }
+        });
   }
 
   Widget lineChart() {
@@ -267,6 +329,17 @@ class _OverviewScreenState extends State<OverviewScreen> {
       _blockCircleText = gradeData;
       _termValues = termValues;
     });
+  }
+
+  Future<List<Pair<String, double>>> getOverviewChartData() async {
+    List<Pair<String, double>> data = [];
+    var subjects = await DatabaseClass.Shared.getSubjects();
+
+    for (Data_Subject sub in subjects) {
+      //let color = getSubjectColor(sub)
+      data.add(Pair(sub.name, await sub.getSubjectAverage()));
+    }
+    return data;
   }
 }
 //Circle1: _averageText + _gradeText [_averagePercent]
