@@ -80,6 +80,7 @@ class Data_Subject {
     inactiveYears = Averages.arrToString(years);
   }
 
+  /// Returns last used term to auto select for new grades
   int lastActiveYear() {
     var num = 1;
     for (var i = 0; i < 5; i++) {
@@ -90,6 +91,18 @@ class Data_Subject {
       }
     }
     return num;
+  }
+
+  List<String> getInactiveTerms() {
+    if (inactiveYears.isEmpty) {
+      return [];
+    }
+    return inactiveYears.split(" ");
+  }
+
+  /// Check if year is inactive
+  bool checkInactiveTerm(int term) {
+    return !getInactiveTerms().contains(term.toString());
   }
 
   @override

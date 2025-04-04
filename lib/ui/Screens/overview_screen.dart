@@ -1,3 +1,5 @@
+import 'dart:js_interop';
+
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +19,17 @@ class _OverviewScreenState extends State<OverviewScreen> {
   late List<String> xAxisList;
   late List<double> yAxisList;
 
+  // Circular Charts
+  double _blockPoints = 0.0;
+  double _blockPercent = 0.0;
+  String _gradeText = "?";
+  String _blockCircleText = "??";
+
   @override
   void initState() {
+    super.initState();
+    updateBlocks();
+
     DatabaseClass.Shared.getSubjects().then((value) {
       setState(() {
         subjects = value;
@@ -151,5 +162,20 @@ class _OverviewScreenState extends State<OverviewScreen> {
             ],
           ),
         ));
+  }
+
+  void updateBlocks() {
+    double blockPoints = (generateBlockOne() + generateBlockTwo()).toDouble();
+    double blockGrade = Util.grade(number: (blockPoints * 15 / 900));
+    String gradeData = blockGrade.toStringAsFixed(2);
+
+    setState(() {
+      _blockPoints = blockPoints;
+      _blockPercent = (blockPoints / 900.0);
+      _gradeText =
+          String(format: "%.2f", Util.grade(number: Util.generalAverage()));
+
+      _blockCircleText = gradeData;
+    });
   }
 }

@@ -1,5 +1,7 @@
+import 'dart:js_interop';
 import 'dart:math';
 
+import 'package:calq_abiturnoten/database/Data_Settings.dart';
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
 import 'package:calq_abiturnoten/database/Data_Test.dart';
 import 'package:flutter/material.dart';
@@ -290,3 +292,113 @@ double calculateBlock2() {
 
   return value / 300.0;
 }
+
+// MARK: Bock Calculations
+/// Calc points block I
+Future<int> generateBlockOne()  async {
+List<Data_Subject> subjects = await DatabaseClass.Shared.getSubjects();
+int sum = 0;
+int count = 0;
+if (subjects.isEmpty) { return 0; }
+
+for (Data_Subject sub in subjects) {
+List<Data_Test> subTests = getAllSubjectTests(sub, TestSortCriteria.onlyActiveTerms);
+if (subTests.isEmpty) { continue; }
+
+var multiplier = sub.lk ? 2 : 1;
+
+for e in 1...4 {
+let tests = SubTests.filter {($0.year == e)}
+if (tests.isEmpty) { continue; }
+
+sum += multiplier * Int(round(Util.testAverage(tests)));
+count += multiplier * 1;
+}
+}
+
+if (sum == 0) { return 0; }
+return ((sum / count) * 40).toInt();
+}
+
+/// Calc points block II
+Future<int> generateBlockTwo()async  {
+  List<Data_Subject> subjects = await DatabaseClass.Shared.getSubjects();
+  if (subjects.isEmpty) { return 0; }
+double sum = 0.0;
+Data_Settings settings =  await  DatabaseClass.Shared.getSettings();
+  for (Data_Subject sub in subjects) {
+var multiplier =settings.hasFiveexams ? 4 : 5;
+sum += (sub.exampoints * multiplier).toDouble();
+}
+
+return sum.toInt();
+}
+/*
+/// Calc Maxpoints block I
+func generatePossibleBlockOne() -> Int {
+let subjects = Util.getAllSubjects()
+var sum = 0
+var count = 0
+if subjects.count == 0 { return 0 }
+
+for i in 0..<subjects.count {
+let sub = subjects[i]
+let SubTests = Util.getAllSubjectTests(sub)
+
+for e in 1...4 {
+let tests = SubTests.filter {($0.year == e)}
+if tests.count == 0 { continue }
+
+if sub.lk {
+sum += 2 * 15
+count += 2
+} else {
+sum += 15
+count += 1
+}
+}
+}
+
+if sum == 0 {return 0 }
+return Int(Double((sum / count) * 40))
+}*/
+
+ enum TestSortCriteria {
+ name,
+ grade,
+ date,
+ onlyActiveTerms
+}
+
+/// Returns all Tests sorted By Criteria
+List<Data_Test> getAllSubjectTests(Data_Subject subject, {TestSortCriteria sortedBy = TestSortCriteria.date})  {
+List<Data_Test> tests = subject.tests;
+switch (sortedBy) {
+case TestSortCriteria.name:
+  tests.sort((a,b) => a.name.compareTo(b.name));
+  return tests;
+case TestSortCriteria.grade:
+ tests.sort((a,b) => a.points.compareTo(b.points));
+return tests;
+case TestSortCriteria.date:
+tests.sort((a,b) => a.date.compareTo(b.date));
+return tests;
+case TestSortCriteria.onlyActiveTerms:
+return filterTests(tests, subject);
+}
+}
+
+List<Data_Test>  filterTests(List<Data_Test> tests, Data_Subject subject) {
+var filteredTests = tests;
+
+for (int year in [1, 2, 3, 4]) {
+  if(!subject.checkInactiveTerm( year)) {
+filteredTests = filteredTests.where((element) => element.year != year).toList();
+
+}
+}
+return tests;
+}
+
+
+
