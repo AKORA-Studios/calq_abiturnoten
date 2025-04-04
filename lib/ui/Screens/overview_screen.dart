@@ -125,47 +125,56 @@ class _OverviewScreenState extends State<OverviewScreen> {
                     showTitles: true,
                     reservedSize: 15,
                     getTitlesWidget: (value, meta) {
-                      return Text("ff", textAlign: TextAlign.center);
+                      return Text(
+                          _termValues[value.toInt() - 1].round().toString(),
+                          textAlign: TextAlign.center);
                     }))),
         // add bars
         barGroups: [
           BarChartGroupData(x: 1, barRods: [
             BarChartRodData(
+                backDrawRodData: backgroundBar(),
+                gradient: LinearGradient(colors: [Colors.blue, Colors.purple]),
                 toY: _termValues[0],
                 width: 60,
                 color: Colors.amber,
-                borderRadius: const BorderRadius.only(
-                    topRight: Radius.circular(16),
-                    topLeft: Radius.circular(16)))
+                borderRadius: barRadiusTerms())
           ]),
           BarChartGroupData(x: 2, barRods: [
             BarChartRodData(
+                backDrawRodData: backgroundBar(),
                 toY: _termValues[1],
                 width: 60,
                 color: Colors.amber,
-                borderRadius: const BorderRadius.only(
-                    topRight: Radius.circular(16),
-                    topLeft: Radius.circular(16))),
+                borderRadius: barRadiusTerms())
           ]),
           BarChartGroupData(x: 3, barRods: [
             BarChartRodData(
+                backDrawRodData: backgroundBar(),
                 toY: _termValues[2],
                 width: 60,
                 color: Colors.amber,
-                borderRadius: const BorderRadius.only(
-                    topRight: Radius.circular(16),
-                    topLeft: Radius.circular(16))),
+                borderRadius: barRadiusTerms())
           ]),
           BarChartGroupData(x: 4, barRods: [
             BarChartRodData(
+                backDrawRodData: backgroundBar(),
                 toY: _termValues[3],
                 width: 60,
                 color: Colors.amber,
-                borderRadius: const BorderRadius.only(
-                    topRight: Radius.circular(16),
-                    topLeft: Radius.circular(16))),
+                borderRadius: barRadiusTerms())
           ]),
         ]));
+  }
+
+  BackgroundBarChartRodData backgroundBar() {
+    return BackgroundBarChartRodData(
+        toY: 14.6, color: Colors.grey.withOpacity(0.5), show: true, fromY: 0);
+  }
+
+  BorderRadius barRadiusTerms() {
+    return const BorderRadius.only(
+        topRight: Radius.circular(8), topLeft: Radius.circular(8));
   }
 
   Widget circularCharts() {
@@ -236,6 +245,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
         });
   }
 
+  // MARK: Functions
   Future<void> updateBlocks() async {
     double blockPoints =
         (await generateBlockOne() + await generateBlockTwo()).toDouble();
