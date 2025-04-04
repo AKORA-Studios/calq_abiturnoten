@@ -19,10 +19,11 @@ class _OverviewScreenState extends State<OverviewScreen> {
   late List<double> yAxisList;
 
   // Circular Charts
-  double _blockPoints = 0.0;
   double _blockPercent = 0.0;
-  String _gradeText = "?";
-  String _blockCircleText = "??";
+  double _averagePercent = 0.0;
+  String _gradeText = "?.??";
+  String _blockCircleText = "?.??";
+  String _averageText = "??.?";
 
   @override
   void initState() {
@@ -99,68 +100,79 @@ class _OverviewScreenState extends State<OverviewScreen> {
                       width: MediaQuery.of(context).size.width - 20,
                       height: 150)),
               const SizedBox(height: 20),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(
-                    width: (MediaQuery.of(context).size.width / 2) - 20,
-                    height: 150,
-                    child: const Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        SizedBox.square(
-                          dimension: 112,
-                          child: CircularProgressIndicator(
-                            value: 0.5,
-                            color: Colors.green,
-                            strokeWidth: 20.0,
-                            backgroundColor: Colors.grey,
-                            strokeCap: StrokeCap.round,
-                          ),
-                        ),
-                        Text(
-                          'xx.xx\nx.xx',
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: (MediaQuery.of(context).size.width / 2) - 20,
-                    height: 150,
-                    child: const Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        SizedBox.square(
-                          dimension: 112,
-                          child: CircularProgressIndicator(
-                            value: 0.5,
-                            color: Colors.green,
-                            strokeWidth: 20.0,
-                            backgroundColor: Colors.grey,
-                            strokeCap: StrokeCap.round,
-                          ),
-                        ),
-                        Text(
-                          'x.xx\nØ',
-                          style: const TextStyle(
-                            fontSize: 18.0,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              ),
+              circularCharts(),
               const SizedBox(height: 20),
             ],
           ),
         ));
+  }
+
+  Widget circularCharts() {
+    return FutureBuilder(
+        future: updateBlocks(),
+        builder: (ctx, snap) {
+          if (!snap.hasError) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  width: (MediaQuery.of(context).size.width / 2) - 20,
+                  height: 150,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox.square(
+                        dimension: 112,
+                        child: CircularProgressIndicator(
+                          value: _averagePercent,
+                          color: Colors.green,
+                          strokeWidth: 20.0,
+                          backgroundColor: Colors.grey,
+                          strokeCap: StrokeCap.round,
+                        ),
+                      ),
+                      Text(
+                        '$_averageText\n$_gradeText',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: (MediaQuery.of(context).size.width / 2) - 20,
+                  height: 150,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox.square(
+                        dimension: 112,
+                        child: CircularProgressIndicator(
+                          value: _blockPercent,
+                          color: Colors.green,
+                          strokeWidth: 20.0,
+                          backgroundColor: Colors.grey,
+                          strokeCap: StrokeCap.round,
+                        ),
+                      ),
+                      Text(
+                        '$_blockCircleText\nØ',
+                        style: const TextStyle(
+                          fontSize: 18.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            );
+          } else {
+            return Text("g${snap.error}");
+          }
+        });
   }
 
   Future<void> updateBlocks() async {
@@ -171,11 +183,13 @@ class _OverviewScreenState extends State<OverviewScreen> {
     double generalAverageValue = await generalAverage();
 
     setState(() {
-      _blockPoints = blockPoints;
+      _averagePercent = generalAverageValue / 15.0;
       _blockPercent = (blockPoints / 900.0);
+      _averageText = generalAverageValue.toStringAsFixed(2);
       _gradeText = grade(generalAverageValue).toStringAsFixed(2);
-
       _blockCircleText = gradeData;
     });
   }
 }
+//Circle1: _averageText + _gradeText [_averagePercent]
+//Circle2: _blockCircleText [_blockPercent]

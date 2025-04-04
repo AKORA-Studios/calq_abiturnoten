@@ -381,7 +381,6 @@ Future<double> testAverage(List<Data_Test> tests) async {
   List<double> avgArr = [];
 
   var types = await DatabaseClass.Shared.getTypes();
-  print(types);
 
   for (Data_Type type in types) {
     List<Data_Test> filteredTests =
