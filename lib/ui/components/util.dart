@@ -1,9 +1,9 @@
-import 'dart:js_interop';
 import 'dart:math';
 
 import 'package:calq_abiturnoten/database/Data_Settings.dart';
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
 import 'package:calq_abiturnoten/database/Data_Test.dart';
+import 'package:calq_abiturnoten/database/Data_Type.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -295,43 +295,55 @@ double calculateBlock2() {
 
 // MARK: Bock Calculations
 /// Calc points block I
-Future<int> generateBlockOne()  async {
-List<Data_Subject> subjects = await DatabaseClass.Shared.getSubjects();
-int sum = 0;
-int count = 0;
-if (subjects.isEmpty) { return 0; }
+Future<int> generateBlockOne() async {
+  List<Data_Subject> subjects = await DatabaseClass.Shared.getSubjects();
+  int sum = 0;
+  int count = 0;
+  if (subjects.isEmpty) {
+    return 0;
+  }
 
-for (Data_Subject sub in subjects) {
-List<Data_Test> subTests = getAllSubjectTests(sub, TestSortCriteria.onlyActiveTerms);
-if (subTests.isEmpty) { continue; }
+  for (Data_Subject sub in subjects) {
+    List<Data_Test> subTests =
+        sub.getSortedTests(TestSortCriteria.onlyActiveTerms);
+    if (subTests.isEmpty) {
+      continue;
+    }
 
-var multiplier = sub.lk ? 2 : 1;
+    int multiplier = sub.lk ? 2 : 1;
 
-for e in 1...4 {
-let tests = SubTests.filter {($0.year == e)}
-if (tests.isEmpty) { continue; }
+    for (int e in [1, 2, 3, 4]) {
+      List<Data_Test> tests =
+          subTests.where((element) => element.year == e).toList();
+      if (tests.isEmpty) {
+        continue;
+      }
+      double average = await testAverage(tests);
+      sum += multiplier * average.round();
+      count += multiplier * 1;
+    }
+  }
 
-sum += multiplier * Int(round(Util.testAverage(tests)));
-count += multiplier * 1;
-}
-}
-
-if (sum == 0) { return 0; }
-return ((sum / count) * 40).toInt();
+  if (sum == 0) {
+    return 0;
+  }
+  return ((sum / count) * 40).toInt();
 }
 
 /// Calc points block II
-Future<int> generateBlockTwo()async  {
+Future<int> generateBlockTwo() async {
   List<Data_Subject> subjects = await DatabaseClass.Shared.getSubjects();
-  if (subjects.isEmpty) { return 0; }
-double sum = 0.0;
-Data_Settings settings =  await  DatabaseClass.Shared.getSettings();
+  if (subjects.isEmpty) {
+    return 0;
+  }
+  double sum = 0.0;
+  Data_Settings settings = await DatabaseClass.Shared.getSettings();
   for (Data_Subject sub in subjects) {
-var multiplier =settings.hasFiveexams ? 4 : 5;
-sum += (sub.exampoints * multiplier).toDouble();
-}
+    var multiplier = settings.hasFiveexams ? 4 : 5;
+    sum += (sub.exampoints * multiplier).toDouble();
+  }
 
-return sum.toInt();
+  return sum.toInt();
 }
 /*
 /// Calc Maxpoints block I
@@ -363,42 +375,86 @@ if sum == 0 {return 0 }
 return Int(Double((sum / count) * 40))
 }*/
 
- enum TestSortCriteria {
- name,
- grade,
- date,
- onlyActiveTerms
+/// Returns the average of an array of tests.
+Future<double> testAverage(List<Data_Test> tests) async {
+  double gradeWeights = 0.0;
+  List<double> avgArr = [];
+
+  var types = await DatabaseClass.Shared.getTypes();
+  print(types);
+
+  for (Data_Type type in types) {
+    List<Data_Test> filteredTests =
+        tests.where((element) => element.type == type.id).toList();
+    if (filteredTests.isNotEmpty) {
+      double weight = type.weigth / 100;
+      gradeWeights += weight;
+      double avg = average(filteredTests.map((e) => e.points).toList());
+      avgArr.add(avg * weight);
+    }
+  }
+
+  if (avgArr.isEmpty) {
+    return 0.0;
+  }
+  double num = avgArr.reduce((a, b) => a + b) / gradeWeights;
+
+  if (num.isNaN) {
+    return 0.0;
+  }
+  return num;
 }
 
-/// Returns all Tests sorted By Criteria
-List<Data_Test> getAllSubjectTests(Data_Subject subject, {TestSortCriteria sortedBy = TestSortCriteria.date})  {
-List<Data_Test> tests = subject.tests;
-switch (sortedBy) {
-case TestSortCriteria.name:
-  tests.sort((a,b) => a.name.compareTo(b.name));
-  return tests;
-case TestSortCriteria.grade:
- tests.sort((a,b) => a.points.compareTo(b.points));
-return tests;
-case TestSortCriteria.date:
-tests.sort((a,b) => a.date.compareTo(b.date));
-return tests;
-case TestSortCriteria.onlyActiveTerms:
-return filterTests(tests, subject);
-}
+double average(List<int> values) {
+  if (values.isEmpty) {
+    return 0.0;
+  }
+
+  double avg = 0.0;
+  for (int i = 0; i < values.length; i++) {
+    avg += values[i];
+  }
+  return avg / values.length;
 }
 
-List<Data_Test>  filterTests(List<Data_Test> tests, Data_Subject subject) {
-var filteredTests = tests;
-
-for (int year in [1, 2, 3, 4]) {
-  if(!subject.checkInactiveTerm( year)) {
-filteredTests = filteredTests.where((element) => element.year != year).toList();
-
-}
-}
-return tests;
+double grade(double number) {
+  if (number == 0.0) {
+    return 0.0;
+  }
+  return ((17 - number.abs()) / 3.0);
 }
 
+/// Returns the average of all grades from all subjects in a specific term, -1 returns all terms
+Future<double> generalAverage({int year = -1}) async {
+  List<Data_Subject> allSubjects = await DatabaseClass.Shared.getSubjects();
+  if (allSubjects.isEmpty) {
+    return 0.0;
+  }
+  double count = 0.0;
+  double grades = 0.0;
 
+  for (Data_Subject sub in allSubjects) {
+    if (sub.tests.isEmpty) {
+      continue;
+    }
+    List<Data_Test> tests = sub.tests;
+    if (year > 0) {
+      tests = sub
+          .getSortedTests(TestSortCriteria.onlyActiveTerms)
+          .where((element) => element.year == year)
+          .toList();
+    }
+    if (tests.isEmpty) {
+      continue;
+    }
+    double multiplier = sub.lk ? 2.0 : 1.0;
 
+    count += multiplier * 1;
+    double average = await testAverage(tests);
+    grades += multiplier * average.round();
+  }
+  if (grades == 0.0) {
+    return 0.0;
+  }
+  return grades / count;
+}

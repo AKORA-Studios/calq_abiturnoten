@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../util/averages.dart';
 import 'Data_Test.dart';
 
+enum TestSortCriteria { name, grade, date, onlyActiveTerms }
+
 class Data_Subject {
   late int id;
   late String name;
@@ -103,6 +105,37 @@ class Data_Subject {
   /// Check if year is inactive
   bool checkInactiveTerm(int term) {
     return !getInactiveTerms().contains(term.toString());
+  }
+
+  /// Returns all Tests sorted By Criteria // TODO: test if sorting works
+  List<Data_Test> getSortedTests(TestSortCriteria date,
+      {TestSortCriteria sortedBy = TestSortCriteria.date}) {
+    List<Data_Test> sortedTests = tests;
+    switch (sortedBy) {
+      case TestSortCriteria.name:
+        sortedTests.sort((a, b) => a.name.compareTo(b.name));
+        return sortedTests;
+      case TestSortCriteria.grade:
+        sortedTests.sort((a, b) => a.points.compareTo(b.points));
+        return sortedTests;
+      case TestSortCriteria.date:
+        sortedTests.sort((a, b) => a.date.compareTo(b.date));
+        return sortedTests;
+      case TestSortCriteria.onlyActiveTerms:
+        return filterTests(sortedTests);
+    }
+  }
+
+  List<Data_Test> filterTests(List<Data_Test> tests) {
+    var filteredTests = tests;
+
+    for (int year in [1, 2, 3, 4]) {
+      if (!checkInactiveTerm(year)) {
+        filteredTests =
+            filteredTests.where((element) => element.year != year).toList();
+      }
+    }
+    return tests;
   }
 
   @override

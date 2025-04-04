@@ -1,10 +1,9 @@
-import 'dart:js_interop';
-
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 import '../../database/database.dart';
+import '../components/util.dart';
 
 class OverviewScreen extends StatefulWidget {
   const OverviewScreen({super.key});
@@ -164,16 +163,17 @@ class _OverviewScreenState extends State<OverviewScreen> {
         ));
   }
 
-  void updateBlocks() {
-    double blockPoints = (generateBlockOne() + generateBlockTwo()).toDouble();
-    double blockGrade = Util.grade(number: (blockPoints * 15 / 900));
+  Future<void> updateBlocks() async {
+    double blockPoints =
+        (await generateBlockOne() + await generateBlockTwo()).toDouble();
+    double blockGrade = grade((blockPoints * 15 / 900));
     String gradeData = blockGrade.toStringAsFixed(2);
+    double generalAverageValue = await generalAverage();
 
     setState(() {
       _blockPoints = blockPoints;
       _blockPercent = (blockPoints / 900.0);
-      _gradeText =
-          String(format: "%.2f", Util.grade(number: Util.generalAverage()));
+      _gradeText = grade(generalAverageValue).toStringAsFixed(2);
 
       _blockCircleText = gradeData;
     });
