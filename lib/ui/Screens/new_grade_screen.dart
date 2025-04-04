@@ -16,7 +16,7 @@ class NewGradeScreen extends StatefulWidget {
 
 class _NewGradeScreenState extends State<NewGradeScreen> {
   String gradeName = "";
-  int selectedYear = 1; // TODO: int current halfyear
+  int selectedYear = 1;
   DateTime _selectedDate = DateTime.now();
   String errorText = "";
   double _testPoints = 0; // TODO: init average points for this halfyear
@@ -43,6 +43,14 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
             widget.sub.id, gradeName, _testPoints.toInt(), selectedYear)
         .then((value) {
       Navigator.pop(context);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      selectedYear = widget.sub.lastActiveYear();
     });
   }
 

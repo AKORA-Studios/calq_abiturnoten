@@ -25,6 +25,9 @@ class _OverviewScreenState extends State<OverviewScreen> {
   String _blockCircleText = "?.??";
   String _averageText = "??.?";
 
+  // Term barChart
+  List<double> _termValues = [0, 0, 0, 0];
+
   @override
   void initState() {
     super.initState();
@@ -55,56 +58,114 @@ class _OverviewScreenState extends State<OverviewScreen> {
                       width: MediaQuery.of(context).size.width - 20,
                       height: 250)),
               const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.all(10),
-                width: double.infinity,
+              card(lineChart()),
+              card(Center(
+                  child: SizedBox(
                 height: 150,
-                child: LineChart(
-                  LineChartData(
-                    minY: 0,
-                    maxY: 15,
-                    gridData: const FlGridData(
-                        drawVerticalLine: false, horizontalInterval: 5),
-                    titlesData: const FlTitlesData(
-                        bottomTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false)),
-                        topTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false)),
-                        leftTitles: AxisTitles(
-                            sideTitles: SideTitles(
-                                interval: 5,
-                                showTitles: true,
-                                reservedSize: 30)),
-                        rightTitles: AxisTitles(
-                            sideTitles: SideTitles(showTitles: false))),
-                    borderData: FlBorderData(show: true),
-                    lineBarsData: subjects
-                        .map((sub) => LineChartBarData(
-                            spots: sub.tests.asMap().entries.map((entry) {
-                              int idx =
-                                  entry.key; // TODO: later replace with date
-
-                              return FlSpot(
-                                  idx + 0.0, entry.value.points + 0.0);
-                            }).toList(),
-                            color: sub.color,
-                            dotData: const FlDotData(show: false)))
-                        .toList(),
-                  ),
-                ),
-              ),
-
-              Center(
-                  child: Container(
-                      color: Colors.grey,
-                      width: MediaQuery.of(context).size.width - 20,
-                      height: 150)),
-              const SizedBox(height: 20),
-              circularCharts(),
-              const SizedBox(height: 20),
+                child: termChart(),
+              ))),
+              const SizedBox(height: 10),
+              card(circularCharts()),
+              const SizedBox(height: 10),
             ],
           ),
         ));
+  }
+
+  Widget lineChart() {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      width: double.infinity,
+      height: 150,
+      child: LineChart(
+        LineChartData(
+          minY: 0,
+          maxY: 15,
+          gridData:
+              const FlGridData(drawVerticalLine: false, horizontalInterval: 5),
+          titlesData: const FlTitlesData(
+              bottomTitles:
+                  AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                      interval: 5, showTitles: true, reservedSize: 30)),
+              rightTitles:
+                  AxisTitles(sideTitles: SideTitles(showTitles: false))),
+          borderData: FlBorderData(show: true),
+          lineBarsData: subjects
+              .map((sub) => LineChartBarData(
+                  spots: sub.tests.asMap().entries.map((entry) {
+                    int idx = entry.key; // TODO: later replace with date
+
+                    return FlSpot(idx + 0.0, entry.value.points + 0.0);
+                  }).toList(),
+                  color: sub.color,
+                  dotData: const FlDotData(show: false)))
+              .toList(),
+        ),
+      ),
+    );
+  }
+
+  Widget termChart() {
+    return BarChart(BarChartData(
+        maxY: 15,
+        minY: 0,
+        borderData: FlBorderData(show: false),
+        //  groupsSpace: 10,
+        gridData: FlGridData(show: false),
+        titlesData: FlTitlesData(
+            topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            leftTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+            show: true,
+            bottomTitles: AxisTitles(
+                sideTitles: SideTitles(
+                    showTitles: true,
+                    reservedSize: 15,
+                    getTitlesWidget: (value, meta) {
+                      return Text("ff", textAlign: TextAlign.center);
+                    }))),
+        // add bars
+        barGroups: [
+          BarChartGroupData(x: 1, barRods: [
+            BarChartRodData(
+                toY: _termValues[0],
+                width: 60,
+                color: Colors.amber,
+                borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(16),
+                    topLeft: Radius.circular(16)))
+          ]),
+          BarChartGroupData(x: 2, barRods: [
+            BarChartRodData(
+                toY: _termValues[1],
+                width: 60,
+                color: Colors.amber,
+                borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(16),
+                    topLeft: Radius.circular(16))),
+          ]),
+          BarChartGroupData(x: 3, barRods: [
+            BarChartRodData(
+                toY: _termValues[2],
+                width: 60,
+                color: Colors.amber,
+                borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(16),
+                    topLeft: Radius.circular(16))),
+          ]),
+          BarChartGroupData(x: 4, barRods: [
+            BarChartRodData(
+                toY: _termValues[3],
+                width: 60,
+                color: Colors.amber,
+                borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(16),
+                    topLeft: Radius.circular(16))),
+          ]),
+        ]));
   }
 
   Widget circularCharts() {
@@ -181,6 +242,12 @@ class _OverviewScreenState extends State<OverviewScreen> {
     double blockGrade = grade((blockPoints * 15 / 900));
     String gradeData = blockGrade.toStringAsFixed(2);
     double generalAverageValue = await generalAverage();
+    List<double> termValues = [
+      await generalAverage(year: 1),
+      await generalAverage(year: 2),
+      await generalAverage(year: 3),
+      await generalAverage(year: 4)
+    ];
 
     setState(() {
       _averagePercent = generalAverageValue / 15.0;
@@ -188,6 +255,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
       _averageText = generalAverageValue.toStringAsFixed(2);
       _gradeText = grade(generalAverageValue).toStringAsFixed(2);
       _blockCircleText = gradeData;
+      _termValues = termValues;
     });
   }
 }

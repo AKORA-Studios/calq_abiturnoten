@@ -108,7 +108,7 @@ class Data_Subject {
   }
 
   /// Returns all Tests sorted By Criteria // TODO: test if sorting works
-  List<Data_Test> getSortedTests(TestSortCriteria date,
+  List<Data_Test> getSortedTests(
       {TestSortCriteria sortedBy = TestSortCriteria.date}) {
     List<Data_Test> sortedTests = tests;
     switch (sortedBy) {

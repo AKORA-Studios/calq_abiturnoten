@@ -305,7 +305,7 @@ Future<int> generateBlockOne() async {
 
   for (Data_Subject sub in subjects) {
     List<Data_Test> subTests =
-        sub.getSortedTests(TestSortCriteria.onlyActiveTerms);
+        sub.getSortedTests(sortedBy: TestSortCriteria.onlyActiveTerms);
     if (subTests.isEmpty) {
       continue;
     }
@@ -439,7 +439,7 @@ Future<double> generalAverage({int year = -1}) async {
     List<Data_Test> tests = sub.tests;
     if (year > 0) {
       tests = sub
-          .getSortedTests(TestSortCriteria.onlyActiveTerms)
+          .getSortedTests(sortedBy: TestSortCriteria.onlyActiveTerms)
           .where((element) => element.year == year)
           .toList();
     }
