@@ -82,54 +82,50 @@ class _OverviewScreenState extends State<OverviewScreen> {
             return Text("Smth went wrong :c");
           } else {
             return BarChart(BarChartData(
-                maxY: 15,
-                minY: 0,
-                borderData: FlBorderData(show: false),
-                //  groupsSpace: 10,
-                gridData: FlGridData(show: false),
-                titlesData: FlTitlesData(
-                    topTitles:
-                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    leftTitles:
-                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    rightTitles:
-                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    show: true,
-                    bottomTitles: AxisTitles(
-                        sideTitles: SideTitles(
-                            showTitles: true,
-                            reservedSize: 30,
-                            getTitlesWidget: (value, meta) {
-                              if (snap.data == null) {
-                                return Text("?\n?");
-                              }
-                              return Text(
-                                  snap.data![value.toInt() - 1].value
-                                          .round()
-                                          .toString() +
-                                      "\n" +
-                                      snap.data![value.toInt() - 1].key
-                                          .substring(0, 3),
-                                  style: TextStyle(height: 1),
-                                  textAlign: TextAlign.center);
-                            }))),
-                // add bars
-                barGroups: [
-                  BarChartGroupData(
-                      x: 1,
-                      barRods: snap.data == null
-                          ? []
-                          : snap.data!
-                              .map((e) => BarChartRodData(
-                                  backDrawRodData: backgroundBar(),
-                                  gradient: LinearGradient(
-                                      colors: [Colors.blue, Colors.purple]),
-                                  toY: e.value,
-                                  width: 60,
-                                  color: Colors.amber,
-                                  borderRadius: barRadiusTerms()))
-                              .toList()),
-                ]));
+              maxY: 15,
+              minY: 0,
+              borderData: FlBorderData(show: false),
+              //  groupsSpace: 10,
+              gridData: FlGridData(show: false),
+              titlesData: FlTitlesData(
+                  topTitles:
+                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  leftTitles:
+                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  rightTitles:
+                      AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                  show: true,
+                  bottomTitles: AxisTitles(
+                      sideTitles: SideTitles(
+                          showTitles: true,
+                          reservedSize: 30,
+                          getTitlesWidget: (value, meta) {
+                            if (snap.data == null) {
+                              return const Text("?\n?");
+                            }
+                            return Text(
+                                "${snap.data![value.toInt()].value.round()}\n${snap.data![value.toInt()].key.substring(0, 3)}",
+                                style: const TextStyle(height: 1),
+                                textAlign: TextAlign.center);
+                          }))),
+              // add bars
+              barGroups: snap.data == null
+                  ? []
+                  : snap.data!
+                      .asMap()
+                      .entries
+                      .map((e) => BarChartGroupData(x: e.key, barRods: [
+                            BarChartRodData(
+                                backDrawRodData: backgroundBar(),
+                                gradient: LinearGradient(
+                                    colors: [Colors.blue, Colors.purple]),
+                                toY: e.value.value,
+                                width: 60,
+                                color: Colors.amber,
+                                borderRadius: barRadiusTerms())
+                          ]))
+                      .toList(),
+            ));
           }
         });
   }
