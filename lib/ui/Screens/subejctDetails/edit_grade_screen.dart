@@ -3,12 +3,17 @@ import 'package:flutter/material.dart';
 
 import '../../../database/database.dart';
 import '../../../util/date_formatter.dart';
-import '../../components/util.dart';
+import '../../components/styling.dart';
 
 class EditGradeScreen extends StatefulWidget {
-  const EditGradeScreen({super.key, required this.test, required this.color});
+  const EditGradeScreen(
+      {super.key,
+      required this.test,
+      required this.color,
+      required this.callbackFunc});
   final Data_Test test;
   final Color color;
+  final VoidCallback callbackFunc;
 
   @override
   State<EditGradeScreen> createState() => _EditGradeScreenState();
@@ -60,6 +65,14 @@ class _EditGradeScreenState extends State<EditGradeScreen> {
     widget.test.points = _testPoints.toInt();
 
     await DatabaseClass.Shared.updateTest(widget.test).then((value) {
+      widget.callbackFunc();
+      Navigator.pop(context);
+    });
+  }
+
+  Future<void> deleteGrade() async {
+    await DatabaseClass.Shared.deleteTest(widget.test.id).then((value) {
+      widget.callbackFunc();
       Navigator.pop(context);
     });
   }
@@ -155,9 +168,17 @@ class _EditGradeScreenState extends State<EditGradeScreen> {
                               backgroundColor: widget.color),
                           onPressed: () async {
                             await saveChanges();
-                            Navigator.pop(context);
                           },
                           child: const Text("Note aktualisieren")),
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                          style: destructiveButton(),
+                          onPressed: () async {
+                            await deleteGrade();
+                          },
+                          child: const Text("Note löschen")),
                     )
                   ],
                 ))));

@@ -1,9 +1,9 @@
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
 import 'package:calq_abiturnoten/database/database.dart';
-import 'package:calq_abiturnoten/ui/components/util.dart';
 import 'package:flutter/material.dart';
 
 import '../../util/date_formatter.dart';
+import '../components/styling.dart';
 
 class NewGradeScreen extends StatefulWidget {
   const NewGradeScreen({super.key, required this.sub});

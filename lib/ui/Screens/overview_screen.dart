@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pair/pair.dart';
 
 import '../../database/database.dart';
+import '../components/styling.dart';
 import '../components/util.dart';
 
 class OverviewScreen extends StatefulWidget {

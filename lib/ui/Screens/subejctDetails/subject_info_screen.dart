@@ -5,6 +5,7 @@ import 'package:pair/pair.dart';
 
 import '../../../database/Data_Subject.dart';
 import '../../../database/database.dart';
+import '../../components/styling.dart';
 import '../../components/util.dart';
 
 class SubjectInfoScreen extends StatefulWidget {
@@ -60,7 +61,12 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => EditGradeScreen(
-                                      test: e, color: widget.sub.color)));
+                                        test: e,
+                                        color: widget.sub.color,
+                                        callbackFunc: () {
+                                          _shouldUpdate = !_shouldUpdate;
+                                        },
+                                      )));
                         }))
                     .toList()
               ]))));
@@ -141,16 +147,7 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
                     )),
                 ...halfYearWidget(),
                 TextButton(
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all<Color>(Colors.red),
-                      foregroundColor:
-                          MaterialStateProperty.all<Color>(Colors.white),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                          RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(18.0),
-                              side: const BorderSide(color: Colors.red))),
-                    ),
+                    style: destructiveButton(),
                     onPressed: () {
                       print("TODO: delete all grades");
                     },

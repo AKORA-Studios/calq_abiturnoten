@@ -18,21 +18,6 @@ String dateFormater(DateTime inputDate) {
   return outputDate; // 12/31/2000 11:59 PM <-- MM/dd 12H format
 }
 
-Widget card(Widget content) {
-  return Padding(
-    padding: const EdgeInsets.all(4),
-    child: Container(
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey),
-          borderRadius: const BorderRadius.all(Radius.circular(8))),
-      child: SizedBox(
-        width: double.infinity,
-        child: Padding(padding: const EdgeInsets.all(5), child: content),
-      ),
-    ),
-  );
-}
-
 Widget settingsOption(
     String title, Color color, IconData icon, Function onTap) {
   // TODO: realize on tap

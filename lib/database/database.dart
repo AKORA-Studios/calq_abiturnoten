@@ -338,6 +338,11 @@ class DatabaseClass {
     assert(count == 1);
   }
 
+  Future<void> deleteTest(int id) async {
+    int count = await db.rawDelete('DELETE FROM Test WHERE id = ?', [id]);
+    assert(count == 1);
+  }
+
   Future<void> deleteType(int id) async {
     // TODO: IMPLEMENT Tpes
   }
