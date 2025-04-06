@@ -146,16 +146,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
               rightTitles:
                   AxisTitles(sideTitles: SideTitles(showTitles: false))),
           borderData: FlBorderData(show: true),
-          lineBarsData: _subjects
-              .map((sub) => LineChartBarData(
-                  spots: sub.tests.asMap().entries.map((entry) {
-                    int idx = entry.key; // TODO: later replace with date
-
-                    return FlSpot(idx + 0.0, entry.value.points + 0.0);
-                  }).toList(),
-                  color: sub.color,
-                  dotData: const FlDotData(show: false)))
-              .toList(),
+          lineBarsData: getLineChartData(_subjects).toList(),
         ),
       ),
     );
@@ -343,6 +334,24 @@ class _OverviewScreenState extends State<OverviewScreen> {
       data.add(Pair(sub.name, await sub.getSubjectAverage()));
     }
     return data;
+  }
+
+  List<LineChartBarData> getLineChartData(List<Data_Subject> subjects) {
+    List<LineChartBarData> arr = [];
+
+    for (Data_Subject sub in subjects) {
+      Pair<int, int> subjectBounds = sub.getDateBounds();
+      arr.add(LineChartBarData(
+          spots: sub.tests.map((test) {
+            var date = (test.date.millisecondsSinceEpoch - subjectBounds.key) /
+                subjectBounds.value;
+            return FlSpot(date, test.points + 0.0);
+          }).toList(),
+          color: sub.color,
+          dotData: const FlDotData(show: false)));
+    }
+
+    return arr;
   }
 }
 //Circle1: _averageText + _gradeText [_averagePercent]

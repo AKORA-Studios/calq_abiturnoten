@@ -1,6 +1,7 @@
 import 'package:calq_abiturnoten/database/database.dart';
 import 'package:calq_abiturnoten/util/color_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:pair/pair.dart';
 
 import '../ui/components/util.dart';
 import '../util/averages.dart';
@@ -187,6 +188,20 @@ class Data_Subject {
 
   List<Data_Test> getTermTests(int term) {
     return tests.where((element) => element.year == term).toList();
+  }
+
+  // Returns <min, max> dates of all tests
+  Pair<int, int> getDateBounds() {
+    Pair<int, int> boundaries = Pair(DateTime.now().millisecondsSinceEpoch,
+        DateTime.now().millisecondsSinceEpoch);
+    if (tests.isEmpty) {
+      return boundaries;
+    }
+    tests.sort((a, b) => a.date.compareTo(b.date));
+    var max = tests.first.date.millisecondsSinceEpoch -
+        tests.last.date.millisecondsSinceEpoch;
+    boundaries = Pair(tests.last.date.millisecondsSinceEpoch, max);
+    return boundaries;
   }
 
   @override
