@@ -15,7 +15,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   bool _rainbowEnabled = false;
-  bool _hasFiveexams = false;
+  bool _hasFiveExams = false;
   bool _shouldUpdateView = false;
 
   @override
@@ -23,7 +23,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     super.initState();
     // Sync app settings from Database
     _rainbowEnabled = DatabaseClass.Shared.rainbowEnabled;
-    _hasFiveexams = DatabaseClass.Shared.hasFiveexams;
+    _hasFiveExams = DatabaseClass.Shared.hasFiveexams;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       onAppear(); // TODO: maybe remove, maybe update subject list?
@@ -100,12 +100,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   ),
                                 ))
                             .toList(),
-                        selected: <bool>{_hasFiveexams},
+                        selected: <bool>{_hasFiveExams},
                         onSelectionChanged: (Set<bool> newSelection) {
                           setState(() {
-                            _hasFiveexams = newSelection.first;
+                            _hasFiveExams = newSelection.first;
                             DatabaseClass.Shared.updateSettings(
-                                _rainbowEnabled, _hasFiveexams);
+                                _rainbowEnabled, _hasFiveExams);
                           });
                         },
                       )),
@@ -120,7 +120,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             setState(() {
                               _rainbowEnabled = value;
                               DatabaseClass.Shared.updateSettings(
-                                  value, _hasFiveexams);
+                                  value, _hasFiveExams);
                             });
                           })),
                   settingsOption("Noten importieren", Colors.blue,

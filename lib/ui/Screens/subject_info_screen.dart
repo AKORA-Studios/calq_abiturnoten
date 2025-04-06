@@ -15,8 +15,8 @@ class SubjectInfoScreen extends StatefulWidget {
 }
 
 class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
-  List<String> subs = ["x", "y"];
-  int selectedYear = 1;
+  List<String> subs = ["x", "y"]; // TODO: remove?
+  int _selectedYear = 1;
   bool _shouldUpdate = false;
 
   @override
@@ -24,7 +24,7 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
     super.initState();
 
     setState(() {
-      selectedYear = widget.sub.lastActiveYear();
+      _selectedYear = widget.sub.lastActiveYear();
     });
 
     DatabaseClass.Shared.getSubjects().then((value) {
@@ -97,9 +97,9 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("${selectedYear.toString()}. Halbjahr"),
+                            Text("${_selectedYear.toString()}. Halbjahr"),
                             Text(widget.sub.inactiveYears
-                                    .contains(selectedYear.toString())
+                                    .contains(_selectedYear.toString())
                                 ? "No"
                                 : "Aktiv")
                           ],
@@ -111,27 +111,27 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
                                     value: e,
                                     label: Text('$e',
                                         style: TextStyle(
-                                            decoration: selectedYear == e
+                                            decoration: _selectedYear == e
                                                 ? TextDecoration.underline
                                                 : TextDecoration.none)),
                                   ))
                               .toList(),
-                          selected: <int>{selectedYear},
+                          selected: <int>{_selectedYear},
                           onSelectionChanged: (Set<int> newSelection) {
                             setState(() {
-                              selectedYear = newSelection.first;
+                              _selectedYear = newSelection.first;
                             });
                           },
                         ),
                         ElevatedButton(
                             onPressed: () async {
-                              await widget.sub.toggleTerm(selectedYear);
+                              await widget.sub.toggleTerm(_selectedYear);
                               setState(() {
                                 _shouldUpdate = !_shouldUpdate;
                               });
                             },
                             child: Text(
-                                "Halbjahr ${widget.sub.isTermInactive(selectedYear) ? "aktivieren" : "deaktivieren"}"))
+                                "Halbjahr ${widget.sub.isTermInactive(_selectedYear) ? "aktivieren" : "deaktivieren"}"))
                       ],
                     )),
                 ...halfYearWidget(),
@@ -176,7 +176,7 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
           lineBarsData: [
             LineChartBarData(
                 spots: widget.sub
-                    .getTermTests(selectedYear)
+                    .getTermTests(_selectedYear)
                     .asMap()
                     .entries
                     .map((entry) {

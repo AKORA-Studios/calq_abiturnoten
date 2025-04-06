@@ -16,13 +16,14 @@ class _ExamScreenState extends State<ExamScreen> {
   double _block2Value = 0.0;
   bool _shouldUpdate = false;
 
-  List<Data_Subject> examOptions = [];
+  List<Data_Subject> _examOptions = [];
 
   @override
   void initState() {
+    super.initState();
     getExamOptions().then((value) {
       setState(() {
-        examOptions = value;
+        _examOptions = value;
       });
     });
     updateBlock2Values();
@@ -31,8 +32,8 @@ class _ExamScreenState extends State<ExamScreen> {
 
   void chooseExam(Data_Subject sub) {
     setState(() {
-      examOptions =
-          examOptions.where((element) => element.id != sub.id).toList();
+      _examOptions =
+          _examOptions.where((element) => element.id != sub.id).toList();
     });
   }
 
@@ -46,7 +47,7 @@ class _ExamScreenState extends State<ExamScreen> {
     await DatabaseClass.Shared.removeExam(i + 1);
     setState(() {
       _shouldUpdate = !_shouldUpdate;
-      examOptions.add(sub);
+      _examOptions.add(sub);
     });
     updateBlock2Values();
   }
@@ -153,7 +154,7 @@ class _ExamScreenState extends State<ExamScreen> {
                 child: Column(
                   children: [
                     Text("Exam NR: $type"),
-                    ...examOptions
+                    ..._examOptions
                         .map((e) => ElevatedButton(
                               child: SizedBox(
                                 width: double.infinity,

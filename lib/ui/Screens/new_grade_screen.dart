@@ -15,8 +15,8 @@ class NewGradeScreen extends StatefulWidget {
 }
 
 class _NewGradeScreenState extends State<NewGradeScreen> {
-  String gradeName = "";
-  int selectedYear = 1;
+  String _gradeName = "";
+  int _selectedYear = 1;
   DateTime _selectedDate = DateTime.now();
   String errorText = "";
   double _testPoints = 0; // TODO: init average points for this halfyear
@@ -33,14 +33,14 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
       });
 
   Future<void> addGrade() async {
-    if (gradeName.isEmpty) {
+    if (_gradeName.isEmpty) {
       setState(() {
         errorText = "Invalid Grade Name";
       });
       return;
     }
-    await DatabaseClass.Shared.createTest(widget.sub.id, gradeName,
-            _testPoints.toInt(), selectedYear, _selectedDate)
+    await DatabaseClass.Shared.createTest(widget.sub.id, _gradeName,
+            _testPoints.toInt(), _selectedYear, _selectedDate)
         .then((value) {
       Navigator.pop(context);
     });
@@ -50,7 +50,7 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
   void initState() {
     super.initState();
     setState(() {
-      selectedYear = widget.sub.lastActiveYear();
+      _selectedYear = widget.sub.lastActiveYear();
     });
   }
 
@@ -77,7 +77,7 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                         TextField(
                           onChanged: (value) {
                             setState(() {
-                              gradeName = value;
+                              _gradeName = value;
                             });
                           },
                           decoration: const InputDecoration(
@@ -98,15 +98,15 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                                     value: e,
                                     label: Text('$e',
                                         style: TextStyle(
-                                            decoration: selectedYear == e
+                                            decoration: _selectedYear == e
                                                 ? TextDecoration.underline
                                                 : TextDecoration.none)),
                                   ))
                               .toList(),
-                          selected: <int>{selectedYear},
+                          selected: <int>{_selectedYear},
                           onSelectionChanged: (Set<int> newSelection) {
                             setState(() {
-                              selectedYear = newSelection.first;
+                              _selectedYear = newSelection.first;
                             });
                           },
                         ),

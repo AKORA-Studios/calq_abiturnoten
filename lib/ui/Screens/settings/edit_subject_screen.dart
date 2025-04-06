@@ -16,13 +16,23 @@ class EditSubjectScreen extends StatefulWidget {
 class _EditSubjectScreenState extends State<EditSubjectScreen> {
   Color _pickerColor = const Color(0xff443a49);
 
-  void changeColor(Color color) {
-    setState(() => _pickerColor = color);
-  }
-
   String _subjectName = "";
   bool _isLK = false;
   String _errorText = "";
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _subjectName = widget.sub.name;
+      _isLK = widget.sub.lk;
+      _pickerColor = widget.sub.color;
+    });
+  }
+
+  void changeColor(Color color) {
+    setState(() => _pickerColor = color);
+  }
 
   Future<void> updateSubject() async {
     if (_subjectName.isEmpty) {
@@ -39,16 +49,6 @@ class _EditSubjectScreenState extends State<EditSubjectScreen> {
       Navigator.pop(context);
     });
     return;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    setState(() {
-      _subjectName = widget.sub.name;
-      _isLK = widget.sub.lk;
-      _pickerColor = widget.sub.color;
-    });
   }
 
   @override

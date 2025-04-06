@@ -14,10 +14,7 @@ class OverviewScreen extends StatefulWidget {
 }
 
 class _OverviewScreenState extends State<OverviewScreen> {
-  String subs = "xx";
-  List<Data_Subject> subjects = [];
-  late List<String> xAxisList;
-  late List<double> yAxisList;
+  List<Data_Subject> _subjects = [];
 
   // Circular Charts
   double _blockPercent = 0.0;
@@ -36,8 +33,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
 
     DatabaseClass.Shared.getSubjects().then((value) {
       setState(() {
-        subjects = value;
-        subs = value.toString().replaceAll("Data_Subject", "\nData_Subject");
+        _subjects = value;
       });
     });
   }
@@ -53,7 +49,6 @@ class _OverviewScreenState extends State<OverviewScreen> {
           child: Column(
             children: [
               const SizedBox(height: 10),
-              //  Text(subs),
               card(SizedBox(
                   width: MediaQuery.of(context).size.width - 20,
                   height: 250,
@@ -151,7 +146,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
               rightTitles:
                   AxisTitles(sideTitles: SideTitles(showTitles: false))),
           borderData: FlBorderData(show: true),
-          lineBarsData: subjects
+          lineBarsData: _subjects
               .map((sub) => LineChartBarData(
                   spots: sub.tests.asMap().entries.map((entry) {
                     int idx = entry.key; // TODO: later replace with date
