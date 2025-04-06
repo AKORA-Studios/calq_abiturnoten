@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 final calqDateformatter = DateFormat('yyyy-MM-dd hh:mm');
 
 String formatDate(DateTime date) {
-  var inputFormat = DateFormat('yy-mm-dd hh:mm:ss');
+  var inputFormat = DateFormat('yyyy-MM-dd hh:mm:ss');
   var inputDate = inputFormat.parse(date.toString().split(".")[0]);
 
   var outputFormat = DateFormat('dd.MM.yyyy');

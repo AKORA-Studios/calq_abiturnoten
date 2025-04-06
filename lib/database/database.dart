@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
+import 'package:calq_abiturnoten/database/Data_Test.dart';
 import 'package:calq_abiturnoten/database/Data_Type.dart';
 import 'package:calq_abiturnoten/util/averages.dart';
 import 'package:path/path.dart';
@@ -160,8 +161,6 @@ class DatabaseClass {
       print("No! Invalid Test Name");
       return;
     }
-    print("eeeeeeeeeeeeeeeee");
-    print(date.toString());
     await db.transaction((txn) async {
       int id1 = await txn.rawInsert(
           'INSERT INTO Test(name, points, type, date, year,subject) VALUES(?,?,?,?,?,?)',
@@ -276,6 +275,21 @@ class DatabaseClass {
         'UPDATE Subject SET color = ?, exampoints = ?, examtype = ?, lk = ?, inactiveYears = ?, name = ?, showinlinegraph = ? WHERE id = ?',
         newSub.toMapUpdate());
     print('Updated Settings: $count');
+  }
+
+  Future<void> updateTest(Data_Test newTest) async {
+    int count = await db.rawUpdate(
+        'UPDATE Test SET name = ?, points = ?, type = ?, date = ?, year = ? WHERE id = ?',
+        [
+          newTest.name,
+          newTest.points,
+          1,
+          newTest.date.toString(),
+          newTest.year,
+          newTest.id
+        ]);
+
+    print('Updated Test: $count');
   }
 
   Future<void> updatesubjectYear(Data_Subject sub) async {

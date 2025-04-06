@@ -59,8 +59,8 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      EditGradeScreen(test: e)));
+                                  builder: (context) => EditGradeScreen(
+                                      test: e, color: widget.sub.color)));
                         }))
                     .toList()
               ]))));
