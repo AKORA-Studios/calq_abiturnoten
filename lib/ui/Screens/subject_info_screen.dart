@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:pair/pair.dart';
 
 import '../../database/Data_Subject.dart';
 import '../../database/database.dart';
@@ -28,11 +29,6 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
     });
 
     DatabaseClass.Shared.getSubjects().then((value) {
-      print(value);
-      /*
-       DatabaseClass.Shared.createTest(1).then((value) {
-        print("ffffff");
-      });*/
       setState(() {
         subs[0] = value.toString();
       });
@@ -175,15 +171,7 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
           borderData: FlBorderData(show: true),
           lineBarsData: [
             LineChartBarData(
-                spots: widget.sub
-                    .getTermTests(_selectedYear)
-                    .asMap()
-                    .entries
-                    .map((entry) {
-                  int idx = entry.key; // TODO: later replace with date
-
-                  return FlSpot(idx + 0.0, entry.value.points + 0.0);
-                }).toList()
+                spots: chartData()
 
                 /*widget.sub.tests.asMap().forEach(
                                   (index, test) =>
@@ -193,5 +181,16 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
                 dotData: const FlDotData(show: false))
           ]),
     );
+  }
+
+  List<FlSpot> chartData() {
+    Pair<int, int> subjectBounds = widget.sub.getDateBounds();
+
+    return widget.sub.getTermTests(_selectedYear).map((test) {
+      var date = (test.date.millisecondsSinceEpoch - subjectBounds.key) /
+          subjectBounds.value;
+
+      return FlSpot(date, test.points + 0.0);
+    }).toList();
   }
 }
