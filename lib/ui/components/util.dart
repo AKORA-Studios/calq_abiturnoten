@@ -238,7 +238,7 @@ Future<String> getActiveTermsGeneral() async {
   var inactiveCount = 0;
   if (subjects.isNotEmpty) {
     for (var sub in subjects) {
-      var arr = getinactiveYears(sub);
+      var arr = sub.inactiveYears.split("");
       for (var num in arr) {
         if (num == "") {
           continue;
@@ -252,15 +252,6 @@ Future<String> getActiveTermsGeneral() async {
   var activeCount = subjects.length * 4 - inactiveCount;
 
   return "$activeCount von ${subjects.length * 4} Halbjahren aktiv";
-}
-
-List<String> getinactiveYears(Data_Subject sub) {
-  List<String> result = [];
-  if (sub.inactiveYears.isEmpty) {
-    return result;
-  }
-  result = sub.inactiveYears.split(" ");
-  return result;
 }
 
 // Final Exams

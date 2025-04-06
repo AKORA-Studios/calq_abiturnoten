@@ -16,10 +16,16 @@ class SubjectInfoScreen extends StatefulWidget {
 
 class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
   List<String> subs = ["x", "y"];
+  int selectedYear = 1;
+  bool _shouldUpdate = false;
 
   @override
   void initState() {
-    // TODO: implement initState
+    super.initState();
+
+    setState(() {
+      selectedYear = widget.sub.lastActiveYear();
+    });
 
     DatabaseClass.Shared.getSubjects().then((value) {
       print(value);
@@ -70,50 +76,16 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
             child: Column(
               children: [
                 Text("${widget.sub.tests.length} Tests"),
-                const Text("Notenverlauf"),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  width: double.infinity,
-                  height: 150,
-                  child: LineChart(
-                    LineChartData(
-                        minY: 0,
-                        maxY: 15,
-                        gridData: const FlGridData(
-                            drawVerticalLine: false, horizontalInterval: 5),
-                        titlesData: const FlTitlesData(
-                            bottomTitles: AxisTitles(
-                                sideTitles: SideTitles(showTitles: false)),
-                            topTitles: AxisTitles(
-                                sideTitles: SideTitles(showTitles: false)),
-                            leftTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                    interval: 5,
-                                    showTitles: true,
-                                    reservedSize: 30)),
-                            rightTitles: AxisTitles(
-                                sideTitles: SideTitles(showTitles: false))),
-                        borderData: FlBorderData(show: true),
-                        lineBarsData: [
-                          LineChartBarData(
-                              spots:
-                                  widget.sub.tests.asMap().entries.map((entry) {
-                                int idx =
-                                    entry.key; // TODO: later replace with date
-
-                                return FlSpot(
-                                    idx + 0.0, entry.value.points + 0.0);
-                              }).toList()
-
-                              /*widget.sub.tests.asMap().forEach(
-                                  (index, test) =>
-                                      FlSpot(index + 0.0, test.points + 0.0))*/
-                              ,
-                              color: widget.sub.color,
-                              dotData: const FlDotData(show: false))
-                        ]),
-                  ),
-                ),
+                card(Column(
+                  children: [
+                    const Text("Notenverlauf"),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 150,
+                      child: lineChart(),
+                    ),
+                  ],
+                )),
                 Card(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4),
@@ -122,16 +94,44 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     child: Column(
                       children: [
-                        const Row(
+                        Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [Text("?. Halbjahr"), Text("Aktiv")],
+                          children: [
+                            Text("${selectedYear.toString()}. Halbjahr"),
+                            Text(widget.sub.inactiveYears
+                                    .contains(selectedYear.toString())
+                                ? "No"
+                                : "Aktiv")
+                          ],
                         ),
-                        const Text("TODO Hier Segmentpicker"),
+                        SegmentedButton<int>(
+                          showSelectedIcon: false,
+                          segments: [1, 2, 3, 4]
+                              .map((e) => ButtonSegment<int>(
+                                    value: e,
+                                    label: Text('$e',
+                                        style: TextStyle(
+                                            decoration: selectedYear == e
+                                                ? TextDecoration.underline
+                                                : TextDecoration.none)),
+                                  ))
+                              .toList(),
+                          selected: <int>{selectedYear},
+                          onSelectionChanged: (Set<int> newSelection) {
+                            setState(() {
+                              selectedYear = newSelection.first;
+                            });
+                          },
+                        ),
                         ElevatedButton(
-                            onPressed: () {
-                              print("TODO Deactivate Term");
+                            onPressed: () async {
+                              await widget.sub.toggleTerm(selectedYear);
+                              setState(() {
+                                _shouldUpdate = !_shouldUpdate;
+                              });
                             },
-                            child: const Text("Halbjahr deaktivieren"))
+                            child: Text(
+                                "Halbjahr ${widget.sub.isTermInactive(selectedYear) ? "aktivieren" : "deaktivieren"}"))
                       ],
                     )),
                 ...halfYearWidget(),
@@ -154,5 +154,41 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
             ),
           ),
         ));
+  }
+
+  // TODO: only take grades form selected term
+  Widget lineChart() {
+    return LineChart(
+      LineChartData(
+          minY: 0,
+          maxY: 15,
+          gridData:
+              const FlGridData(drawVerticalLine: false, horizontalInterval: 5),
+          titlesData: const FlTitlesData(
+              bottomTitles:
+                  AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+              leftTitles: AxisTitles(
+                  sideTitles: SideTitles(
+                      interval: 5, showTitles: true, reservedSize: 30)),
+              rightTitles:
+                  AxisTitles(sideTitles: SideTitles(showTitles: false))),
+          borderData: FlBorderData(show: true),
+          lineBarsData: [
+            LineChartBarData(
+                spots: widget.sub.tests.asMap().entries.map((entry) {
+                  int idx = entry.key; // TODO: later replace with date
+
+                  return FlSpot(idx + 0.0, entry.value.points + 0.0);
+                }).toList()
+
+                /*widget.sub.tests.asMap().forEach(
+                                  (index, test) =>
+                                      FlSpot(index + 0.0, test.points + 0.0))*/
+                ,
+                color: widget.sub.color,
+                dotData: const FlDotData(show: false))
+          ]),
+    );
   }
 }

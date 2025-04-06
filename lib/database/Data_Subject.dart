@@ -1,3 +1,4 @@
+import 'package:calq_abiturnoten/database/database.dart';
 import 'package:calq_abiturnoten/util/color_extension.dart';
 import 'package:flutter/material.dart';
 
@@ -159,6 +160,29 @@ class Data_Subject {
     double average = (subAverage / count);
     //var rounded = String(format: "%.2f", average)//.padding(toLength: 4, withPad: "0", startingAt: 0)
     return double.parse(average.toStringAsFixed(2)) ?? 0.0;
+  }
+
+  /// Activate Terms
+  bool isTermInactive(int term) {
+    return inactiveYears.contains(term.toString());
+  }
+
+  Future<void> toggleTerm(int term) async {
+    if (isTermInactive(term)) {
+      await activateTerm(term);
+    } else {
+      await deactivateTerm(term);
+    }
+  }
+
+  Future<void> deactivateTerm(int term) async {
+    inactiveYears = inactiveYears + term.toString();
+    await DatabaseClass.Shared.updateSubject(this);
+  }
+
+  Future<void> activateTerm(int term) async {
+    inactiveYears = inactiveYears.replaceAll(term.toString(), "");
+    await DatabaseClass.Shared.updateSubject(this);
   }
 
   @override
