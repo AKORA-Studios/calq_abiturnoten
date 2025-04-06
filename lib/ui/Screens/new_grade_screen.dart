@@ -21,6 +21,14 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
   String errorText = "";
   double _testPoints = 0; // TODO: init average points for this halfyear
 
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _selectedYear = widget.sub.lastActiveYear();
+    });
+  }
+
   Future _selectDate(BuildContext context) async => showDatePicker(
         context: context,
         initialDate: DateTime.now(),
@@ -43,14 +51,6 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
             _testPoints.toInt(), _selectedYear, _selectedDate)
         .then((value) {
       Navigator.pop(context);
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    setState(() {
-      _selectedYear = widget.sub.lastActiveYear();
     });
   }
 

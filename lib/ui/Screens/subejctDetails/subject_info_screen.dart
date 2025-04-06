@@ -1,10 +1,11 @@
+import 'package:calq_abiturnoten/ui/Screens/subejctDetails/edit_grade_screen.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:pair/pair.dart';
 
-import '../../database/Data_Subject.dart';
-import '../../database/database.dart';
-import '../components/util.dart';
+import '../../../database/Data_Subject.dart';
+import '../../../database/database.dart';
+import '../../components/util.dart';
 
 class SubjectInfoScreen extends StatefulWidget {
   const SubjectInfoScreen({super.key, required this.sub});
@@ -53,7 +54,15 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
               child: Column(children: [
                 Text("$e. Halbjahr"),
                 const Divider(),
-                ...tests.map((e) => testRow(e, widget.sub)).toList()
+                ...tests
+                    .map((e) => testRow(e, widget.sub, () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      EditGradeScreen(test: e)));
+                        }))
+                    .toList()
               ]))));
     }).toList();
     return result;

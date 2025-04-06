@@ -1,4 +1,4 @@
-import 'package:calq_abiturnoten/ui/Screens/subject_info_screen.dart';
+import 'package:calq_abiturnoten/ui/Screens/subejctDetails/subject_info_screen.dart';
 import 'package:calq_abiturnoten/ui/components/util.dart';
 import 'package:calq_abiturnoten/util/averages.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +30,8 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                         children: snap.data!
                             .map((e) => TextButton(
                                 style: TextButton.styleFrom(
-                                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0)),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 0, 0)),
                                 onPressed: () {
                                   Navigator.push(
                                       context,

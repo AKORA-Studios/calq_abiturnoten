@@ -194,14 +194,12 @@ Widget subjectRowWith2Action(
 }
 
 // TODO: color test different if favorised GradeType
-Widget testRow(Data_Test test, Data_Subject sub) {
+Widget testRow(Data_Test test, Data_Subject sub, Function() action) {
   bool result = Random().nextDouble() <= 0.7;
 
   var isPrimaryTpe = result; // TODO
   return TextButton(
-      onPressed: () {
-        print("TODO go to edit grade");
-      },
+      onPressed: action,
       child: Row(
         children: [
           InkWell(
