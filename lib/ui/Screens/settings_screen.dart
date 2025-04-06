@@ -153,7 +153,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    EditSubjectScreen(sub: e)));
+                                                    EditSubjectScreen(
+                                                        sub: e,
+                                                        callbackFunc: () {
+                                                          setState(() {
+                                                            _shouldUpdateView =
+                                                                !_shouldUpdateView;
+                                                          });
+                                                        })));
                                       }, () {
                                         createDialogue(e);
                                       }))

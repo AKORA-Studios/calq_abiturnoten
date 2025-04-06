@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 class EditSubjectScreen extends StatefulWidget {
-  const EditSubjectScreen({super.key, required this.sub});
-
+  const EditSubjectScreen(
+      {super.key, required this.sub, required this.callbackFunc});
+  final VoidCallback callbackFunc;
   final Data_Subject sub;
 
   @override
@@ -46,6 +47,7 @@ class _EditSubjectScreenState extends State<EditSubjectScreen> {
     widget.sub.color = _pickerColor;
 
     DatabaseClass.Shared.updateSubject(widget.sub).then((value) {
+      widget.callbackFunc();
       Navigator.pop(context);
     });
     return;

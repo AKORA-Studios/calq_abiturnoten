@@ -2,15 +2,15 @@
 
 Android Version of [Calq iOS](https://github.com/AKORA-Studios/Calq) written in Flutter.
 
-This is a work-in-progress so not much works
+This is a work-in-progress 
 
 ## Implemented Features
 
 * [] Export/Import json
 * [] Export PDF
 * [] Variable Grade Types
-* [] Final Exams
-* [] Charts
+* [x] Final Exams
+* [x] Charts [except colors]
 
 ### TODO
 + edit grades
