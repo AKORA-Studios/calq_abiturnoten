@@ -156,7 +156,6 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
         ));
   }
 
-  // TODO: only take grades form selected term
   Widget lineChart() {
     return LineChart(
       LineChartData(
@@ -176,7 +175,11 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
           borderData: FlBorderData(show: true),
           lineBarsData: [
             LineChartBarData(
-                spots: widget.sub.tests.asMap().entries.map((entry) {
+                spots: widget.sub
+                    .getTermTests(selectedYear)
+                    .asMap()
+                    .entries
+                    .map((entry) {
                   int idx = entry.key; // TODO: later replace with date
 
                   return FlSpot(idx + 0.0, entry.value.points + 0.0);

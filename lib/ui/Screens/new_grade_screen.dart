@@ -39,8 +39,8 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
       });
       return;
     }
-    await DatabaseClass.Shared.createTest(
-            widget.sub.id, gradeName, _testPoints.toInt(), selectedYear)
+    await DatabaseClass.Shared.createTest(widget.sub.id, gradeName,
+            _testPoints.toInt(), selectedYear, _selectedDate)
         .then((value) {
       Navigator.pop(context);
     });

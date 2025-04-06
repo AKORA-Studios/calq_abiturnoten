@@ -154,15 +154,18 @@ class DatabaseClass {
       int subjectID,
       String name,
       int points,
-      int year) async {
+      int year,
+      DateTime date) async {
     if (name.isEmpty) {
       print("No! Invalid Test Name");
       return;
     }
+    print("eeeeeeeeeeeeeeeee");
+    print(date.toString());
     await db.transaction((txn) async {
       int id1 = await txn.rawInsert(
           'INSERT INTO Test(name, points, type, date, year,subject) VALUES(?,?,?,?,?,?)',
-          [name, points, 1, "", year, subjectID]);
+          [name, points, 1, date.toString(), year, subjectID]);
       print('Inserted Test: $id1');
     });
   }

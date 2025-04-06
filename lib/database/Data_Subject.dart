@@ -185,6 +185,10 @@ class Data_Subject {
     await DatabaseClass.Shared.updateSubject(this);
   }
 
+  List<Data_Test> getTermTests(int term) {
+    return tests.where((element) => element.year == term).toList();
+  }
+
   @override
   String toString() {
     return 'Data_Subject{name: $name, id: $id [${tests.length}]}';
