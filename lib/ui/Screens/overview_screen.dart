@@ -116,7 +116,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                                 // gradient: const LinearGradient(colors: [Colors.blue, Colors.purple]),
                                 toY: e.value.value,
                                 width: 60,
-                                color: Colors.amber,
+                                color: calqColor,
                                 borderRadius: barRadiusTerms())
                           ]))
                       .toList(),
@@ -181,11 +181,9 @@ class _OverviewScreenState extends State<OverviewScreen> {
           BarChartGroupData(x: 1, barRods: [
             BarChartRodData(
                 backDrawRodData: backgroundBar(),
-                gradient:
-                    const LinearGradient(colors: [Colors.blue, Colors.purple]),
                 toY: _termValues[0],
                 width: 60,
-                color: Colors.amber,
+                color: calqColor,
                 borderRadius: barRadiusTerms())
           ]),
           BarChartGroupData(x: 2, barRods: [
@@ -193,7 +191,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                 backDrawRodData: backgroundBar(),
                 toY: _termValues[1],
                 width: 60,
-                color: Colors.amber,
+                color: calqColor,
                 borderRadius: barRadiusTerms())
           ]),
           BarChartGroupData(x: 3, barRods: [
@@ -201,7 +199,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                 backDrawRodData: backgroundBar(),
                 toY: _termValues[2],
                 width: 60,
-                color: Colors.amber,
+                color: calqColor,
                 borderRadius: barRadiusTerms())
           ]),
           BarChartGroupData(x: 4, barRods: [
@@ -209,7 +207,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                 backDrawRodData: backgroundBar(),
                 toY: _termValues[3],
                 width: 60,
-                color: Colors.amber,
+                color: calqColor,
                 borderRadius: barRadiusTerms())
           ]),
         ]));
@@ -249,7 +247,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                             dimension: 112,
                             child: CircularProgressIndicator(
                               value: _averagePercent,
-                              color: Colors.green,
+                              color: calqColor,
                               strokeWidth: 20.0,
                               backgroundColor: Colors.grey.withOpacity(0.5),
                               strokeCap: StrokeCap.round,
@@ -275,7 +273,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                             dimension: 112,
                             child: CircularProgressIndicator(
                               value: _blockPercent,
-                              color: Colors.green,
+                              color: calqColor,
                               strokeWidth: 20.0,
                               backgroundColor: Colors.grey.withOpacity(0.5),
                               strokeCap: StrokeCap.round,

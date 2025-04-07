@@ -1,4 +1,5 @@
 import 'package:calq_abiturnoten/database/database.dart';
+import 'package:calq_abiturnoten/ui/components/styling.dart';
 import 'package:calq_abiturnoten/ui/components/util.dart';
 import 'package:flutter/material.dart';
 
@@ -208,6 +209,7 @@ class _ExamScreenState extends State<ExamScreen> {
                 flex: 2,
                 child: Text("Block 1"),
               ),
+              SizedBox(width: 20),
               Expanded(
                 flex: 1,
                 child: Text("Block 2"),
@@ -219,14 +221,15 @@ class _ExamScreenState extends State<ExamScreen> {
               Expanded(
                 flex: 2,
                 child: LinearProgressIndicator(
-                  valueColor: const AlwaysStoppedAnimation(Colors.green),
+                  valueColor: const AlwaysStoppedAnimation(calqColor),
                   value: _block1Value,
                 ),
               ),
+              const SizedBox(width: 20),
               Expanded(
                 flex: 1,
                 child: LinearProgressIndicator(
-                  valueColor: const AlwaysStoppedAnimation(Colors.green),
+                  valueColor: const AlwaysStoppedAnimation(calqColor),
                   value: _block2Value,
                 ),
               ),
@@ -234,12 +237,12 @@ class _ExamScreenState extends State<ExamScreen> {
           ),
           Row(
             children: [
-              //    LinearProgressIndicator(),
               Expanded(
                 flex: 2,
                 child:
                     Text("${(_block1Value * 900).round().toString()} von 600"),
               ),
+              const SizedBox(width: 20),
               Expanded(
                 flex: 1,
                 child: Text("${(_block2Value * 300).round()} von 300"),

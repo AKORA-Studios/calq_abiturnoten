@@ -3,6 +3,7 @@ import 'package:calq_abiturnoten/ui/Screens/add_grade_screen.dart';
 import 'package:calq_abiturnoten/ui/Screens/exam_screen.dart';
 import 'package:calq_abiturnoten/ui/Screens/overview_screen.dart';
 import 'package:calq_abiturnoten/ui/Screens/subjects_screen.dart';
+import 'package:calq_abiturnoten/ui/components/styling.dart';
 import 'package:flutter/material.dart';
 
 import 'ui/Screens/settings_screen.dart';
@@ -32,10 +33,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Calq Abiturnotenrechner',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: CalqTheme.lightThemeData(context),
+      darkTheme: CalqTheme.darkThemeData(),
       home: const MyHomePage(title: 'Calq'),
     );
   }
