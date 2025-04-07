@@ -1,10 +1,11 @@
+import 'package:calq_abiturnoten/database/database.dart';
 import 'package:calq_abiturnoten/ui/Screens/subejctDetails/edit_grade_screen.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:pair/pair.dart';
 
 import '../../../database/Data_Subject.dart';
-import '../../../database/database.dart';
+import '../../../database/Data_Test.dart';
 import '../../components/styling.dart';
 import '../../components/util.dart';
 
@@ -18,9 +19,9 @@ class SubjectInfoScreen extends StatefulWidget {
 }
 
 class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
-  List<String> subs = ["x", "y"]; // TODO: remove?
   int _selectedYear = 1;
   bool _shouldUpdate = false;
+  List<Data_Test> _tests = [];
 
   @override
   void initState() {
@@ -30,9 +31,9 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
       _selectedYear = widget.sub.lastActiveYear();
     });
 
-    DatabaseClass.Shared.getSubjects().then((value) {
+    DatabaseClass.Shared.getSubjectTests(widget.sub).then((value) {
       setState(() {
-        subs[0] = value.toString();
+        _tests = value;
       });
     });
   }
@@ -40,8 +41,7 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
   List<Widget> halfYearWidget() {
     List<Widget> result = [];
     [1, 2, 3, 4].map((e) {
-      var tests =
-          widget.sub.tests.where((element) => element.year == e).toList();
+      var tests = _tests.where((element) => element.year == e).toList();
       if (tests.isEmpty) {
         return;
       }
@@ -56,15 +56,20 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
                 Text("$e. Halbjahr"),
                 const Divider(),
                 ...tests
-                    .map((e) => testRow(e, widget.sub, () {
-                          Navigator.push(
+                    .map((e) => testRow(e, widget.sub, () async {
+                          Data_Test t = await Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => EditGradeScreen(
                                         test: e,
                                         color: widget.sub.color,
-                                        callbackFunc: () {
-                                          _shouldUpdate = !_shouldUpdate;
+                                        callbackFunc: () async {
+                                          var x = await DatabaseClass.Shared
+                                              .getSubjectTests(widget.sub);
+                                          setState(() {
+                                            _tests = x;
+                                            _shouldUpdate = !_shouldUpdate;
+                                          });
                                         },
                                       )));
                         }))
@@ -177,12 +182,7 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
           borderData: FlBorderData(show: true),
           lineBarsData: [
             LineChartBarData(
-                spots: chartData()
-
-                /*widget.sub.tests.asMap().forEach(
-                                  (index, test) =>
-                                      FlSpot(index + 0.0, test.points + 0.0))*/
-                ,
+                spots: chartData(),
                 color: widget.sub.color,
                 dotData: const FlDotData(show: false))
           ]),
@@ -192,7 +192,7 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
   List<FlSpot> chartData() {
     Pair<int, int> subjectBounds = widget.sub.getDateBounds();
 
-    return widget.sub.getTermTests(_selectedYear).map((test) {
+    return _tests.where((element) => element.year == _selectedYear).map((test) {
       var date = (test.date.millisecondsSinceEpoch - subjectBounds.key) /
           subjectBounds.value;
 

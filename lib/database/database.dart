@@ -123,6 +123,20 @@ class DatabaseClass {
         [];
   }
 
+  Future<List<Data_Test>> getSubjectTests(Data_Subject sub) async {
+    List<Map<dynamic, dynamic>>? resTests = await fetchTests();
+    List<Map<dynamic, dynamic>>? subjectTests =
+        resTests?.where((element) => element["subject"] == sub.id).toList();
+
+    List<Map<String, Object>> x = [];
+    subjectTests?.forEach((element) {
+      element.map((key, value) => MapEntry(key, value as Object));
+      x.add(element.map((key, value) => MapEntry(key, value as Object)));
+    });
+
+    return x.map((e) => Data_Test.fromMap(e)).toList();
+  }
+
   Future<List<Data_Type>> getTypes() async {
     List<Map<dynamic, dynamic>>? res2 = await fetchTypes();
 
