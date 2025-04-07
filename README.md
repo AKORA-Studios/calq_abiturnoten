@@ -4,16 +4,13 @@ Android Version of [Calq iOS](https://github.com/AKORA-Studios/Calq) written in 
 
 This is a work-in-progress 
 
-## Implemented Features
+## To Be Implemented Features
 
 * [] Export/Import json
 * [] Export PDF
 * [] Variable Grade Types
-* [x] Final Exams
-* [x] Charts [except colors]
 
 ### TODO
-+ edit grades
-+ delete grades
 + delete all grades
 + types
++ rainbow Colors

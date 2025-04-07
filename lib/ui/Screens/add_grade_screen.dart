@@ -15,7 +15,8 @@ class AddGradeScreen extends StatefulWidget {
 class _AddGradeScreenState extends State<AddGradeScreen> {
   Widget subjectEntry(Data_Subject sub) {
     return TextButton(
-        style: TextButton.styleFrom(padding: const EdgeInsets.fromLTRB(0, 0, 0, 0)),
+        style: TextButton.styleFrom(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0)),
         onPressed: () {
           Navigator.push(
               context,
@@ -29,7 +30,6 @@ class _AddGradeScreenState extends State<AddGradeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: const Text("Neue Note hinzufügen"),
         ),
         body: SingleChildScrollView(

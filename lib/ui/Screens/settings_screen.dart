@@ -75,7 +75,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: const Text("Settings"),
         ),
         body: Padding(
@@ -127,7 +126,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Icons.folder_open, () {}),
                   settingsOption(
                       "Noten exportieren", Colors.green, Icons.share, () {}),
-                  settingsOption("Wertung änmdern", Colors.yellow,
+                  settingsOption("Wertung ändern", Colors.yellow,
                       Icons.filter_frames, () {}),
                   settingsOption("Demo Daten laden", Colors.orange,
                       Icons.warning_amber, () {}),

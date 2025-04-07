@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 const calqColor = Color(0xff428fe3);
+const appbarColorLight = Color(0xffdde1f3);
+const appbarColorDark = Color(0xff111113);
 
 Widget card(Widget content) {
   return Padding(
@@ -45,6 +47,8 @@ class CalqTheme {
             onTertiary: Colors.teal),
 
         // cardTheme : ...,
+        appBarTheme: const AppBarTheme(
+            backgroundColor: appbarColorLight, shadowColor: Colors.black),
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ButtonStyle(
                 elevation: MaterialStateProperty.resolveWith(
@@ -85,6 +89,8 @@ class CalqTheme {
             onTertiary: Colors.teal),
 
         //    cardTheme : ...,
+        appBarTheme: const AppBarTheme(
+            backgroundColor: appbarColorDark, shadowColor: Colors.white12),
         elevatedButtonTheme: ElevatedButtonThemeData(
             style: ButtonStyle(
                 elevation: MaterialStateProperty.resolveWith(

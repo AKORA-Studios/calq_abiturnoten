@@ -35,6 +35,7 @@ class MyApp extends StatelessWidget {
       title: 'Calq Abiturnotenrechner',
       theme: CalqTheme.lightThemeData(context),
       darkTheme: CalqTheme.darkThemeData(),
+      themeMode: ThemeMode.system,
       home: const MyHomePage(title: 'Calq'),
     );
   }
@@ -56,7 +57,10 @@ class _MyHomePageState extends State<MyHomePage> {
         length: 5,
         child: Scaffold(
             bottomNavigationBar: Container(
-                color: Theme.of(context).colorScheme.inversePrimary,
+                color: Theme.of(context)
+                    .colorScheme
+                    .inversePrimary
+                    .withOpacity(0.4),
                 child: const TabBar(
                   tabs: [
                     Tab(icon: Icon(Icons.bar_chart)),
