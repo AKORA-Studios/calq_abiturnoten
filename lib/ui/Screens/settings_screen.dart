@@ -19,6 +19,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   bool _rainbowEnabled = false;
   bool _hasFiveExams = false;
   bool _shouldUpdateView = false;
+  String _versionString = "Version: ?? (Build: ??)";
 
   @override
   void initState() {
@@ -29,6 +30,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       onAppear(); // TODO: maybe remove, maybe update subject list?
+    });
+
+    PackageInfo.fromPlatform().then((value) {
+      String version = value.version;
+      String buildNumber = value.buildNumber;
+
+      setState(() {
+        _versionString = "Version: $version (Build: $buildNumber)";
+      });
+      print(_versionString);
     });
   }
 
@@ -208,7 +219,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   const Text("Sonstiges"),
                   const Divider(),
-                  const Text("Version: ??, Build: ??"),
+                  Text(_versionString),
                   TextButton(
                       onPressed: () {
                         showLicensePage(context: context);
