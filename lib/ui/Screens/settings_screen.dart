@@ -200,7 +200,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               Column(
                 children: [
-                  const Text("Types"),
+                  const Text("Notentypen"),
                   const Divider(),
                   FutureBuilder(
                       future: DatabaseClass.Shared.getTypes(),
@@ -219,6 +219,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   const Text("Sonstiges"),
                   const Divider(),
+                  ElevatedButton(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.red)),
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (ctx) {
+                              return deleteDataAlert();
+                            });
+                      },
+                      child: Text("Alle Daten löschen")),
                   Text(_versionString),
                   TextButton(
                       onPressed: () {
@@ -259,6 +271,38 @@ class _SettingsScreenState extends State<SettingsScreen> {
             );
           }
         });
+  }
+
+  Widget deleteDataAlert() {
+    // TODO: check if works
+    return AlertDialog(
+      // To display the title it is optional
+      title: Text('Delete all Data'),
+      // Message which will be pop up on the screen
+      content: Text('Do you really want to delete all data?'),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('No!!!'),
+        ),
+        TextButton(
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.red),
+              foregroundColor: MaterialStateProperty.all(Colors.white)),
+          onPressed: () {
+            DatabaseClass.Shared.deleteAllTypes().then((value) {
+              Navigator.of(context).pop();
+              setState(() {
+                _shouldUpdateView = !_shouldUpdateView;
+              });
+            });
+          },
+          child: Text('Delete'),
+        ),
+      ],
+    );
   }
 
   Widget gradeTypeAlert(int typeID) {
