@@ -15,6 +15,7 @@ class ExamScreen extends StatefulWidget {
 class _ExamScreenState extends State<ExamScreen> {
   double _block1Value = 0.5;
   double _block2Value = 0.0;
+  int _maxBlock1Value = 600;
   bool _shouldUpdate = false;
 
   List<Data_Subject> _examOptions = [];
@@ -45,9 +46,15 @@ class _ExamScreenState extends State<ExamScreen> {
   }
 
   void updateBlock1Values() {
+    generatePossibleBlockOne().then((value) {
+      setState(() {
+        _maxBlock1Value = value;
+      });
+    });
+
     generateBlockOne().then((value) {
       setState(() {
-        _block1Value = (value / 900.0);
+        _block1Value = (value / _maxBlock1Value);
       });
     });
   }
@@ -239,8 +246,8 @@ class _ExamScreenState extends State<ExamScreen> {
             children: [
               Expanded(
                 flex: 2,
-                child:
-                    Text("${(_block1Value * 900).round().toString()} von 600"),
+                child: Text(
+                    "${(_block1Value * _maxBlock1Value).round().toString()} von ${_maxBlock1Value}"),
               ),
               const SizedBox(width: 20),
               Expanded(

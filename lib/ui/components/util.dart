@@ -319,35 +319,42 @@ Future<int> generateBlockTwo() async {
 
   return sum.toInt();
 }
-/*
-/// Calc Maxpoints block I
-func generatePossibleBlockOne() -> Int {
-let subjects = Util.getAllSubjects()
-var sum = 0
-var count = 0
-if subjects.count == 0 { return 0 }
 
-for i in 0..<subjects.count {
-let sub = subjects[i]
-let SubTests = Util.getAllSubjectTests(sub)
+/// Calc Max Points block I
+Future<int> generatePossibleBlockOne() async {
+  List<Data_Subject> subjects = await DatabaseClass.Shared.getSubjects();
+  var sum = 0;
+  var count = 0;
+  if (subjects.isEmpty) {
+    return 0;
+  }
 
-for e in 1...4 {
-let tests = SubTests.filter {($0.year == e)}
-if tests.count == 0 { continue }
+  for (int i = 0; i < subjects.length; i++) {
+    Data_Subject sub = subjects[i];
+    List<Data_Test> subTests = await DatabaseClass.Shared.getSubjectTests(sub);
 
-if sub.lk {
-sum += 2 * 15
-count += 2
-} else {
-sum += 15
-count += 1
+    for (int e in [1, 2, 3, 4]) {
+      List<Data_Test> tests =
+          subTests.where((element) => element.year == e).toList();
+      if (tests.isEmpty) {
+        continue;
+      }
+
+      if (sub.lk) {
+        sum += 2 * 15;
+        count += 2;
+      } else {
+        sum += 15;
+        count += 1;
+      }
+    }
+  }
+
+  if (sum == 0) {
+    return 0;
+  }
+  return ((sum / count) * 40).round();
 }
-}
-}
-
-if sum == 0 {return 0 }
-return Int(Double((sum / count) * 40))
-}*/
 
 /// Returns the average of an array of tests.
 Future<double> testAverage(List<Data_Test> tests) async {
