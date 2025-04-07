@@ -140,9 +140,10 @@ class DatabaseClass {
   Future<List<Data_Type>> getTypes() async {
     List<Map<dynamic, dynamic>>? res2 = await fetchTypes();
 
-    if (res2!.isEmpty) {
+    // TODO: chekc if can be removed
+    /*if (res2!.isEmpty) {
       resetTypes();
-    }
+    }*/
 
     res2 = await fetchTypes();
 
@@ -229,11 +230,9 @@ class DatabaseClass {
     return ids.length + 1;
   }
 
-  /*
-
   // MARK: Managed GradeTypes
-  static func addSecondType(_ firstID: Int16) {
-  let newType = GradeType(context: getContext())
+  /*void addSecondType(int firstID) {
+  Data_Type newType = GradeType(context: getContext())
   newType.name = "new default type"
   newType.weigth = 0.0
   newType.id = getNewIDQwQ([firstID])
@@ -252,19 +251,7 @@ class DatabaseClass {
   addSecondType(types[0].id)
   } else if types.isEmpty {
   setTypes(Util.getSettings())
-  }
-
-    static func getTypeGrades(_ type: Int16) -> [UserTest] {
-  var arr: [UserTest] = []
-  for sub in Util.getAllSubjects() {
-  for test in Util.getAllSubjectTests(sub) {
-  if test.type != type { continue }
-  arr.append(test)
-  }
-  }
-  return arr
-  }
-  * */
+  }*/
 
   // UPDATE DATA
   Future<void> updateSettings_PrimaryType(int primaryType) async {
@@ -357,8 +344,33 @@ class DatabaseClass {
     assert(count == 1);
   }
 
-  Future<void> deleteType(int id) async {
-    // TODO: IMPLEMENT Tpes
+  Future<bool> deleteType(int typeID) async {
+    List<Data_Test> testsWithType = await getTypeGrades(typeID);
+
+    if (testsWithType.isNotEmpty) {
+      print("Tests still use this type!");
+      return false;
+    }
+
+    int count =
+        await db.rawDelete('DELETE FROM Gradetype WHERE id = ?', [typeID]);
+    assert(count == 1);
+    return true;
+  }
+
+  Future<List<Data_Test>> getTypeGrades(int type) async {
+    List<Data_Test> arr = [];
+    List<Data_Subject> subjects = await getSubjects();
+    for (Data_Subject sub in subjects) {
+      List<Data_Test> tests = await getSubjectTests(sub);
+      for (Data_Test test in tests) {
+        if (test.type != type) {
+          continue;
+        }
+        arr.add(test);
+      }
+    }
+    return arr;
   }
 
   Future<void> deleteAllTypes() async {

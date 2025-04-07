@@ -9,10 +9,7 @@ import 'package:intl/intl.dart';
 
 import '../../database/database.dart';
 
-String dateFormater(DateTime inputDate) {
-  //var inputFormat = DateFormat('yyyy-MM-dd hh:mm:ss a');
-  //var inputDate = inputFormat.parse('31/12/2000 23:59'); // <-- dd/MM 24H format
-
+String dateFormatter(DateTime inputDate) {
   var outputFormat = DateFormat('dd.MM.yy');
   var outputDate = outputFormat.format(inputDate);
   return outputDate; // 12/31/2000 11:59 PM <-- MM/dd 12H format
@@ -83,7 +80,7 @@ Widget subjectRow(Data_Subject sub) {
   );
 }
 
-Widget subjectRowWithHalfyears(Data_Subject sub) {
+Widget subjectRowWithTerms(Data_Subject sub) {
   return Row(
     children: [
       IconButton.filled(
@@ -208,7 +205,7 @@ Widget testRow(Data_Test test, Data_Subject sub, Function() action) {
           const SizedBox(width: 10),
           Text(test.name),
           const Spacer(),
-          Text(dateFormater(test.date))
+          Text(dateFormatter(test.date))
         ],
       ));
 }

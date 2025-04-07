@@ -1,6 +1,8 @@
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
+import 'package:calq_abiturnoten/database/Data_Type.dart';
 import 'package:calq_abiturnoten/ui/Screens/settings/edit_subject_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../database/database.dart';
 import '../components/util.dart';
@@ -189,15 +191,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   const Text("Types"),
                   const Divider(),
-                  const Text("Version: ??, Build: ??"),
                   FutureBuilder(
                       future: DatabaseClass.Shared.getTypes(),
                       builder: (ctx, snap) {
                         if (snap.hasData) {
                           return Column(
-                              children: snap.data!
-                                  .map((e) => Text("${e.name}: ${e.weigth}"))
-                                  .toList());
+                              children:
+                                  snap.data!.map((e) => typeRow(e)).toList());
                         } else {
                           return const SizedBox();
                         }
@@ -219,5 +219,65 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ],
           ),
         ));
+  }
+
+  Widget typeRow(Data_Type type) {
+    return FutureBuilder(
+        future: DatabaseClass.Shared.getTypeGrades(type.id),
+        builder: (ctx, snap) {
+          if (snap.hasError) {
+            return Text("Smth went wrong with: ${type.name}");
+          } else {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("${type.name}: ${type.weigth}"),
+                IconButton(
+                    onPressed: snap.data!.isEmpty
+                        ? () {
+                            showDialog(
+                                context: context,
+                                builder: (ctx) {
+                                  return gradeTypeAlert(type.id);
+                                });
+                          }
+                        : null,
+                    icon: Icon(Icons.delete,
+                        color: snap.data!.isEmpty ? Colors.red : Colors.grey))
+              ],
+            );
+          }
+        });
+  }
+
+  Widget gradeTypeAlert(int typeID) {
+    return AlertDialog(
+      // To display the title it is optional
+      title: Text('Delete Grade Type'),
+      // Message which will be pop up on the screen
+      content: Text('Do you really want to delete this Gradetype?'),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('No!!!'),
+        ),
+        TextButton(
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.red),
+              foregroundColor: MaterialStateProperty.all(Colors.white)),
+          onPressed: () {
+            DatabaseClass.Shared.deleteType(typeID).then((value) {
+              Navigator.of(context).pop();
+              setState(() {
+                _shouldUpdateView = !_shouldUpdateView;
+              });
+            });
+          },
+          child: Text('Delete'),
+        ),
+      ],
+    );
   }
 }
