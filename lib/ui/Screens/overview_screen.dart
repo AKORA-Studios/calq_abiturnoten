@@ -113,8 +113,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                       .map((e) => BarChartGroupData(x: e.key, barRods: [
                             BarChartRodData(
                                 backDrawRodData: backgroundBar(),
-                                gradient: const LinearGradient(
-                                    colors: [Colors.blue, Colors.purple]),
+                                // gradient: const LinearGradient(colors: [Colors.blue, Colors.purple]),
                                 toY: e.value.value,
                                 width: 60,
                                 color: Colors.amber,
@@ -257,7 +256,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                             ),
                           ),
                           Text(
-                            '$_averageText\n$_gradeText',
+                            '$_averageText\n $_gradeText',
                             style: const TextStyle(
                               fontSize: 20.0,
                               color: Colors.black,
@@ -283,7 +282,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                             ),
                           ),
                           Text(
-                            '$_blockCircleText\nØ',
+                            '$_blockCircleText\n  Ø ',
                             style: const TextStyle(
                               fontSize: 18.0,
                               color: Colors.black,

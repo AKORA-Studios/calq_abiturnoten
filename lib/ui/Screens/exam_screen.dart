@@ -12,7 +12,7 @@ class ExamScreen extends StatefulWidget {
 }
 
 class _ExamScreenState extends State<ExamScreen> {
-  final double _block1Value = 0.5;
+  double _block1Value = 0.5;
   double _block2Value = 0.0;
   bool _shouldUpdate = false;
 
@@ -27,7 +27,7 @@ class _ExamScreenState extends State<ExamScreen> {
       });
     });
     updateBlock2Values();
-    //  _shouldUpdate = !_shouldUpdate;
+    updateBlock1Values();
   }
 
   void chooseExam(Data_Subject sub) {
@@ -40,6 +40,14 @@ class _ExamScreenState extends State<ExamScreen> {
   void updateBlock2Values() {
     setState(() {
       _block2Value = calculateBlock2();
+    });
+  }
+
+  void updateBlock1Values() {
+    generateBlockOne().then((value) {
+      setState(() {
+        _block1Value = (value / 900.0);
+      });
     });
   }
 
@@ -65,6 +73,7 @@ class _ExamScreenState extends State<ExamScreen> {
         if (snap.hasData) {
           // Subject set
           var sub = snap.data!;
+          // updateBlock1Values(); // update them regularly
           return Card(
               child: Padding(
                   padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
@@ -226,9 +235,10 @@ class _ExamScreenState extends State<ExamScreen> {
           Row(
             children: [
               //    LinearProgressIndicator(),
-              const Expanded(
+              Expanded(
                 flex: 2,
-                child: Text("? von 600"),
+                child:
+                    Text("${(_block1Value * 900).round().toString()} von 600"),
               ),
               Expanded(
                 flex: 1,

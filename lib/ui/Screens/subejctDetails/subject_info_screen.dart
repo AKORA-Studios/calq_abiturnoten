@@ -56,8 +56,8 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
                 Text("$e. Halbjahr"),
                 const Divider(),
                 ...tests
-                    .map((e) => testRow(e, widget.sub, () async {
-                          Data_Test t = await Navigator.push(
+                    .map((e) => testRow(e, widget.sub, () {
+                          Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => EditGradeScreen(
