@@ -193,6 +193,10 @@ class DatabaseClass {
     });
   }
 
+  Future<void> addType() async {
+    await createType("DefaultName", 0.0, -1);
+  }
+
   // Assigned id == -1 automatically assign id
   Future<void> createType(String name, double weight, int assignedID) async {
     List<Data_Type> existingTypes = await getTypes();

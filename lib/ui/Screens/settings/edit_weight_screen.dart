@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../database/Data_Type.dart';
 import '../../../database/database.dart';
 
+// TODO: reload data on change
 class EditWeightScreen extends StatefulWidget {
   const EditWeightScreen(
       {super.key, required this.types, required this.callbackFunc});
@@ -24,7 +25,15 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
         body: SingleChildScrollView(
           child: Column(children: [
             Text("huh"),
-            ...widget.types.map((e) => typeRow(e)).toList()
+            ...widget.types.map((e) => typeRow(e)).toList(),
+            ElevatedButton(
+                onPressed: () {
+                  print("Test");
+                  DatabaseClass.Shared.addType().then((value) {
+                    Navigator.pop(context);
+                  });
+                },
+                child: Text("Typ hinzufügen"))
           ]),
         ));
   }
