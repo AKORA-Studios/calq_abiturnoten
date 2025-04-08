@@ -1,3 +1,4 @@
+import 'package:calq_abiturnoten/ui/components/styling.dart';
 import 'package:flutter/material.dart';
 
 import '../../../database/Data_Type.dart';
@@ -5,10 +6,8 @@ import '../../../database/database.dart';
 
 // TODO: reload data on change
 class EditWeightScreen extends StatefulWidget {
-  const EditWeightScreen(
-      {super.key, required this.types, required this.callbackFunc});
-  final List<Data_Type> types;
-  final VoidCallback callbackFunc;
+  const EditWeightScreen({super.key});
+
   @override
   State<EditWeightScreen> createState() => _EditWeightScreenState();
 }
@@ -24,14 +23,24 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
         ),
         body: SingleChildScrollView(
           child: Column(children: [
-            Text("huh"),
-            ...widget.types.map((e) => typeRow(e)).toList(),
+            FutureBuilder(
+                future: DatabaseClass.Shared.getTypes(),
+                builder: (ctx, snap) {
+                  if (snap.hasError || snap.data == null) {
+                    return Text("Smth went wrong");
+                  } else {
+                    return Column(
+                        children: snap.data!.map((e) => typeRow(e)).toList());
+                  }
+                }),
+            //        ...widget.types.map((e) => typeRow(e)).toList(),
             ElevatedButton(
                 onPressed: () {
-                  print("Test");
-                  DatabaseClass.Shared.addType().then((value) {
-                    Navigator.pop(context);
-                  });
+                  showDialog(
+                      context: context,
+                      builder: (ctx) {
+                        return newTypeAlert();
+                      });
                 },
                 child: Text("Typ hinzufügen"))
           ]),
@@ -39,35 +48,89 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
   }
 
   Widget typeRow(Data_Type type) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text("${type.name}[${type.assignedID}]: ${type.weigth}"),
+        IconButton(
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  builder: (ctx) {
+                    return deleteAlert(type.id);
+                  });
+            },
+            icon: Icon(Icons.delete, color: Colors.red))
+      ],
+    );
+  }
+
+  Widget deleteAlert(int typeID) {
     return FutureBuilder(
-        future: DatabaseClass.Shared.getTypeGrades(type.id),
+        future: DatabaseClass.Shared.getTypeGrades(typeID),
         builder: (ctx, snap) {
-          if (snap.hasError || !snap.hasData) {
-            return Text("Smth went wrong with: ${type.name}");
-          } else {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("${type.name}[${type.assignedID}]: ${type.weigth}"),
-                IconButton(
-                    onPressed: snap.data!.isEmpty
-                        ? () {
-                            showDialog(
-                                context: context,
-                                builder: (ctx) {
-                                  return gradeTypeAlert(type.id);
-                                });
-                          }
-                        : null,
-                    icon: Icon(Icons.delete,
-                        color: snap.data!.isEmpty ? Colors.red : Colors.grey))
+          if (snap.hasError || !snap.hasData || snap.data!.isNotEmpty) {
+            return AlertDialog(
+              title: Text("Type is still in use"),
+              content:
+                  Text("Type is still used by gardes so it cant be deleted"),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Oki'),
+                ),
               ],
             );
+          } else {
+            return gradeTypeAlert(typeID);
           }
         });
   }
 
-  // MARK: Functions
+  TextEditingController _textFieldController = TextEditingController();
+
+  Widget newTypeAlert() {
+    return AlertDialog(
+      // To display the title it is optional
+      title: Text('Create new Grade Type'),
+      // Message which will be pop up on the screen
+      content: TextField(
+        controller: _textFieldController..text = 'DefaultGradeName',
+        //  controller: _textFieldController,
+        decoration: InputDecoration(hintText: "DefaultTypeName"),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('No!!!'),
+        ),
+        TextButton(
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(calqColor),
+              foregroundColor: MaterialStateProperty.all(Colors.white)),
+          onPressed: () {
+            if (_textFieldController.text.isEmpty) {
+              return;
+            }
+            DatabaseClass.Shared.addType(_textFieldController.text)
+                .then((value) {
+              setState(() {
+                _shouldUpdateView = !_shouldUpdateView;
+              });
+              Navigator.of(context).pop();
+            });
+            _textFieldController..text = "DefaultGradeName";
+          },
+          child: Text('Create'),
+        ),
+      ],
+    );
+  }
+
   Widget gradeTypeAlert(int typeID) {
     return AlertDialog(
       // To display the title it is optional
@@ -88,7 +151,9 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
           onPressed: () {
             DatabaseClass.Shared.deleteType(typeID).then((value) {
               Navigator.of(context).pop();
-              widget.callbackFunc();
+              setState(() {
+                _shouldUpdateView = !_shouldUpdateView;
+              });
             });
           },
           child: Text('Delete'),
@@ -97,5 +162,3 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
     );
   }
 }
-//Circle1: _averageText + _gradeText [_averagePercent]
-//Circle2: _blockCircleText [_blockPercent]

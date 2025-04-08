@@ -213,15 +213,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => EditWeightScreen(
-                                              types: snap.data ?? [],
-                                              callbackFunc: () {
-                                                setState(() {
-                                                  _shouldUpdateView =
-                                                      !_shouldUpdateView;
-                                                });
-                                              },
-                                            )));
+                                        builder: (context) =>
+                                            const EditWeightScreen()));
                               },
                               child: Text("Notentypen bearbeiten"));
                         }

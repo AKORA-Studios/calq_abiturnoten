@@ -193,23 +193,23 @@ class DatabaseClass {
     });
   }
 
-  Future<void> addType() async {
-    await createType("DefaultName", 0.0, -1);
+  Future<void> addType(String name) async {
+    await createType(name, 0.0, -1);
   }
 
   // Assigned id == -1 automatically assign id
   Future<void> createType(String name, double weight, int assignedID) async {
     List<Data_Type> existingTypes = await getTypes();
 
-    List<int> existingIDs = existingTypes.map((e) => e.id).toList();
+    List<int> existingIDs = existingTypes.map((e) => e.assignedID).toList();
     double existingWeights = existingTypes.isNotEmpty
         ? existingTypes.map((e) => e.weigth).toList().reduce((a, b) => a + b)
         : 0.0;
 
-    int assignedidNew = assignedID;
+    int assignedNewID = assignedID;
     double weightNew = weight;
     if (assignedID < 0) {
-      assignedidNew = getNewIDQwQ(existingIDs);
+      assignedNewID = getNewIDQwQ(existingIDs);
     }
     if (weightNew + existingWeights > 100.0) {
       weightNew = 0.0;
@@ -218,7 +218,7 @@ class DatabaseClass {
     await db.transaction((txn) async {
       int id1 = await txn.rawInsert(
           'INSERT INTO Gradetype(name, weigth, assignedID)  VALUES(?,?,?)',
-          [name, weightNew, assignedidNew]);
+          [name, weightNew, assignedNewID]);
       print('Inserted Gradetype: $id1');
     });
   }
