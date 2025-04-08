@@ -194,7 +194,7 @@ class DatabaseClass {
   }
 
   // Assigned id == -1 automatically assign id
-  Future<void> createType(String name, double weigth, int assignedID) async {
+  Future<void> createType(String name, double weight, int assignedID) async {
     List<Data_Type> existingTypes = await getTypes();
 
     List<int> existingIDs = existingTypes.map((e) => e.id).toList();
@@ -203,7 +203,7 @@ class DatabaseClass {
         : 0.0;
 
     int assignedidNew = assignedID;
-    double weightNew = weigth;
+    double weightNew = weight;
     if (assignedID < 0) {
       assignedidNew = getNewIDQwQ(existingIDs);
     }

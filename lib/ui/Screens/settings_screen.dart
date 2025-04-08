@@ -1,6 +1,6 @@
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
-import 'package:calq_abiturnoten/database/Data_Type.dart';
 import 'package:calq_abiturnoten/ui/Screens/settings/edit_subject_screen.dart';
+import 'package:calq_abiturnoten/ui/Screens/settings/edit_weight_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -205,14 +205,27 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   FutureBuilder(
                       future: DatabaseClass.Shared.getTypes(),
                       builder: (ctx, snap) {
-                        if (snap.hasData) {
-                          return Column(
-                              children:
-                                  snap.data!.map((e) => typeRow(e)).toList());
+                        if (snap.hasError || !snap.hasData) {
+                          return Text("smth went wrong fetching gradetypes");
                         } else {
-                          return const SizedBox();
+                          return ElevatedButton(
+                              onPressed: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => EditWeightScreen(
+                                              types: snap.data ?? [],
+                                              callbackFunc: () {
+                                                setState(() {
+                                                  _shouldUpdateView =
+                                                      !_shouldUpdateView;
+                                                });
+                                              },
+                                            )));
+                              },
+                              child: Text("Notentypen bearbeiten"));
                         }
-                      })
+                      }),
                 ],
               ),
               Column(
@@ -244,35 +257,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ));
   }
 
-  Widget typeRow(Data_Type type) {
-    return FutureBuilder(
-        future: DatabaseClass.Shared.getTypeGrades(type.id),
-        builder: (ctx, snap) {
-          if (snap.hasError) {
-            return Text("Smth went wrong with: ${type.name}");
-          } else {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("${type.name}: ${type.weigth}"),
-                IconButton(
-                    onPressed: snap.data!.isEmpty
-                        ? () {
-                            showDialog(
-                                context: context,
-                                builder: (ctx) {
-                                  return gradeTypeAlert(type.id);
-                                });
-                          }
-                        : null,
-                    icon: Icon(Icons.delete,
-                        color: snap.data!.isEmpty ? Colors.red : Colors.grey))
-              ],
-            );
-          }
-        });
-  }
-
   Widget deleteDataAlert() {
     // TODO: check if works
     return AlertDialog(
@@ -293,37 +277,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               foregroundColor: MaterialStateProperty.all(Colors.white)),
           onPressed: () {
             DatabaseClass.Shared.deleteAllTypes().then((value) {
-              Navigator.of(context).pop();
-              setState(() {
-                _shouldUpdateView = !_shouldUpdateView;
-              });
-            });
-          },
-          child: Text('Delete'),
-        ),
-      ],
-    );
-  }
-
-  Widget gradeTypeAlert(int typeID) {
-    return AlertDialog(
-      // To display the title it is optional
-      title: Text('Delete Grade Type'),
-      // Message which will be pop up on the screen
-      content: Text('Do you really want to delete this Gradetype?'),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text('No!!!'),
-        ),
-        TextButton(
-          style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(Colors.red),
-              foregroundColor: MaterialStateProperty.all(Colors.white)),
-          onPressed: () {
-            DatabaseClass.Shared.deleteType(typeID).then((value) {
               Navigator.of(context).pop();
               setState(() {
                 _shouldUpdateView = !_shouldUpdateView;
