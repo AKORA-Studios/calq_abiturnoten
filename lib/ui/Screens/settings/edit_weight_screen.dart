@@ -13,7 +13,7 @@ class EditWeightScreen extends StatefulWidget {
 }
 
 class _EditWeightScreenState extends State<EditWeightScreen> {
-  bool _shouldUpdateView = false;
+  bool _shouldUpdate = false;
 
   @override
   Widget build(BuildContext context) {
@@ -119,7 +119,7 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
             DatabaseClass.Shared.addType(_textFieldController.text)
                 .then((value) {
               setState(() {
-                _shouldUpdateView = !_shouldUpdateView;
+                _shouldUpdate = !_shouldUpdate;
               });
               Navigator.of(context).pop();
             });
@@ -152,7 +152,7 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
             DatabaseClass.Shared.deleteType(typeID).then((value) {
               Navigator.of(context).pop();
               setState(() {
-                _shouldUpdateView = !_shouldUpdateView;
+                _shouldUpdate = !_shouldUpdate;
               });
             });
           },

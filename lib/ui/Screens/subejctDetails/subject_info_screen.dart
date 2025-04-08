@@ -153,13 +153,47 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
                 TextButton(
                     style: destructiveButton(),
                     onPressed: () {
-                      print("TODO: delete all grades");
+                      showDialog(
+                          context: context,
+                          builder: (ctx) {
+                            return deleteAllAlert();
+                          });
                     },
                     child: const Text("Alle Noten löschen")),
               ],
             ),
           ),
         ));
+  }
+
+  Widget deleteAllAlert() {
+    return AlertDialog(
+      title: Text("Delete all grades"),
+      // content: "",
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: Text('No!!!'),
+        ),
+        TextButton(
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(calqColor),
+              foregroundColor: MaterialStateProperty.all(Colors.white)),
+          onPressed: () {
+            DatabaseClass.Shared.deleteSubjectTests(widget.sub).then((value) {
+              setState(() {
+                //_shouldUpdate = !_shouldUpdate;
+                _tests = [];
+              });
+              Navigator.of(context).pop();
+            });
+          },
+          child: Text('Delete All'),
+        ),
+      ],
+    );
   }
 
   Widget lineChart() {

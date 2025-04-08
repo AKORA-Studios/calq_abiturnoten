@@ -348,6 +348,21 @@ class DatabaseClass {
     assert(count == 1);
   }
 
+  Future<void> deleteSubjectTests(Data_Subject sub) async {
+    List<Map<dynamic, dynamic>>? resTests = await fetchTests();
+    List<Map<dynamic, dynamic>>? subjectTests =
+        resTests?.where((element) => element["subject"] == sub.id).toList();
+    List<dynamic>? ids = subjectTests?.map((e) {
+      return e["id"];
+    }).toList();
+
+    ids?.forEach((element) async {
+      int count = await db
+          .rawDelete('DELETE FROM Test WHERE id = ?', [element.toString()]);
+      assert(count == 1);
+    });
+  }
+
   Future<bool> deleteType(int typeID) async {
     List<Data_Test> testsWithType = await getTypeGrades(typeID);
 

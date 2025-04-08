@@ -8,9 +8,11 @@ This is a work-in-progress
 
 * [] Export/Import json
 * [] Export PDF
-* [] Variable Grade Types
+* [] Impact Segment
+* [] Rainbow Colors
+* [] Localization
 
 ### TODO
 + delete all grades
-+ types
++ edit type weights + favorite a type
 + rainbow Colors
