@@ -223,13 +223,16 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
   }
 
   List<FlSpot> chartData() {
+    List<FlSpot> arr = [];
     Pair<int, int> subjectBounds = widget.sub.getDateBounds();
 
-    return _tests.where((element) => element.year == _selectedYear).map((test) {
+    arr = _tests.where((element) => element.year == _selectedYear).map((test) {
       var date = (test.date.millisecondsSinceEpoch - subjectBounds.key) /
           subjectBounds.value;
 
       return FlSpot(date, test.points + 0.0);
     }).toList();
+
+    return arr.length < 2 ? [] : arr;
   }
 }
