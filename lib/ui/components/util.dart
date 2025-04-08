@@ -17,22 +17,34 @@ String dateFormatter(DateTime inputDate) {
 
 Widget settingsOption(
     String title, Color color, IconData icon, Function onTap) {
-  // TODO: realize on tap
-  return Row(
-    children: [
-      IconButton.filled(
-        style: ButtonStyle(
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-            backgroundColor: MaterialStateProperty.all<Color>(color)),
-        onPressed: null,
-        icon: Icon(
-          icon,
-          color: Colors.white,
-        ),
+  return SizedBox(
+    width: double.infinity,
+    child: TextButton(
+      style: TextButton.styleFrom(
+        minimumSize: Size.zero, // Set this
+        padding: EdgeInsets.zero, // and this
       ),
-      Text(title)
-    ],
+      onPressed: () {
+        onTap();
+      },
+      child: Row(
+        children: [
+          IconButton.filled(
+            style: ButtonStyle(
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8))),
+                backgroundColor: MaterialStateProperty.all<Color>(color)),
+            onPressed: null,
+            icon: Icon(
+              icon,
+              color: Colors.white,
+            ),
+          ),
+          Text(title)
+        ],
+      ),
+    ),
   );
 }
 

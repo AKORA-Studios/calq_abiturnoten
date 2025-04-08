@@ -143,8 +143,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Icons.filter_frames, () {}),
                   settingsOption("Demo Daten laden", Colors.orange,
                       Icons.warning_amber, () {}),
-                  settingsOption(
-                      "Daten löschen", Colors.red, Icons.delete, () {}),
+                  settingsOption("Daten löschen", Colors.red, Icons.delete, () {
+                    // TODO: confirm if works
+                    showDialog(
+                        context: context,
+                        builder: (ctx) {
+                          return deleteDataAlert();
+                        });
+                  }),
                   settingsOption("Github", Colors.pink, Icons.info, () {}),
                   settingsOption("PDF Export", Colors.deepPurpleAccent,
                       Icons.file_copy_outlined, () {})
@@ -225,18 +231,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 children: [
                   const Text("Sonstiges"),
                   const Divider(),
-                  ElevatedButton(
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all(Colors.red)),
-                      onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (ctx) {
-                              return deleteDataAlert();
-                            });
-                      },
-                      child: Text("Alle Daten löschen")),
                   Text(_versionString),
                   TextButton(
                       onPressed: () {

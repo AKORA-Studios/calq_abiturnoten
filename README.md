@@ -13,6 +13,5 @@ This is a work-in-progress
 * [] Localization
 
 ### TODO
-+ delete all grades
 + edit type weights + favorite a type
 + rainbow Colors
