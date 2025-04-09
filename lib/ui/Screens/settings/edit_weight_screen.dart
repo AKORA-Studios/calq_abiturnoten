@@ -15,6 +15,12 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
   bool _shouldUpdate = false;
   int _primaryType = -1;
 
+  // Edit Weights
+  int _selectedWeightIndex = 0;
+  double _sumValue = 0.0;
+  List<String> _segments = ["10", "1", "0.1"];
+  List<double> _segmentValues = [];
+
   @override
   void initState() {
     super.initState();
@@ -53,15 +59,95 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
                               return newTypeAlert();
                             });
                       },
-                      child: const Text("Typ hinzufügen"))
+                      child: const Text("Typ hinzufügen")),
+                  Divider(),
+                  Text("Change Weights"),
+                  ...editWeight()
                 ]))));
+  }
+
+  List<Widget> editWeight() {
+    List<ButtonSegment<int>> buttons = [];
+    _segments.asMap().forEach((index, value) {
+      buttons.add(ButtonSegment<int>(
+        value: index,
+        label: Text(value),
+      ));
+    });
+
+    return [
+      SegmentedButton<int>(
+        showSelectedIcon: false,
+        segments: buttons,
+        selected: <int>{_selectedWeightIndex},
+        onSelectionChanged: (Set<int> newSelection) {
+          setState(() {
+            _selectedWeightIndex = newSelection.first;
+          });
+        },
+      ),
+      FutureBuilder(
+          future: DatabaseClass.Shared.getTypes(),
+          builder: (ctx, snap) {
+            if (snap.hasError || snap.data == null) {
+              return const Text("Smth went wrong");
+            } else {
+              return Column(
+                  children: snap.data!.map((e) => typeEditRow(e)).toList());
+            }
+          }),
+      Text("Gesamt: ${_sumValue.toStringAsFixed(1)}%"),
+      ElevatedButton(
+          onPressed: () {
+            print("Update weight");
+          },
+          child: Text("Save Weight Changes"))
+    ];
+  }
+
+  Widget typeEditRow(Data_Type type) {
+    return card(Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text("${type.name} [${type.assignedID}]"),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text("??"),
+            IconButton(
+                onPressed: () {
+                  double value = double.parse(_segments[_selectedWeightIndex]);
+                  if (_sumValue - value < 0.0) {
+                    return;
+                  }
+
+                  setState(() {
+                    _sumValue -= value;
+                  });
+                },
+                icon: Icon(Icons.remove)),
+            IconButton(
+                onPressed: () {
+                  double value = double.parse(_segments[_selectedWeightIndex]);
+                  setState(() {
+                    if (_sumValue + value > 100.0) {
+                      return;
+                    }
+                    _sumValue += value;
+                  });
+                },
+                icon: const Icon(Icons.add))
+          ],
+        )
+      ],
+    ));
   }
 
   Widget typeRow(Data_Type type) {
     return card(Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text("${type.name} [${type.assignedID}]: ${type.weigth}"),
+        Text("${type.name} [${type.assignedID}]"),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
