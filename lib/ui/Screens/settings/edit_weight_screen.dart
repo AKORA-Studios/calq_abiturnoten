@@ -13,19 +13,47 @@ class EditWeightScreen extends StatefulWidget {
 
 class _EditWeightScreenState extends State<EditWeightScreen> {
   bool _shouldUpdate = false;
+  bool _notInited = true;
   int _primaryType = -1;
-
   // Edit Weights
   int _selectedWeightIndex = 0;
-  double _sumValue = 0.0;
   List<String> _segments = ["10", "1", "0.1"];
-  List<double> _segmentValues = [];
+  String _errorText = "";
+
+  Map<int, double> _mappedWeights = {};
 
   @override
   void initState() {
     super.initState();
     setState(() {
       _primaryType = DatabaseClass.Shared.primaryType;
+    });
+  }
+
+  double getCurrentValue() {
+    return double.parse((_mappedWeights.values
+            .fold(0.0, (previousValue, element) => previousValue + element))
+        .toStringAsFixed(1));
+  }
+
+  void saveWeightChanges() {
+    double finalValue = getCurrentValue();
+    if (finalValue < 0.0 || finalValue > 100.0) {
+      setState(() {
+        _errorText = "Value not in range 0...100";
+      });
+      return;
+    }
+
+    if (finalValue != 100.0) {
+      setState(() {
+        _errorText = "Sum has to be 100.0";
+      });
+      return;
+    }
+
+    DatabaseClass.Shared.editTypeWeights(_mappedWeights).then((value) {
+      Navigator.pop(context);
     });
   }
 
@@ -92,16 +120,31 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
             if (snap.hasError || snap.data == null) {
               return const Text("Smth went wrong");
             } else {
-              return Column(
-                  children: snap.data!.map((e) => typeEditRow(e)).toList());
+              List<Widget> children = [];
+              snap.data!.asMap().forEach((index, e) {
+                if (_notInited) {
+                  _mappedWeights[e.id] = e.weigth;
+                }
+
+                children.add(typeEditRow(e));
+              });
+              // setState(() {
+              _notInited = false;
+              //   });
+
+              return Column(children: children);
             }
           }),
-      Text("Gesamt: ${_sumValue.toStringAsFixed(1)}%"),
+      Text("Gesamt: ${getCurrentValue()}%"),
       ElevatedButton(
           onPressed: () {
-            print("Update weight");
+            saveWeightChanges();
           },
-          child: Text("Save Weight Changes"))
+          child: const Text("Save Weight Changes")),
+      Text(
+        _errorText,
+        style: const TextStyle(color: Colors.red),
+      )
     ];
   }
 
@@ -113,27 +156,30 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Text("??"),
+            Text((_mappedWeights[type.id] ?? 0.0).toStringAsFixed(1)),
             IconButton(
                 onPressed: () {
                   double value = double.parse(_segments[_selectedWeightIndex]);
-                  if (_sumValue - value < 0.0) {
+                  if (getCurrentValue() - value < 0.0 ||
+                      (_mappedWeights[type.id] ?? 0.0) - value < 0.0) {
                     return;
                   }
-
                   setState(() {
-                    _sumValue -= value;
+                    _mappedWeights[type.id] = _mappedWeights[type.id]! - value;
                   });
                 },
                 icon: Icon(Icons.remove)),
             IconButton(
                 onPressed: () {
                   double value = double.parse(_segments[_selectedWeightIndex]);
+
+                  if (getCurrentValue() + value > 100.0) {
+                    return;
+                  }
+
                   setState(() {
-                    if (_sumValue + value > 100.0) {
-                      return;
-                    }
-                    _sumValue += value;
+                    _mappedWeights[type.id] =
+                        (_mappedWeights[type.id] ?? 0.0) + value;
                   });
                 },
                 icon: const Icon(Icons.add))
@@ -193,7 +239,7 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
             return AlertDialog(
               title: const Text("Type is still in use"),
               content: const Text(
-                  "Type is still used by gardes so it cant be deleted"),
+                  "Type is still used by grades so it cant be deleted"),
               actions: [
                 TextButton(
                   onPressed: () {

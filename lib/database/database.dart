@@ -254,6 +254,15 @@ class DatabaseClass {
     primaryType = newPrimaryType;
   }
 
+  Future<void> editTypeWeights(Map<int, double> map) async {
+    map.forEach((key, value) async {
+      double roundedValue = double.parse(value.toStringAsFixed(1));
+      int count = await db.rawUpdate(
+          'UPDATE Gradetype SET weigth = ? WHERE id = ?', [roundedValue, key]);
+      print('Updated Gradetype ${key}´s value: $count');
+    });
+  }
+
   Future<void> updateSettings(
       bool colorfulCharts, bool hasFiveExamsValue) async {
     int count = await db.rawUpdate(
@@ -360,8 +369,8 @@ class DatabaseClass {
       return false;
     }
 
-    int count =
-        await db.rawDelete('DELETE FROM Gradetype WHERE id = ?', [typeID]);
+    int count = await db
+        .rawDelete('DELETE FROM Gradetype WHERE assignedID = ?', [typeID]);
     assert(count == 1);
     return true;
   }
