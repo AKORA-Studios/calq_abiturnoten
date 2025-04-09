@@ -13,6 +13,15 @@ class EditWeightScreen extends StatefulWidget {
 
 class _EditWeightScreenState extends State<EditWeightScreen> {
   bool _shouldUpdate = false;
+  int _primaryType = -1;
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      _primaryType = DatabaseClass.Shared.primaryType;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,15 +62,39 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text("${type.name} [${type.assignedID}]: ${type.weigth}"),
-        IconButton(
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  builder: (ctx) {
-                    return deleteAlert(type.assignedID);
-                  });
-            },
-            icon: const Icon(Icons.delete, color: Colors.red))
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Container(
+                padding: const EdgeInsets.all(0.0),
+                width: 30.0, // you can adjust the width as you need
+                child: IconButton(
+                    onPressed: () {
+                      DatabaseClass.Shared.updatePrimaryType(type.assignedID)
+                          .then((value) {
+                        setState(() {
+                          _primaryType = DatabaseClass.Shared.primaryType;
+                        });
+                      });
+                    },
+                    icon: Icon(Icons.star,
+                        color: _primaryType == type.assignedID
+                            ? calqColor
+                            : Colors.grey))),
+            Container(
+                padding: const EdgeInsets.all(0.0),
+                width: 30.0, // you can adjust the width as you need
+                child: IconButton(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (ctx) {
+                            return deleteAlert(type.assignedID);
+                          });
+                    },
+                    icon: const Icon(Icons.delete, color: Colors.red)))
+          ],
+        )
       ],
     ));
   }
@@ -73,8 +106,8 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
           if (snap.hasError || !snap.hasData || snap.data!.isNotEmpty) {
             return AlertDialog(
               title: const Text("Type is still in use"),
-              content:
-                  const Text("Type is still used by gardes so it cant be deleted"),
+              content: const Text(
+                  "Type is still used by gardes so it cant be deleted"),
               actions: [
                 TextButton(
                   onPressed: () {

@@ -278,7 +278,7 @@ class Averages {
   }
 
   static Future<void> setPrimaryType(int type) async {
-    await DatabaseClass.Shared.updateSettingsPrimaryType(type);
+    await DatabaseClass.Shared.updatePrimaryType(type);
   }
 
   // TODO: for whats new screen maybe

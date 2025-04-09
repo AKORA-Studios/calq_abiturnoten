@@ -12,7 +12,7 @@ import '../../database/database.dart';
 String dateFormatter(DateTime inputDate) {
   var outputFormat = DateFormat('dd.MM.yy');
   var outputDate = outputFormat.format(inputDate);
-  return outputDate; // 12/31/2000 11:59 PM <-- MM/dd 12H format
+  return outputDate; //12.12.12
 }
 
 Widget settingsOption(
@@ -21,8 +21,8 @@ Widget settingsOption(
     width: double.infinity,
     child: TextButton(
       style: TextButton.styleFrom(
-        minimumSize: Size.zero, // Set this
-        padding: EdgeInsets.zero, // and this
+        minimumSize: Size.zero,
+        padding: EdgeInsets.zero,
       ),
       onPressed: () {
         onTap();
@@ -187,11 +187,10 @@ Widget subjectRowWith2Action(
   );
 }
 
-// TODO: color test different if favorised GradeType
 Widget testRow(Data_Test test, Data_Subject sub, Function() action) {
   bool result = Random().nextDouble() <= 0.7;
 
-  var isPrimaryTpe = result; // TODO
+  var isPrimaryTpe = test.type == DatabaseClass.Shared.primaryType;
   return TextButton(
       onPressed: action,
       child: Row(

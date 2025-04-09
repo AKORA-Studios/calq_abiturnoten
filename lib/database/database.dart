@@ -188,6 +188,7 @@ class DatabaseClass {
     });
   }
 
+  // MARK: Managed GradeTypes
   Future<void> addType(String name) async {
     await createType(name, 0.0, -1);
   }
@@ -229,36 +230,28 @@ class DatabaseClass {
     return ids.length + 1;
   }
 
-  // MARK: Managed GradeTypes
-  /*void addSecondType(int firstID) {
-  Data_Type newType = GradeType(context: getContext())
-  newType.name = "new default type"
-  newType.weigth = 0.0
-  newType.id = getNewIDQwQ([firstID])
+  Future<List<Data_Test>> getTypeGrades(int type) async {
+    List<Data_Test> arr = [];
+    List<Data_Subject> subjects =
+        await getSubjects(); // TODO: just fetch tests without subs?
 
-  let settings = Util.getSettings()
-  settings.addToGradetypes(newType)
-  saveCoreData()
+    for (Data_Subject sub in subjects) {
+      List<Data_Test> tests = await getSubjectTests(sub);
+      for (Data_Test test in tests) {
+        if (test.type == type) {
+          arr.add(test);
+        }
+      }
+    }
+    return arr;
   }
 
-  static func getTypes() -> [GradeType] {
-  var types = getSettings().getAllGradeTypes()
-
-  if types.count >= 2 { return types }
-
-  if types.count == 1 {
-  addSecondType(types[0].id)
-  } else if types.isEmpty {
-  setTypes(Util.getSettings())
-  }*/
-
   // UPDATE DATA
-  Future<void> updateSettingsPrimaryType(int primaryType) async {
-    // TODO: hehe
+  Future<void> updatePrimaryType(int newPrimaryType) async {
     int count = await db
-        .rawUpdate('UPDATE Appsettings SET primaryType = ?', [primaryType]);
+        .rawUpdate('UPDATE Appsettings SET primaryType = ?', [newPrimaryType]);
     print('Updated Settings: $count');
-    primaryType = primaryType;
+    primaryType = newPrimaryType;
   }
 
   Future<void> updateSettings(
@@ -371,22 +364,6 @@ class DatabaseClass {
         await db.rawDelete('DELETE FROM Gradetype WHERE id = ?', [typeID]);
     assert(count == 1);
     return true;
-  }
-
-  Future<List<Data_Test>> getTypeGrades(int type) async {
-    List<Data_Test> arr = [];
-    List<Data_Subject> subjects =
-        await getSubjects(); // TODO: just fetch tests without subs?
-
-    for (Data_Subject sub in subjects) {
-      List<Data_Test> tests = await getSubjectTests(sub);
-      for (Data_Test test in tests) {
-        if (test.type == type) {
-          arr.add(test);
-        }
-      }
-    }
-    return arr;
   }
 
   Future<void> deleteAllTypes() async {
