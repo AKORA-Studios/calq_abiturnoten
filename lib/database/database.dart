@@ -165,13 +165,8 @@ class DatabaseClass {
     });
   }
 
-  Future<void> createTest(
-      // TODO: add types
-      int subjectID,
-      String name,
-      int points,
-      int year,
-      DateTime date) async {
+  Future<void> createTest(int subjectID, String name, int points, int year,
+      DateTime date, int selectedType) async {
     if (name.isEmpty) {
       print("No! Invalid Test Name");
       return;
@@ -179,7 +174,7 @@ class DatabaseClass {
     await db.transaction((txn) async {
       int id1 = await txn.rawInsert(
           'INSERT INTO Test(name, points, type, date, year,subject) VALUES(?,?,?,?,?,?)',
-          [name, points, 1, date.toString(), year, subjectID]);
+          [name, points, selectedType, date.toString(), year, subjectID]);
       print('Inserted Test: $id1');
     });
   }
@@ -379,14 +374,15 @@ class DatabaseClass {
 
   Future<List<Data_Test>> getTypeGrades(int type) async {
     List<Data_Test> arr = [];
-    List<Data_Subject> subjects = await getSubjects();
+    List<Data_Subject> subjects =
+        await getSubjects(); // TODO: just fetch tests without subs?
+
     for (Data_Subject sub in subjects) {
       List<Data_Test> tests = await getSubjectTests(sub);
       for (Data_Test test in tests) {
-        if (test.type != type) {
-          continue;
+        if (test.type == type) {
+          arr.add(test);
         }
-        arr.add(test);
       }
     }
     return arr;

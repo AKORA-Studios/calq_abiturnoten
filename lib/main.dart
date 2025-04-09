@@ -1,6 +1,6 @@
 import 'package:calq_abiturnoten/database/database.dart';
-import 'package:calq_abiturnoten/ui/Screens/add_grade_screen.dart';
 import 'package:calq_abiturnoten/ui/Screens/exam_screen.dart';
+import 'package:calq_abiturnoten/ui/Screens/newGrade/add_grade_screen.dart';
 import 'package:calq_abiturnoten/ui/Screens/overview_screen.dart';
 import 'package:calq_abiturnoten/ui/Screens/subjects_screen.dart';
 import 'package:calq_abiturnoten/ui/components/styling.dart';

@@ -36,3 +36,10 @@ APK can be found in `projectFolder\build\app\outputs\apk\releases`
 | Windows      |      -      |:question:|
 | Web | Not Planned | :x: |
 
+
+
+# TODO today
+
+edit garde type
+
+deleteing type check if test with type exist

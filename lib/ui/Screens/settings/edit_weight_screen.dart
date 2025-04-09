@@ -15,6 +15,15 @@ class EditWeightScreen extends StatefulWidget {
 class _EditWeightScreenState extends State<EditWeightScreen> {
   bool _shouldUpdate = false;
 
+  /*@override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Call your function here
+    setState(() {
+      _shouldUpdate = !_shouldUpdate;
+    });
+  }*/
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,47 +31,49 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
           title: const Text("Edit Weights"),
         ),
         body: SingleChildScrollView(
-          child: Column(children: [
-            FutureBuilder(
-                future: DatabaseClass.Shared.getTypes(),
-                builder: (ctx, snap) {
-                  if (snap.hasError || snap.data == null) {
-                    return Text("Smth went wrong");
-                  } else {
-                    return Column(
-                        children: snap.data!.map((e) => typeRow(e)).toList());
-                  }
-                }),
-            //        ...widget.types.map((e) => typeRow(e)).toList(),
-            ElevatedButton(
-                onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (ctx) {
-                        return newTypeAlert();
-                      });
-                },
-                child: Text("Typ hinzufügen"))
-          ]),
-        ));
+            child: Padding(
+                padding: EdgeInsets.all(8),
+                child: Column(children: [
+                  FutureBuilder(
+                      future: DatabaseClass.Shared.getTypes(),
+                      builder: (ctx, snap) {
+                        if (snap.hasError || snap.data == null) {
+                          return Text("Smth went wrong");
+                        } else {
+                          return Column(
+                              children:
+                                  snap.data!.map((e) => typeRow(e)).toList());
+                        }
+                      }),
+                  //        ...widget.types.map((e) => typeRow(e)).toList(),
+                  ElevatedButton(
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: (ctx) {
+                              return newTypeAlert();
+                            });
+                      },
+                      child: Text("Typ hinzufügen"))
+                ]))));
   }
 
   Widget typeRow(Data_Type type) {
-    return Row(
+    return card(Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text("${type.name}[${type.assignedID}]: ${type.weigth}"),
+        Text("${type.name} [${type.assignedID}]: ${type.weigth}"),
         IconButton(
             onPressed: () {
               showDialog(
                   context: context,
                   builder: (ctx) {
-                    return deleteAlert(type.id);
+                    return deleteAlert(type.assignedID);
                   });
             },
             icon: Icon(Icons.delete, color: Colors.red))
       ],
-    );
+    ));
   }
 
   Widget deleteAlert(int typeID) {

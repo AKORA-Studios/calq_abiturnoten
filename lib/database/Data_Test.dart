@@ -33,6 +33,6 @@ class Data_Test {
 
   @override
   String toString() {
-    return 'Data_Test{name: $name, id: $id}';
+    return 'Data_Test{name: $name, id: $id type: $type points: $points year: $year}';
   }
 }

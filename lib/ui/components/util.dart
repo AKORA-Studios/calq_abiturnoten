@@ -215,7 +215,7 @@ Widget testRow(Data_Test test, Data_Subject sub, Function() action) {
             ),
           ),
           const SizedBox(width: 10),
-          Text(test.name),
+          Text(test.name + " [${test.type}]"),
           const Spacer(),
           Text(dateFormatter(test.date))
         ],

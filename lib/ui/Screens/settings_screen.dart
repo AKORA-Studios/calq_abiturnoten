@@ -39,7 +39,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       setState(() {
         _versionString = "Version: $version (Build: $buildNumber)";
       });
-      print(_versionString);
     });
   }
 

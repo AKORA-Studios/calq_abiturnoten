@@ -1,9 +1,9 @@
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
-import 'package:calq_abiturnoten/ui/Screens/new_grade_screen.dart';
 import 'package:flutter/material.dart';
 
-import '../../database/database.dart';
-import '../components/util.dart';
+import '../../../database/database.dart';
+import '../../components/util.dart';
+import 'new_grade_screen.dart';
 
 class AddGradeScreen extends StatefulWidget {
   const AddGradeScreen({super.key});
