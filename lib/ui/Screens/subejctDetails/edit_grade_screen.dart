@@ -1,6 +1,7 @@
 import 'package:calq_abiturnoten/database/Data_Test.dart';
 import 'package:flutter/material.dart';
 
+import '../../../database/Data_Type.dart';
 import '../../../database/database.dart';
 import '../../../util/date_formatter.dart';
 import '../../components/styling.dart';
@@ -26,6 +27,7 @@ class _EditGradeScreenState extends State<EditGradeScreen> {
   String errorText = "";
   double _testPoints = 0;
   bool _shouldUpdate = false;
+  int _selectedTypeIndex = -1;
 
   @override
   void initState() {
@@ -35,6 +37,7 @@ class _EditGradeScreenState extends State<EditGradeScreen> {
       _selectedDate = widget.test.date;
       _gradeName = widget.test.name;
       _testPoints = widget.test.points.toDouble();
+      _selectedTypeIndex = widget.test.type;
     });
     setState(() {
       _shouldUpdate = !_shouldUpdate;
@@ -59,10 +62,19 @@ class _EditGradeScreenState extends State<EditGradeScreen> {
       });
       return;
     }
+
+    if (_selectedTypeIndex < 0) {
+      setState(() {
+        errorText = "Pls select a grade type";
+      });
+      return;
+    }
+
     widget.test.year = _selectedYear;
     widget.test.date = _selectedDate;
     widget.test.name = _gradeName;
     widget.test.points = _testPoints.toInt();
+    widget.test.type = _selectedTypeIndex;
 
     await DatabaseClass.Shared.updateTest(widget.test).then((value) {
       widget.callbackFunc();
@@ -109,7 +121,9 @@ class _EditGradeScreenState extends State<EditGradeScreen> {
                         )
                       ],
                     )),
-                    card(const Text("Typ")),
+                    card(Column(
+                      children: [const Text("Typ"), typeSelection()],
+                    )),
                     card(Column(
                       children: [
                         const Text("Halbjahr"),
@@ -181,5 +195,43 @@ class _EditGradeScreenState extends State<EditGradeScreen> {
                     )
                   ],
                 ))));
+  }
+
+  Widget typeSelection() {
+    return FutureBuilder(
+        future: DatabaseClass.Shared.getTypes(),
+        builder: (ctx, snap) {
+          if (snap.hasError) {
+            return const Text("Smth went wrong ");
+          } else {
+            List<Data_Type> arr = snap.hasData ? snap.data! : [];
+            List<ButtonSegment<int>> buttons = [];
+            if (arr.isEmpty) {
+              return const Text("No Data :c");
+            }
+
+            arr.asMap().forEach((index, e) {
+              buttons.add(ButtonSegment<int>(
+                value: e.assignedID,
+                label: Text('${e.name} \n[${e.assignedID}]',
+                    style: TextStyle(
+                        decoration: _selectedTypeIndex == index
+                            ? TextDecoration.underline
+                            : TextDecoration.none)),
+              ));
+            });
+
+            return SegmentedButton<int>(
+              showSelectedIcon: false,
+              segments: buttons,
+              selected: <int>{_selectedTypeIndex},
+              onSelectionChanged: (Set<int> newSelection) {
+                setState(() {
+                  _selectedTypeIndex = newSelection.first;
+                });
+              },
+            );
+          }
+        });
   }
 }

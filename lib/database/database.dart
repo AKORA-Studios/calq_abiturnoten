@@ -283,7 +283,7 @@ class DatabaseClass {
         [
           newTest.name,
           newTest.points,
-          1,
+          newTest.type,
           newTest.date.toString(),
           newTest.year,
           newTest.id

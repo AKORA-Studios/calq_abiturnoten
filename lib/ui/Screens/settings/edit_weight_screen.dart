@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../../database/Data_Type.dart';
 import '../../../database/database.dart';
 
-// TODO: reload data on change
 class EditWeightScreen extends StatefulWidget {
   const EditWeightScreen({super.key});
 
@@ -14,15 +13,6 @@ class EditWeightScreen extends StatefulWidget {
 
 class _EditWeightScreenState extends State<EditWeightScreen> {
   bool _shouldUpdate = false;
-
-  /*@override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Call your function here
-    setState(() {
-      _shouldUpdate = !_shouldUpdate;
-    });
-  }*/
 
   @override
   Widget build(BuildContext context) {
