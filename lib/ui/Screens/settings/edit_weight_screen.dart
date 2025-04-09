@@ -22,13 +22,13 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
         ),
         body: SingleChildScrollView(
             child: Padding(
-                padding: EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
                 child: Column(children: [
                   FutureBuilder(
                       future: DatabaseClass.Shared.getTypes(),
                       builder: (ctx, snap) {
                         if (snap.hasError || snap.data == null) {
-                          return Text("Smth went wrong");
+                          return const Text("Smth went wrong");
                         } else {
                           return Column(
                               children:
@@ -44,7 +44,7 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
                               return newTypeAlert();
                             });
                       },
-                      child: Text("Typ hinzufügen"))
+                      child: const Text("Typ hinzufügen"))
                 ]))));
   }
 
@@ -61,7 +61,7 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
                     return deleteAlert(type.assignedID);
                   });
             },
-            icon: Icon(Icons.delete, color: Colors.red))
+            icon: const Icon(Icons.delete, color: Colors.red))
       ],
     ));
   }
@@ -72,15 +72,15 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
         builder: (ctx, snap) {
           if (snap.hasError || !snap.hasData || snap.data!.isNotEmpty) {
             return AlertDialog(
-              title: Text("Type is still in use"),
+              title: const Text("Type is still in use"),
               content:
-                  Text("Type is still used by gardes so it cant be deleted"),
+                  const Text("Type is still used by gardes so it cant be deleted"),
               actions: [
                 TextButton(
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
-                  child: Text('Oki'),
+                  child: const Text('Oki'),
                 ),
               ],
             );
@@ -90,24 +90,24 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
         });
   }
 
-  TextEditingController _textFieldController = TextEditingController();
+  final TextEditingController _textFieldController = TextEditingController();
 
   Widget newTypeAlert() {
     return AlertDialog(
       // To display the title it is optional
-      title: Text('Create new Grade Type'),
+      title: const Text('Create new Grade Type'),
       // Message which will be pop up on the screen
       content: TextField(
         controller: _textFieldController..text = 'DefaultGradeName',
         //  controller: _textFieldController,
-        decoration: InputDecoration(hintText: "DefaultTypeName"),
+        decoration: const InputDecoration(hintText: "DefaultTypeName"),
       ),
       actions: [
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text('No!!!'),
+          child: const Text('No!!!'),
         ),
         TextButton(
           style: ButtonStyle(
@@ -124,9 +124,9 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
               });
               Navigator.of(context).pop();
             });
-            _textFieldController..text = "DefaultGradeName";
+            _textFieldController.text = "DefaultGradeName";
           },
-          child: Text('Create'),
+          child: const Text('Create'),
         ),
       ],
     );
@@ -135,15 +135,15 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
   Widget gradeTypeAlert(int typeID) {
     return AlertDialog(
       // To display the title it is optional
-      title: Text('Delete Grade Type'),
+      title: const Text('Delete Grade Type'),
       // Message which will be pop up on the screen
-      content: Text('Do you really want to delete this Gradetype?'),
+      content: const Text('Do you really want to delete this Gradetype?'),
       actions: [
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text('No!!!'),
+          child: const Text('No!!!'),
         ),
         TextButton(
           style: ButtonStyle(
@@ -157,7 +157,7 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
               });
             });
           },
-          child: Text('Delete'),
+          child: const Text('Delete'),
         ),
       ],
     );

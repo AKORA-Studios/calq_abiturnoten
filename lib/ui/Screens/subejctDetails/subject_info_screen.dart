@@ -168,14 +168,14 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
 
   Widget deleteAllAlert() {
     return AlertDialog(
-      title: Text("Delete all grades"),
+      title: const Text("Delete all grades"),
       // content: "",
       actions: [
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text('No!!!'),
+          child: const Text('No!!!'),
         ),
         TextButton(
           style: ButtonStyle(
@@ -190,7 +190,7 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
               Navigator.of(context).pop();
             });
           },
-          child: Text('Delete All'),
+          child: const Text('Delete All'),
         ),
       ],
     );

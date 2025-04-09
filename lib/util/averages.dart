@@ -250,13 +250,13 @@ class Averages {
   /// Remove  inactive term
   static void removeYear(Data_Subject sub, int num) {
     sub.removeYear(num);
-    DatabaseClass.Shared.updatesubjectYear(sub); // TODO: check if works
+    DatabaseClass.Shared.updateSubjectYear(sub); // TODO: check if works
   }
 
   /// Add inactive term
   static void addYear(Data_Subject sub, int num) {
     sub.addYear(num);
-    DatabaseClass.Shared.updatesubjectYear(sub); // TODO: check if works
+    DatabaseClass.Shared.updateSubjectYear(sub); // TODO: check if works
   }
 
   static String arrToString(List<String> arr) {
@@ -278,7 +278,7 @@ class Averages {
   }
 
   static Future<void> setPrimaryType(int type) async {
-    await DatabaseClass.Shared.updateSettings_PrimaryType(type);
+    await DatabaseClass.Shared.updateSettingsPrimaryType(type);
   }
 
   // TODO: for whats new screen maybe

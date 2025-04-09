@@ -211,7 +211,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       future: DatabaseClass.Shared.getTypes(),
                       builder: (ctx, snap) {
                         if (snap.hasError || !snap.hasData) {
-                          return Text("smth went wrong fetching gradetypes");
+                          return const Text("smth went wrong fetching gradetypes");
                         } else {
                           return ElevatedButton(
                               onPressed: () {
@@ -221,7 +221,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                         builder: (context) =>
                                             const EditWeightScreen()));
                               },
-                              child: Text("Notentypen bearbeiten"));
+                              child: const Text("Notentypen bearbeiten"));
                         }
                       }),
                 ],
@@ -247,15 +247,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
     // TODO: check if works
     return AlertDialog(
       // To display the title it is optional
-      title: Text('Delete all Data'),
+      title: const Text('Delete all Data'),
       // Message which will be pop up on the screen
-      content: Text('Do you really want to delete all data?'),
+      content: const Text('Do you really want to delete all data?'),
       actions: [
         TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },
-          child: Text('No!!!'),
+          child: const Text('No!!!'),
         ),
         TextButton(
           style: ButtonStyle(
@@ -269,7 +269,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               });
             });
           },
-          child: Text('Delete'),
+          child: const Text('Delete'),
         ),
       ],
     );

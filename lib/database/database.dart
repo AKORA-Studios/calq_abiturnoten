@@ -253,7 +253,8 @@ class DatabaseClass {
   }*/
 
   // UPDATE DATA
-  Future<void> updateSettings_PrimaryType(int primaryType) async {
+  Future<void> updateSettingsPrimaryType(int primaryType) async {
+    // TODO: hehe
     int count = await db
         .rawUpdate('UPDATE Appsettings SET primaryType = ?', [primaryType]);
     print('Updated Settings: $count');
@@ -292,7 +293,7 @@ class DatabaseClass {
     print('Updated Test: $count');
   }
 
-  Future<void> updatesubjectYear(Data_Subject sub) async {
+  Future<void> updateSubjectYear(Data_Subject sub) async {
     int count = await db.rawUpdate(
         'UPDATE Subject SET inactiveYears = ?, WHERE id = ?',
         [sub.inactiveYears, sub.id]);
