@@ -138,8 +138,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       Icons.folder_open, () {}),
                   settingsOption(
                       "Noten exportieren", Colors.green, Icons.share, () {}),
-                  settingsOption("Wertung ändern", Colors.yellow,
-                      Icons.filter_frames, () {}),
+                  settingsOption(
+                      "Wertung ändern", Colors.yellow, Icons.filter_frames, () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const EditWeightScreen()));
+                  }),
                   settingsOption("Demo Daten laden", Colors.orange,
                       Icons.warning_amber, () {}),
                   settingsOption("Daten löschen", Colors.red, Icons.delete, () {
@@ -201,29 +206,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     )));
                       },
                       child: const Text("Neues Fach hinzufügen"))
-                ],
-              ),
-              Column(
-                children: [
-                  const Text("Notentypen"),
-                  const Divider(),
-                  FutureBuilder(
-                      future: DatabaseClass.Shared.getTypes(),
-                      builder: (ctx, snap) {
-                        if (snap.hasError || !snap.hasData) {
-                          return const Text("smth went wrong fetching gradetypes");
-                        } else {
-                          return ElevatedButton(
-                              onPressed: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const EditWeightScreen()));
-                              },
-                              child: const Text("Notentypen bearbeiten"));
-                        }
-                      }),
                 ],
               ),
               Column(

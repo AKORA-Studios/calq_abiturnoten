@@ -13,13 +13,12 @@ class EditWeightScreen extends StatefulWidget {
 
 class _EditWeightScreenState extends State<EditWeightScreen> {
   bool _shouldUpdate = false;
-  bool _notInited = true;
+  bool _notInitialized = true;
   int _primaryType = -1;
   // Edit Weights
   int _selectedWeightIndex = 0;
-  List<String> _segments = ["10", "1", "0.1"];
+  final List<String> _segments = ["10", "1", "0.1"];
   String _errorText = "";
-
   Map<int, double> _mappedWeights = {};
 
   @override
@@ -88,8 +87,8 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
                             });
                       },
                       child: const Text("Typ hinzufügen")),
-                  Divider(),
-                  Text("Change Weights"),
+                  const Divider(),
+                  const Text("Change Weights"),
                   ...editWeight()
                 ]))));
   }
@@ -122,14 +121,14 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
             } else {
               List<Widget> children = [];
               snap.data!.asMap().forEach((index, e) {
-                if (_notInited) {
+                if (_notInitialized) {
                   _mappedWeights[e.id] = e.weigth;
                 }
 
                 children.add(typeEditRow(e));
               });
               // setState(() {
-              _notInited = false;
+              _notInitialized = false;
               //   });
 
               return Column(children: children);
@@ -168,7 +167,7 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
                     _mappedWeights[type.id] = _mappedWeights[type.id]! - value;
                   });
                 },
-                icon: Icon(Icons.remove)),
+                icon: const Icon(Icons.remove)),
             IconButton(
                 onPressed: () {
                   double value = double.parse(_segments[_selectedWeightIndex]);

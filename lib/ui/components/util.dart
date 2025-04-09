@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:calq_abiturnoten/database/Data_Settings.dart';
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
 import 'package:calq_abiturnoten/database/Data_Test.dart';
@@ -188,8 +186,6 @@ Widget subjectRowWith2Action(
 }
 
 Widget testRow(Data_Test test, Data_Subject sub, Function() action) {
-  bool result = Random().nextDouble() <= 0.7;
-
   var isPrimaryTpe = test.type == DatabaseClass.Shared.primaryType;
   return TextButton(
       onPressed: action,

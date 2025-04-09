@@ -8,13 +8,12 @@ This is a work-in-progress
 
 * [] Export/Import json
 * [] Export PDF
-* [] Impact Segment
 * [] Rainbow Colors
 * [] Localization
 
 ### TODO
-+ edit type weights + favorite a type
 + rainbow Colors
++ impact segment new grades
 
 
 ## Building APK
