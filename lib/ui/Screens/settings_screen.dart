@@ -1,6 +1,7 @@
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
 import 'package:calq_abiturnoten/ui/Screens/settings/edit_subject_screen.dart';
 import 'package:calq_abiturnoten/ui/Screens/settings/edit_weight_screen.dart';
+import 'package:calq_abiturnoten/ui/Screens/settings/pdf_export_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -158,7 +159,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   settingsOption(
                       "Github (WIP)", Colors.pink, Icons.info, () {}),
                   settingsOption("PDF Export (WIP)", Colors.purple,
-                      Icons.file_copy_outlined, () {})
+                      Icons.file_copy_outlined, () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PDFExportScreen()));
+                  })
                 ],
               ),
               Column(
