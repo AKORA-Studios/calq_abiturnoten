@@ -214,7 +214,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
 
   BackgroundBarChartRodData backgroundBar() {
     return BackgroundBarChartRodData(
-        toY: 14.6, color: Colors.grey.withOpacity(0.5), show: true, fromY: 0);
+        toY: 14.6, color: Colors.grey.withOpacity(0.3), show: true, fromY: 0);
   }
 
   BorderRadius barRadiusTerms() {
@@ -248,7 +248,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                               value: _averagePercent,
                               color: calqColor,
                               strokeWidth: 20.0,
-                              backgroundColor: Colors.grey.withOpacity(0.5),
+                              backgroundColor: Colors.grey.withOpacity(0.3),
                               strokeCap: StrokeCap.round,
                             ),
                           ),
@@ -273,7 +273,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                               value: _blockPercent,
                               color: calqColor,
                               strokeWidth: 20.0,
-                              backgroundColor: Colors.grey.withOpacity(0.5),
+                              backgroundColor: Colors.grey.withOpacity(0.3),
                               strokeCap: StrokeCap.round,
                             ),
                           ),

@@ -43,7 +43,7 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
                                     future: Averages.averageString(e),
                                     builder: (ctx, snap) {
                                       if (snap.hasData) {
-                                        return subjectRowWithHalfyears2(
+                                        return subjectRowWithTerms(
                                             e, snap.data ?? "?");
                                       } else {
                                         return const SizedBox();

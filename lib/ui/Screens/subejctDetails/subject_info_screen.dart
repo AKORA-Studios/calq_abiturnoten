@@ -45,36 +45,31 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
       if (tests.isEmpty) {
         return;
       }
-      result.add(Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(4),
-          ),
-          clipBehavior: Clip.antiAliasWithSaveLayer,
-          child: Padding(
-              padding: const EdgeInsets.all(5),
-              child: Column(children: [
-                Text("$e. Halbjahr"),
-                const Divider(),
-                ...tests
-                    .map((e) => testRow(e, widget.sub, () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => EditGradeScreen(
-                                        test: e,
-                                        color: widget.sub.color,
-                                        callbackFunc: () async {
-                                          var x = await DatabaseClass.Shared
-                                              .getSubjectTests(widget.sub);
-                                          setState(() {
-                                            _tests = x;
-                                            _shouldUpdate = !_shouldUpdate;
-                                          });
-                                        },
-                                      )));
-                        }))
-                    .toList()
-              ]))));
+      result.add(card(Padding(
+          padding: const EdgeInsets.all(5),
+          child: Column(children: [
+            Text("$e. Halbjahr"),
+            const Divider(),
+            ...tests
+                .map((e) => testRow(e, widget.sub, () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EditGradeScreen(
+                                    test: e,
+                                    color: widget.sub.color,
+                                    callbackFunc: () async {
+                                      var x = await DatabaseClass.Shared
+                                          .getSubjectTests(widget.sub);
+                                      setState(() {
+                                        _tests = x;
+                                        _shouldUpdate = !_shouldUpdate;
+                                      });
+                                    },
+                                  )));
+                    }))
+                .toList()
+          ]))));
     }).toList();
     return result;
   }
@@ -90,10 +85,17 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
             padding: const EdgeInsets.all(10),
             child: Column(
               children: [
-                Text("${widget.sub.tests.length} Tests"),
                 card(Column(
                   children: [
-                    const Text("Notenverlauf"),
+                    const SizedBox(
+                      width: double.infinity,
+                      child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Text(
+                            "Time Chart",
+                            textAlign: TextAlign.left,
+                          )),
+                    ),
                     SizedBox(
                       width: double.infinity,
                       height: 150,
@@ -101,54 +103,58 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
                     ),
                   ],
                 )),
-                Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4),
+                card(Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("${_selectedYear.toString()}. Halbjahr"),
+                          Text(
+                              widget.sub.inactiveYears
+                                      .contains(_selectedYear.toString())
+                                  ? "inactive"
+                                  : "active",
+                              style: TextStyle(
+                                  color: widget.sub.inactiveYears
+                                          .contains(_selectedYear.toString())
+                                      ? Colors.grey.withOpacity(0.5)
+                                      : widget.sub.color.withOpacity(0.5)))
+                        ],
+                      ),
                     ),
-                    // Define how the card's content should be clipped
-                    clipBehavior: Clip.antiAliasWithSaveLayer,
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("${_selectedYear.toString()}. Halbjahr"),
-                            Text(widget.sub.inactiveYears
-                                    .contains(_selectedYear.toString())
-                                ? "No"
-                                : "Aktiv")
-                          ],
-                        ),
-                        SegmentedButton<int>(
-                          showSelectedIcon: false,
-                          segments: [1, 2, 3, 4]
-                              .map((e) => ButtonSegment<int>(
-                                    value: e,
-                                    label: Text('$e',
-                                        style: TextStyle(
-                                            decoration: _selectedYear == e
-                                                ? TextDecoration.underline
-                                                : TextDecoration.none)),
-                                  ))
-                              .toList(),
-                          selected: <int>{_selectedYear},
-                          onSelectionChanged: (Set<int> newSelection) {
-                            setState(() {
-                              _selectedYear = newSelection.first;
-                            });
-                          },
-                        ),
-                        ElevatedButton(
-                            onPressed: () async {
-                              await widget.sub.toggleTerm(_selectedYear);
-                              setState(() {
-                                _shouldUpdate = !_shouldUpdate;
-                              });
-                            },
-                            child: Text(
-                                "Halbjahr ${widget.sub.isTermInactive(_selectedYear) ? "aktivieren" : "deaktivieren"}"))
-                      ],
-                    )),
+                    SegmentedButton<int>(
+                      showSelectedIcon: false,
+                      style: calqSegmentedButtonStyle(),
+                      segments: [1, 2, 3, 4]
+                          .map((e) => ButtonSegment<int>(
+                                value: e,
+                                label: Text('$e',
+                                    style: TextStyle(
+                                        decoration: _selectedYear == e
+                                            ? TextDecoration.underline
+                                            : TextDecoration.none)),
+                              ))
+                          .toList(),
+                      selected: <int>{_selectedYear},
+                      onSelectionChanged: (Set<int> newSelection) {
+                        setState(() {
+                          _selectedYear = newSelection.first;
+                        });
+                      },
+                    ),
+                    ElevatedButton(
+                        onPressed: () async {
+                          await widget.sub.toggleTerm(_selectedYear);
+                          setState(() {
+                            _shouldUpdate = !_shouldUpdate;
+                          });
+                        },
+                        child: Text(
+                            "Halbjahr ${widget.sub.isTermInactive(_selectedYear) ? "aktivieren" : "deaktivieren"}"))
+                  ],
+                )),
                 ...halfYearWidget(),
                 TextButton(
                     style: destructiveButton(),
@@ -159,7 +165,7 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
                             return deleteAllAlert();
                           });
                     },
-                    child: const Text("Alle Noten löschen")),
+                    child: const Text("Delete all grades")),
               ],
             ),
           ),

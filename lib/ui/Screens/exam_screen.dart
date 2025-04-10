@@ -93,14 +93,14 @@ class _ExamScreenState extends State<ExamScreen> {
                           sub.name,
                           style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
-                        ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                                foregroundColor: Colors.white),
+                        IconButton(
                             onPressed: () async {
                               removeExam(sub, i);
                             },
-                            child: const Text("Remove"))
+                            icon: Icon(
+                              Icons.delete,
+                              color: Colors.red,
+                            )),
                       ],
                     ),
                     Row(

@@ -121,7 +121,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         },
                       )),
                   settingsOptionWithWidget(
-                      "Regenbogen",
+                      "Regenbogen (WIP)",
                       Colors.blue,
                       Icons.bar_chart,
                       Switch(
@@ -134,18 +134,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   value, _hasFiveExams);
                             });
                           })),
-                  settingsOption("Noten importieren", Colors.blue,
+                  settingsOption("Noten importieren (WIP)", Colors.blue,
                       Icons.folder_open, () {}),
+                  settingsOption("Noten exportieren (WIP)", Colors.green,
+                      Icons.share, () {}),
                   settingsOption(
-                      "Noten exportieren", Colors.green, Icons.share, () {}),
-                  settingsOption(
-                      "Wertung ändern", Colors.yellow, Icons.filter_frames, () {
+                      "Wertung ändern", Colors.amber, Icons.filter_frames, () {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => const EditWeightScreen()));
                   }),
-                  settingsOption("Demo Daten laden", Colors.orange,
+                  settingsOption("Demo Daten laden (WIP)", Colors.orange,
                       Icons.warning_amber, () {}),
                   settingsOption("Daten löschen", Colors.red, Icons.delete, () {
                     // TODO: confirm if works
@@ -155,8 +155,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           return deleteDataAlert();
                         });
                   }),
-                  settingsOption("Github", Colors.pink, Icons.info, () {}),
-                  settingsOption("PDF Export", Colors.deepPurpleAccent,
+                  settingsOption(
+                      "Github (WIP)", Colors.pink, Icons.info, () {}),
+                  settingsOption("PDF Export (WIP)", Colors.purple,
                       Icons.file_copy_outlined, () {})
                 ],
               ),
