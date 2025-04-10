@@ -53,8 +53,13 @@ class _ExamScreenState extends State<ExamScreen> {
     });
 
     generateBlockOne().then((value) {
+      var newValue = (value / _maxBlock1Value);
+      if (newValue.isNaN || newValue.isFinite) {
+        return;
+      }
+
       setState(() {
-        _block1Value = (value / _maxBlock1Value);
+        _block1Value = newValue;
       });
     });
   }
@@ -229,7 +234,7 @@ class _ExamScreenState extends State<ExamScreen> {
                 flex: 2,
                 child: LinearProgressIndicator(
                   valueColor: const AlwaysStoppedAnimation(calqColor),
-                  value: _block1Value,
+                  value: _block1Value.isNaN ? 0.0 : _block1Value,
                 ),
               ),
               const SizedBox(width: 20),
@@ -247,7 +252,7 @@ class _ExamScreenState extends State<ExamScreen> {
               Expanded(
                 flex: 2,
                 child: Text(
-                    "${(_block1Value * _maxBlock1Value).round().toString()} von $_maxBlock1Value"),
+                    "${((_block1Value * _maxBlock1Value).isNaN ? 0.0 : (_block1Value * _maxBlock1Value)).round().toString()} von $_maxBlock1Value"),
               ),
               const SizedBox(width: 20),
               Expanded(

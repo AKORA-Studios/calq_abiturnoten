@@ -74,7 +74,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
         future: getOverviewChartData(),
         builder: (ctx, snap) {
           if (snap.hasError) {
-            return const Text("Smth went wrong :c");
+            return Text("Smth went wrong :c ${snap.error}");
           } else {
             return BarChart(BarChartData(
               maxY: 15,

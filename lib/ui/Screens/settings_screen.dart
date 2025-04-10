@@ -149,7 +149,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   settingsOption("Demo Daten laden (WIP)", Colors.orange,
                       Icons.warning_amber, () {}),
                   settingsOption("Daten löschen", Colors.red, Icons.delete, () {
-                    // TODO: confirm if works
                     showDialog(
                         context: context,
                         builder: (ctx) {
@@ -233,7 +232,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Widget deleteDataAlert() {
-    // TODO: check if works
     return AlertDialog(
       // To display the title it is optional
       title: const Text('Delete all Data'),
@@ -251,7 +249,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               backgroundColor: MaterialStateProperty.all(Colors.red),
               foregroundColor: MaterialStateProperty.all(Colors.white)),
           onPressed: () {
-            DatabaseClass.Shared.deleteAllTypes().then((value) {
+            DatabaseClass.Shared.deleteData().then((value) {
               Navigator.of(context).pop();
               setState(() {
                 _shouldUpdateView = !_shouldUpdateView;

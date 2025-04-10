@@ -182,8 +182,8 @@ class DatabaseClass {
   Future<void> createSettings() async {
     await db.transaction((txn) async {
       int id1 = await txn.rawInsert(
-          'INSERT INTO Appsettings(colorfulCharts, weightBigGrades, hasFiveexams)  VALUES(?,?,?)',
-          [1, "", 1]);
+          'INSERT INTO Appsettings(colorfulCharts, weightBigGrades, hasFiveexams, primaryType)  VALUES(?,?,?, ?)',
+          [1, "", 1, 0]);
       print('Inserted Appsettings: $id1');
     });
   }
@@ -333,7 +333,10 @@ class DatabaseClass {
 
 // DELETE DATA
   Future<void> deleteData() async {
-    await deleteDatabase(PATH);
+    await db.rawQuery('DELETE FROM Subject;');
+    await db.rawQuery('DELETE FROM Test;');
+    await db.rawQuery('DELETE FROM Gradetype;');
+    await db.rawQuery('DELETE FROM Appsettings;');
   }
 
   Future<void> deleteSubject(int id) async {
