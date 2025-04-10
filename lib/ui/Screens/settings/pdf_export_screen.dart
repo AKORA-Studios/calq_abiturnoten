@@ -1,10 +1,8 @@
-import 'dart:io';
-
 import 'package:calq_abiturnoten/util/date_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share/share.dart';
+
+import 'PDFUtil.dart';
 
 class PDFExportScreen extends StatefulWidget {
   const PDFExportScreen({super.key});
@@ -15,7 +13,7 @@ class PDFExportScreen extends StatefulWidget {
 
 class _PDFExportScreenState extends State<PDFExportScreen> {
   String _newContent = "";
-  final String _fileName = "a.html";
+  final String _fileName = "a.pdf";
 
   @override
   void initState() {
@@ -32,23 +30,7 @@ class _PDFExportScreenState extends State<PDFExportScreen> {
       setState(() {
         _newContent = htmlFileContent;
       });
-      share();
-    });
-  }
-
-  void share() {
-    getTemporaryDirectory().then((tempDir) {
-      final File file = File('${tempDir.path}/$_fileName');
-      file.writeAsString(_newContent);
-
-      Share.shareFiles(['${tempDir.path}/$_fileName'], text: 'Great picture');
-    });
-  }
-
-  void createTempFile(String content) {
-    getTemporaryDirectory().then((tempDir) {
-      final File file = File('${tempDir.path}/$_fileName');
-      return file.writeAsString(content);
+      test1(_newContent, _fileName);
     });
   }
 
