@@ -129,6 +129,7 @@ class _EditGradeScreenState extends State<EditGradeScreen> {
                         const Text("Halbjahr"),
                         SegmentedButton<int>(
                           showSelectedIcon: false,
+                          style: calqSegmentedButtonStyle(),
                           segments: [1, 2, 3, 4]
                               .map((e) => ButtonSegment<int>(
                                     value: e,
@@ -178,7 +179,7 @@ class _EditGradeScreenState extends State<EditGradeScreen> {
                       width: double.infinity,
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: widget.color),
+                              backgroundColor: widget.color.withOpacity(0.5)),
                           onPressed: () async {
                             await saveChanges();
                           },
@@ -223,6 +224,7 @@ class _EditGradeScreenState extends State<EditGradeScreen> {
 
             return SegmentedButton<int>(
               showSelectedIcon: false,
+              style: calqSegmentedButtonStyle(),
               segments: buttons,
               selected: <int>{_selectedTypeIndex},
               onSelectionChanged: (Set<int> newSelection) {

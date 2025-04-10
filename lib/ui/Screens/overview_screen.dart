@@ -256,7 +256,6 @@ class _OverviewScreenState extends State<OverviewScreen> {
                             '$_averageText\n $_gradeText',
                             style: const TextStyle(
                               fontSize: 20.0,
-                              color: Colors.black,
                             ),
                           ),
                         ],
@@ -282,7 +281,6 @@ class _OverviewScreenState extends State<OverviewScreen> {
                             '$_blockCircleText\n  Ø ',
                             style: const TextStyle(
                               fontSize: 18.0,
-                              color: Colors.black,
                             ),
                           ),
                         ],

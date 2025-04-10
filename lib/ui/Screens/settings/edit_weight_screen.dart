@@ -105,6 +105,7 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
     return [
       SegmentedButton<int>(
         showSelectedIcon: false,
+        style: calqSegmentedButtonStyle(),
         segments: buttons,
         selected: <int>{_selectedWeightIndex},
         onSelectionChanged: (Set<int> newSelection) {

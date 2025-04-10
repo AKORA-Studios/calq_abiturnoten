@@ -21,9 +21,7 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  @override
   void initState() {
-    //  DatabaseClass.Shared.createSubject();
     DatabaseClass.Shared.fetchSubjects().then((value) {
       // print(value);
     });
@@ -33,9 +31,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Calq Abiturnotenrechner',
-      theme: CalqTheme.lightThemeData(context),
-      darkTheme: CalqTheme.darkThemeData(),
+      theme: ThemeData(
+        brightness: Brightness.light,
+        colorSchemeSeed: calqColor,
+      ),
+      darkTheme: ThemeData(
+        colorSchemeSeed: calqColor,
+        brightness: Brightness.dark,
+      ),
       themeMode: ThemeMode.system,
+      debugShowCheckedModeBanner: false,
       home: const MyHomePage(title: 'Calq'),
     );
   }

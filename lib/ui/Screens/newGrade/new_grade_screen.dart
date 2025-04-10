@@ -108,6 +108,7 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                       children: [
                         const Text("Halbjahr"),
                         SegmentedButton<int>(
+                          style: calqSegmentedButtonStyle(),
                           showSelectedIcon: false,
                           segments: [1, 2, 3, 4]
                               .map((e) => ButtonSegment<int>(
@@ -158,7 +159,8 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                       width: double.infinity,
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: widget.sub.color),
+                              backgroundColor:
+                                  widget.sub.color.withOpacity(0.5)),
                           onPressed: addGrade,
                           child: const Text("Note hinzufügen")),
                     )
@@ -192,6 +194,7 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
 
             return SegmentedButton<int>(
               showSelectedIcon: false,
+              style: calqSegmentedButtonStyle(),
               segments: buttons,
               selected: <int>{_selectedTypeIndex},
               onSelectionChanged: (Set<int> newSelection) {

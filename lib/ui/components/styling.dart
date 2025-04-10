@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 const calqColor = Color(0xff428fe3);
 const appbarColorLight = Color(0xffdde1f3);
-const appbarColorDark = Color(0xff111113);
+const appbarColorDark = Color(0xff2D2D2D);
 
 Widget card(Widget content) {
   return Padding(
@@ -30,95 +30,11 @@ ButtonStyle destructiveButton() {
   );
 }
 
-ColorScheme customScheme() {
-  return ColorScheme.fromSwatch(
-      cardColor: Colors.green,
-      accentColor: calqColor,
-      backgroundColor: Colors.white);
-}
-
-class CalqTheme {
-  static ThemeData lightThemeData(BuildContext context) {
-    return ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: calqColor,
-            background: Colors.white,
-            error: Colors.red,
-            onTertiary: Colors.teal),
-
-        // cardTheme : ...,
-        appBarTheme: const AppBarTheme(
-            backgroundColor: appbarColorLight, shadowColor: Colors.black),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ButtonStyle(
-                elevation: MaterialStateProperty.resolveWith(
-                    (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.hovered)) {
-                    return 5.0;
-                  } else {
-                    return 3.0;
-                  }
-                }),
-                backgroundColor: MaterialStateProperty.resolveWith(
-                    (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.hovered)) {
-                    return Colors.white;
-                  } else {
-                    return calqColor;
-                  }
-                }),
-                shadowColor:
-                    MaterialStateProperty.all<Color>(Colors.lightBlueAccent),
-                foregroundColor: MaterialStateProperty.resolveWith(
-                    (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.hovered)) {
-                    return calqColor;
-                  } else {
-                    return Colors.white;
-                  }
-                }))),
-        useMaterial3: true);
-  }
-
-  static ThemeData darkThemeData() {
-    return ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-            seedColor: calqColor,
-            background: Colors.black45,
-            error: Colors.red,
-            onTertiary: Colors.teal),
-
-        //    cardTheme : ...,
-        appBarTheme: const AppBarTheme(
-            backgroundColor: appbarColorDark, shadowColor: Colors.white12),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ButtonStyle(
-                elevation: MaterialStateProperty.resolveWith(
-                    (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.hovered)) {
-                    return 5.0;
-                  } else {
-                    return 3.0;
-                  }
-                }),
-                backgroundColor: MaterialStateProperty.resolveWith(
-                    (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.hovered)) {
-                    return Colors.white;
-                  } else {
-                    return calqColor;
-                  }
-                }),
-                shadowColor:
-                    MaterialStateProperty.all<Color>(Colors.lightBlueAccent),
-                foregroundColor: MaterialStateProperty.resolveWith(
-                    (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.hovered)) {
-                    return calqColor;
-                  } else {
-                    return Colors.white;
-                  }
-                }))),
-        useMaterial3: true);
-  }
+ButtonStyle calqSegmentedButtonStyle() {
+  return ButtonStyle(
+      side: MaterialStateBorderSide.resolveWith((states) {
+        return BorderSide(color: Colors.grey.withOpacity(0.5));
+      }),
+      shape: MaterialStateProperty.all<OutlinedBorder>(
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))));
 }
