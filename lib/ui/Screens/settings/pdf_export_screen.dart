@@ -1,9 +1,10 @@
-import 'dart:convert';
+import 'dart:io';
 
 import 'package:calq_abiturnoten/util/date_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share/share.dart';
 
 class PDFExportScreen extends StatefulWidget {
   const PDFExportScreen({super.key});
@@ -14,6 +15,7 @@ class PDFExportScreen extends StatefulWidget {
 
 class _PDFExportScreenState extends State<PDFExportScreen> {
   String _newContent = "";
+  final String _fileName = "a.html";
 
   @override
   void initState() {
@@ -35,22 +37,19 @@ class _PDFExportScreenState extends State<PDFExportScreen> {
   }
 
   void share() {
-    Share.shareXFiles(
-      [
-        XFile.fromData(
-          utf8.encode(_newContent),
-          name: 'flutter_logo.html',
-          mimeType: 'text/plain',
-        ),
-      ],
-      //  sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
-    ).then((value) {});
+    getTemporaryDirectory().then((tempDir) {
+      final File file = File('${tempDir.path}/$_fileName');
+      file.writeAsString(_newContent);
 
-    /*
-         Share.shareXFiles([
-      XFile.fromData(utf8.encode(_newContent), mimeType: 'text/plain')
-    ]); // fileNameOverrides: ['myfile.txt']
-    * */
+      Share.shareFiles(['${tempDir.path}/$_fileName'], text: 'Great picture');
+    });
+  }
+
+  void createTempFile(String content) {
+    getTemporaryDirectory().then((tempDir) {
+      final File file = File('${tempDir.path}/$_fileName');
+      return file.writeAsString(content);
+    });
   }
 
   @override
@@ -74,29 +73,4 @@ class _PDFExportScreenState extends State<PDFExportScreen> {
   Future<String> load2RowTemplate() async {
     return await rootBundle.loadString('assets/pdf/row2.html');
   }
-/*
-  Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
-
-    return directory.path;
-  }
-
-  Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/counter.txt');
-  }
-
-  Future<int> readCounter() async {
-    try {
-      final file = await _localFile;
-
-      // Read the file
-      final contents = await file.readAsString();
-
-      return int.parse(contents);
-    } catch (e) {
-      // If encountering an error, return 0
-      return 0;
-    }
-  }*/
 }
