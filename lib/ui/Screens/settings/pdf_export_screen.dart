@@ -2,7 +2,7 @@ import 'package:calq_abiturnoten/util/date_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'PDFUtil.dart';
+import '../../../util/PDF_util.dart';
 
 class PDFExportScreen extends StatefulWidget {
   const PDFExportScreen({super.key});

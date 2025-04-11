@@ -98,8 +98,11 @@ class _OverviewScreenState extends State<OverviewScreen> {
                             if (snap.data == null) {
                               return const Text("?\n?");
                             }
+
+                            String name = snap.data![value.toInt()].key;
+
                             return Text(
-                                "${snap.data![value.toInt()].value.round()}\n${snap.data![value.toInt()].key.substring(0, 3)}",
+                                "${snap.data![value.toInt()].value.round()}\n${name.length > 3 ? name.substring(0, 3) : name}",
                                 style: const TextStyle(height: 1),
                                 textAlign: TextAlign.center);
                           }))),
@@ -336,17 +339,18 @@ class _OverviewScreenState extends State<OverviewScreen> {
 
     for (Data_Subject sub in subjects) {
       Pair<int, int> subjectBounds = sub.getDateBounds();
+      var spotData = sub.tests.map((test) {
+        var date = (test.date.millisecondsSinceEpoch - subjectBounds.key) /
+            subjectBounds.value;
+        return FlSpot(date, test.points + 0.0);
+      }).toList();
+
       arr.add(LineChartBarData(
-          spots: sub.tests.map((test) {
-            var date = (test.date.millisecondsSinceEpoch - subjectBounds.key) /
-                subjectBounds.value;
-            return FlSpot(date, test.points + 0.0);
-          }).toList(),
+          spots: spotData.length < 2 ? [] : spotData,
           color: sub.color,
           dotData: const FlDotData(show: false)));
     }
-
-    return arr;
+    return arr.length < 2 ? [] : arr;
   }
 }
 //Circle1: _averageText + _gradeText [_averagePercent]

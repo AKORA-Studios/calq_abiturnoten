@@ -337,6 +337,8 @@ class DatabaseClass {
     await db.rawQuery('DELETE FROM Test;');
     await db.rawQuery('DELETE FROM Gradetype;');
     await db.rawQuery('DELETE FROM Appsettings;');
+
+    await resetTypes();
   }
 
   Future<void> deleteSubject(int id) async {

@@ -4,6 +4,7 @@ import 'package:calq_abiturnoten/ui/Screens/settings/edit_weight_screen.dart';
 import 'package:calq_abiturnoten/ui/Screens/settings/pdf_export_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:share/share.dart';
 
 import '../../database/database.dart';
 import '../components/util.dart';
@@ -155,8 +156,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           return deleteDataAlert();
                         });
                   }),
-                  settingsOption(
-                      "Github (WIP)", Colors.pink, Icons.info, () {}),
+                  settingsOption("Github", Colors.pink, Icons.info, () {
+                    Share.share(
+                        "https://github.com/AKORA-Studios/calq_abiturnoten",
+                        subject: "Calq Github Link");
+                  }),
                   settingsOption("PDF Export (WIP)", Colors.purple,
                       Icons.file_copy_outlined, () {
                     Navigator.push(

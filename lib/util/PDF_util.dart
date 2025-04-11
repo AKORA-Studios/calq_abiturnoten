@@ -4,20 +4,20 @@ import 'package:htmltopdfwidgets/htmltopdfwidgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
 
-void test1(String _newContent, String _fileName) {
+void test1(String newContent, String fileName) {
   getTemporaryDirectory().then((tempDir) {
-    final File file = File('${tempDir.path}/$_fileName');
+    final File file = File('${tempDir.path}/$fileName');
 
-    final newpdf = Document();
-    HTMLToPdf().convert(_newContent).then((widgets) {
-      newpdf.addPage(MultiPage(
+    final newPdf = Document();
+    HTMLToPdf().convert(newContent).then((widgets) {
+      newPdf.addPage(MultiPage(
           maxPages: 200,
           build: (context) {
             return widgets;
           }));
-      newpdf.save().then((value) {
+      newPdf.save().then((value) {
         file.writeAsBytes(value);
-        Share.shareFiles(['${file.path}'], text: 'Great picture');
+        Share.shareFiles([(file.path)], text: 'Great picture');
       });
     });
   });
