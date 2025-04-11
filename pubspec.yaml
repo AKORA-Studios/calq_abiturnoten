@@ -41,6 +41,10 @@ dependencies:
   pair: ^0.1.2
   fl_chart: ^0.63.0
   package_info_plus: ^5.0.1
+  path_provider: ^2.1.4
+  share: ^2.0.4
+  htmltopdfwidgets: ^1.0.3
+
 
 dev_dependencies:
   flutter_test:
@@ -65,9 +69,10 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/pdf/template.html
+    - assets/pdf/row.html
+    - assets/pdf/row2.html
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
