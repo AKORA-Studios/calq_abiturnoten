@@ -74,8 +74,6 @@ class _ExamScreenState extends State<ExamScreen> {
   }
 
   void updateSlider(double value, Data_Subject sub) async {
-    // TODO: save points
-
     await DatabaseClass.Shared.updateExamPoints(value.round(), sub);
     updateBlock2Values();
   }

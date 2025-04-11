@@ -7,7 +7,6 @@ This is a work-in-progress
 ## To Be Implemented Features
 
 * [] Export/Import json
-* [] Export PDF
 * [] Rainbow Colors
 * [] Localization
 
