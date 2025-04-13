@@ -19,54 +19,59 @@ class _SubjectsScreenState extends State<SubjectsScreen> {
         appBar: AppBar(
           title: const Text("Subjects"),
         ),
-        body: ListView(
-          children: [
-            FutureBuilder(
-                future: DatabaseClass.Shared.getSubjects(),
-                builder: (ctx, snap) {
-                  if (snap.hasData) {
-                    return Column(
-                        children: snap.data!
-                            .map((e) => TextButton(
-                                style: TextButton.styleFrom(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 0, 0, 0)),
-                                onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              SubjectInfoScreen(sub: e)));
-                                },
-                                child: Card(
-                                  child: FutureBuilder(
-                                    future: Averages.averageString(e),
-                                    builder: (ctx, snap) {
-                                      if (snap.hasData) {
-                                        return subjectRowWithTerms(
-                                            e, snap.data ?? "?");
-                                      } else {
-                                        return const SizedBox();
-                                      }
-                                    },
-                                  ),
-                                )))
-                            .toList());
-                  } else {
-                    return const SizedBox();
-                  }
-                }),
-            Center(
-                child: FutureBuilder(
-                    future: getActiveTermsGeneral(),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(4),
+            child: Column(
+              children: [
+                FutureBuilder(
+                    future: DatabaseClass.Shared.getSubjects(),
                     builder: (ctx, snap) {
                       if (snap.hasData) {
-                        return Text(snap.data!);
+                        return Column(
+                            children: snap.data!
+                                .map((e) => TextButton(
+                                    style: TextButton.styleFrom(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 0, 0, 0)),
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  SubjectInfoScreen(sub: e)));
+                                    },
+                                    child: Card(
+                                      child: FutureBuilder(
+                                        future: Averages.averageString(e),
+                                        builder: (ctx, snap) {
+                                          if (snap.hasData) {
+                                            return subjectRowWithTerms(
+                                                e, snap.data ?? "?");
+                                          } else {
+                                            return const SizedBox();
+                                          }
+                                        },
+                                      ),
+                                    )))
+                                .toList());
                       } else {
-                        return const Text("? von ? Halbjahren aktiv");
+                        return const SizedBox();
                       }
-                    }))
-          ],
+                    }),
+                Center(
+                    child: FutureBuilder(
+                        future: getActiveTermsGeneral(),
+                        builder: (ctx, snap) {
+                          if (snap.hasData) {
+                            return Text(snap.data!);
+                          } else {
+                            return const Text("? von ? Halbjahren aktiv");
+                          }
+                        }))
+              ],
+            ),
+          ),
         ));
   }
 }

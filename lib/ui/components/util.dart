@@ -348,7 +348,7 @@ Future<double> testAverage(List<Data_Test> tests) async {
 
   for (Data_Type type in types) {
     List<Data_Test> filteredTests =
-        tests.where((element) => element.type == type.id).toList();
+        tests.where((element) => element.type == type.assignedID).toList();
     if (filteredTests.isNotEmpty) {
       double weight = type.weigth / 100;
       gradeWeights += weight;

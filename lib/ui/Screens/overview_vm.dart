@@ -32,7 +32,7 @@ class OverViewViewModel with ChangeNotifier {
     _barChartData = await fetchOverviewChartData();
     await updateBlocks();
     _termChartData = await fetchTermChartData();
-    print("Viewmodel finished updating");
+
     notifyListeners();
   }
 
@@ -110,7 +110,7 @@ class OverViewViewModel with ChangeNotifier {
         (await generateBlockOne() + await generateBlockTwo()).toDouble();
     double blockGrade = grade((blockPoints * 15 / 900));
     String gradeData = blockGrade.toStringAsFixed(2);
-    double generalAverageValue = await generalAverage();
+    double generalAverageValue = (await generalAverage()).roundToDouble();
     List<double> termValues = [
       await generalAverage(year: 1),
       await generalAverage(year: 2),
