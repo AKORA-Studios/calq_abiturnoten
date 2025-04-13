@@ -105,7 +105,7 @@ class DatabaseClass {
     List<Map<dynamic, dynamic>>? res2 = await fetchSubjects();
     List<Map<dynamic, dynamic>>? resTests = await fetchTests();
 
-    return res2?.map((e) {
+    var result = res2?.map((e) {
           List<Map<dynamic, dynamic>>? subjectTests = resTests
               ?.where((element) => element["subject"] == e["id"])
               .toList();
@@ -121,6 +121,11 @@ class DatabaseClass {
           return Data_Subject.fromMap(y, x);
         }).toList() ??
         [];
+    result.sort((a, b) => a.name.compareTo(b.name));
+    result.sort((a, b) {
+      return b.lk ? 1 : -1;
+    });
+    return result;
   }
 
   Future<List<Data_Test>> getSubjectTests(Data_Subject sub) async {

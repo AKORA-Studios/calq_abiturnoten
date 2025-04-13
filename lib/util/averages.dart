@@ -57,7 +57,7 @@ class Averages {
 
     for (var type in allTypes) {
       List<Data_Test> filteredTests =
-          tests.where((element) => element.type == type.id).toList();
+          tests.where((element) => element.type == type.assignedID).toList();
       if (filteredTests.isNotEmpty) {
         double weight = (type.weigth) / 100;
         gradeWeights += weight;
@@ -82,7 +82,7 @@ class Averages {
   /// Returns the average of all grades from one subject
   static Future<double> getSubjectAverages(Data_Subject sub) async {
     List<Data_Test> tests =
-        getAllSubjectTests(sub, TestSortCriteria.onlyActiveTerm);
+        await getAllSubjectTests(sub, TestSortCriteria.onlyActiveTerm);
     if (tests.isEmpty) {
       return 0.0;
     }
@@ -110,7 +110,7 @@ class Averages {
       [bool filterinactve = true]) async {
     var tests = filterinactve
         ? sub.tests
-        : getAllSubjectTests(sub, TestSortCriteria.onlyActiveTerm);
+        : await getAllSubjectTests(sub, TestSortCriteria.onlyActiveTerm);
     tests = tests.where((element) => element.year == year).toList();
 
     if (tests.isEmpty) {
@@ -135,7 +135,7 @@ class Averages {
         continue;
       }
       List<Data_Test> tests =
-          getAllSubjectTests(sub, TestSortCriteria.onlyActiveTerm);
+          await getAllSubjectTests(sub, TestSortCriteria.onlyActiveTerm);
       if (tests.isEmpty) {
         subjectCount -= 1;
         continue;
@@ -162,10 +162,11 @@ class Averages {
       if (sub.tests.isEmpty) {
         continue;
       }
+      List<Data_Test> tests2 =
+          await getAllSubjectTests(sub, TestSortCriteria.onlyActiveTerm);
+
       List<Data_Test> tests =
-          getAllSubjectTests(sub, TestSortCriteria.onlyActiveTerm)
-              .where((element) => element.year == year)
-              .toList();
+          tests2.where((element) => element.year == year).toList();
 
       if (tests.isEmpty) {
         continue;
@@ -199,8 +200,8 @@ class Averages {
     }
 
     for (var i = 1; i < 5; i++) {
-      List<Data_Test> arr =
-          sub.tests.where((element) => element.year == i).toList();
+      List<Data_Test> arr2 = await getAllSubjectTests(sub);
+      List<Data_Test> arr = arr2.where((element) => element.year == i).toList();
       if (arr.isEmpty) {
         str += "-- ";
         continue;
@@ -264,12 +265,12 @@ class Averages {
   }
 
   static Future<bool> isPrimaryType(Data_Type type) {
-    return isPrimaryTypeInt(type.id);
+    return isPrimaryTypeInt(type.assignedID);
   }
 
   static Future<bool> isPrimaryTypeInt(int type) async {
     List<Data_Type> allTypes = await DatabaseClass.Shared.getTypes();
-    List<int> typeIDs = allTypes.map((e) => e.id).toList();
+    List<int> typeIDs = allTypes.map((e) => e.assignedID).toList();
 
     if (!typeIDs.contains(type)) {
       setPrimaryType(typeIDs[0]);
@@ -309,9 +310,9 @@ class Averages {
   }
 
   /// Returns all Tests sorted By Criteria
-  static List<Data_Test> getAllSubjectTests(Data_Subject subject,
-      [TestSortCriteria sortedBy = TestSortCriteria.date]) {
-    var tests = subject.tests;
+  static Future<List<Data_Test>> getAllSubjectTests(Data_Subject subject,
+      [TestSortCriteria sortedBy = TestSortCriteria.date]) async {
+    var tests = await DatabaseClass.Shared.getSubjectTests(subject);
     switch (sortedBy) {
       case TestSortCriteria.name:
         tests.sort((b, a) => b.name.compareTo(a.name));

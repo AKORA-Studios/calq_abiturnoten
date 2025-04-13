@@ -350,7 +350,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
       var spotData = sub.tests.map((test) {
         var date = (test.date.millisecondsSinceEpoch - subjectBounds.key) /
             subjectBounds.value;
-        return FlSpot(date, test.points + 0.0);
+        return FlSpot(1 - date, test.points + 0.0);
       }).toList();
 
       arr.add(LineChartBarData(
