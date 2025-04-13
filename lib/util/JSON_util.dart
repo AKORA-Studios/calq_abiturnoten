@@ -52,9 +52,11 @@ class JSONUtil {
     for (Data_Subject sub in subjects) {
       int testCount = 0;
       String testString = "";
-      for (Data_Test test in await DatabaseClass.Shared.getSubjectTests(sub)) {
+      List<Data_Test> subTests =
+          await DatabaseClass.Shared.getSubjectTests(sub);
+      for (Data_Test test in subTests) {
         testCount += 1;
-        str += test.toJSON();
+        str += "${test.toJSON()}${subTests.length == testCount ? "" : ","}";
       }
 
       str += sub.toJSON(testString);

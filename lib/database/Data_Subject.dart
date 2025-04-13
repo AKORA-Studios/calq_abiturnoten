@@ -207,7 +207,7 @@ class Data_Subject {
 
   // UTIL
   String toJSON(String jsonTests) {
-    return "{\"name\": $name, \"color\": ${color.toHexString},\"inactiveYears\": $inactiveYears,  \"lk\": $lk, \"subjecttests\": $jsonTests}";
+    return "{\"name\": \"$name\", \"color\": \"${color.toHexString}\",\"inactiveYears\": \"$inactiveYears\",  \"lk\": $lk, \"subjecttests\": $jsonTests}";
   }
 
   @override

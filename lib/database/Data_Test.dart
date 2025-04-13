@@ -31,6 +31,11 @@ class Data_Test {
     return map;
   }
 
+  // UTIL
+  String toJSON() {
+    return "{\"name\": \"$name\", \"year\": $year, \"grade\":$points, \"date\": \"${date.millisecondsSinceEpoch}\", \"type\": $type}";
+  }
+
   @override
   String toString() {
     return 'Data_Test{name: $name, id: $id type: $type points: $points year: $year}';

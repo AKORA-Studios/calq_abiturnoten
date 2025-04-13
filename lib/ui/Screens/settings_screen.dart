@@ -139,8 +139,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           })),
                   settingsOption("Noten importieren (WIP)", Colors.blue,
                       Icons.folder_open, () {}),
-                  settingsOption("Noten exportieren (WIP)", Colors.green,
-                      Icons.share, () {}),
+                  settingsOption("Noten exportieren", Colors.green, Icons.share,
+                      () {
+                    JSONUtil().exportJSON();
+                  }),
                   settingsOption(
                       "Wertung ändern", Colors.amber, Icons.filter_frames, () {
                     Navigator.push(
