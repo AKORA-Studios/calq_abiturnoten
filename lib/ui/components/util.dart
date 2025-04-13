@@ -185,8 +185,10 @@ Widget testRow(Data_Test test, Data_Subject sub, Function() action) {
             ),
           ),
           const SizedBox(width: 10),
-          Text("${test.name} [${test.type}]"),
-          const Spacer(),
+          Expanded(
+              child: Text("${test.name} [${test.type}]",
+                  overflow: TextOverflow.ellipsis)),
+          const SizedBox(width: 10),
           Text(dateFormatter(test.date))
         ],
       ));

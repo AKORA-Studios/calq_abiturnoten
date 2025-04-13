@@ -117,7 +117,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                                 backDrawRodData: backgroundBar(),
                                 // gradient: const LinearGradient(colors: [Colors.blue, Colors.purple]),
                                 toY: e.value.value,
-                                width: 60,
+                                width: barWidth(snap.data!.length),
                                 color: calqColor,
                                 borderRadius: barRadiusTerms())
                           ]))
@@ -125,6 +125,14 @@ class _OverviewScreenState extends State<OverviewScreen> {
             ));
           }
         });
+  }
+
+  // TODO: test different sizes
+  double barWidth(int length) {
+    if (length > 10) {
+      return 20;
+    }
+    return 60;
   }
 
   Widget lineChart() {
