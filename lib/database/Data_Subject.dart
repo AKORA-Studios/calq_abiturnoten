@@ -1,6 +1,7 @@
 import 'package:calq_abiturnoten/database/database.dart';
 import 'package:calq_abiturnoten/util/color_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:pair/pair.dart';
 
 import '../ui/components/util.dart';
@@ -202,6 +203,11 @@ class Data_Subject {
         tests.last.date.millisecondsSinceEpoch;
     boundaries = Pair(tests.last.date.millisecondsSinceEpoch, max);
     return boundaries;
+  }
+
+  // UTIL
+  String toJSON(String jsonTests) {
+    return "{\"name\": $name, \"color\": ${color.toHexString},\"inactiveYears\": $inactiveYears,  \"lk\": $lk, \"subjecttests\": $jsonTests}";
   }
 
   @override

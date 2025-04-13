@@ -1,8 +1,8 @@
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
-import 'package:calq_abiturnoten/json/JSON_util.dart';
 import 'package:calq_abiturnoten/ui/Screens/settings/edit_subject_screen.dart';
 import 'package:calq_abiturnoten/ui/Screens/settings/edit_weight_screen.dart';
 import 'package:calq_abiturnoten/ui/Screens/settings/pdf_export_screen.dart';
+import 'package:calq_abiturnoten/util/JSON_util.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:share/share.dart';

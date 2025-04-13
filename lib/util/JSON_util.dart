@@ -1,7 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:calq_abiturnoten/database/Data_Subject.dart';
+import 'package:calq_abiturnoten/database/Data_Test.dart';
 import 'package:calq_abiturnoten/database/database.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share/share.dart';
 
 class JSONUtil {
   Future<void> loadDemoData(BuildContext context) async {
@@ -9,8 +14,8 @@ class JSONUtil {
         .loadString("assets/json/demo_data.json");
     final jsonResult = jsonDecode(data);
 
-    DatabaseClass.Shared.hasFiveexams = false;
-    DatabaseClass.Shared.rainbowEnabled = false;
+    DatabaseClass.Shared.hasFiveexams = true;
+    DatabaseClass.Shared.rainbowEnabled = true;
 
     for (dynamic sub in jsonResult) {
       String name = tryCast(sub["name"]) ?? "???";
@@ -34,6 +39,38 @@ class JSONUtil {
         }
       });
     }
+  }
+
+  Future<void> exportJSON() async {
+    var str =
+        "{\"formatVersion\": 3, \"colorfulCharts\": ${DatabaseClass.Shared.rainbowEnabled}, \"hasFiveExams\": ${DatabaseClass.Shared.hasFiveexams},";
+    str +=
+        "\"highlightedType\": \(primaryType), \"gradeTypes\": \(getTypesJSONData()), \(getExamJSONData()) \"usersubjects\": [";
+// TODO: include types+ json verison
+    List<Data_Subject> subjects = await DatabaseClass.Shared.getSubjects();
+    int subCount = 0;
+    for (Data_Subject sub in subjects) {
+      int testCount = 0;
+      String testString = "";
+      for (Data_Test test in await DatabaseClass.Shared.getSubjectTests(sub)) {
+        testCount += 1;
+        str += test.toJSON();
+      }
+
+      str += sub.toJSON(testString);
+
+      subCount += 1;
+      str += "]} ${subjects.length == subCount ? "" : ","}";
+    }
+
+    str += "]}";
+
+    getTemporaryDirectory().then((tempDir) {
+      final File file = File('${tempDir.path}/exportedJSON.json');
+
+      file.writeAsString(str);
+      Share.shareFiles([(file.path)], text: 'Exported JSON Data');
+    });
   }
 }
 

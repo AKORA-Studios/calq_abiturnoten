@@ -4,7 +4,7 @@ import 'package:htmltopdfwidgets/htmltopdfwidgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
 
-void test1(String newContent, String fileName) {
+void tempSavePDF(String newContent, String fileName) {
   getTemporaryDirectory().then((tempDir) {
     final File file = File('${tempDir.path}/$fileName');
 
@@ -17,7 +17,7 @@ void test1(String newContent, String fileName) {
           }));
       newPdf.save().then((value) {
         file.writeAsBytes(value);
-        Share.shareFiles([(file.path)], text: 'Great picture');
+        Share.shareFiles([(file.path)], text: 'Great PDF Data!');
       });
     });
   });
