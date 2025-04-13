@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:pair/pair.dart';
 
-import '../ui/components/util.dart';
 import '../util/averages.dart';
 import 'Data_Test.dart';
 
@@ -111,25 +110,6 @@ class Data_Subject {
     return !getInactiveTerms().contains(term.toString());
   }
 
-  /// Returns all Tests sorted By Criteria // TODO: test if sorting works
-  List<Data_Test> getSortedTests(
-      {TestSortCriteria sortedBy = TestSortCriteria.date}) {
-    List<Data_Test> sortedTests = tests;
-    switch (sortedBy) {
-      case TestSortCriteria.name:
-        sortedTests.sort((a, b) => a.name.compareTo(b.name));
-        return sortedTests;
-      case TestSortCriteria.grade:
-        sortedTests.sort((a, b) => a.points.compareTo(b.points));
-        return sortedTests;
-      case TestSortCriteria.date:
-        sortedTests.sort((a, b) => a.date.compareTo(b.date));
-        return sortedTests;
-      case TestSortCriteria.onlyActiveTerms:
-        return filterTests(sortedTests);
-    }
-  }
-
   List<Data_Test> filterTests(List<Data_Test> tests) {
     var filteredTests = tests;
 
@@ -140,28 +120,6 @@ class Data_Subject {
       }
     }
     return tests;
-  }
-
-  /// Returns the average of all grades from one subject
-  Future<double> getSubjectAverage() async {
-    if (tests.isEmpty) {
-      return 0.0;
-    }
-
-    double count = 0.0;
-    double subAverage = 0.0;
-
-    for (int e in [1, 2, 3, 4]) {
-      var yearTests = tests.where((element) => element.year == e).toList();
-      if (yearTests.isEmpty) {
-        continue;
-      }
-      count += 1;
-      subAverage += await testAverage(yearTests);
-    }
-    double average = (subAverage / count);
-    //var rounded = String(format: "%.2f", average)//.padding(toLength: 4, withPad: "0", startingAt: 0)
-    return double.parse(average.toStringAsFixed(2)) ?? 0.0;
   }
 
   /// Activate Terms

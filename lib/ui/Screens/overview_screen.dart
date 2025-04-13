@@ -1,4 +1,5 @@
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
+import 'package:calq_abiturnoten/util/averages.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:pair/pair.dart';
@@ -99,7 +100,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                               return const Text("?\n?");
                             }
 
-                            String name = snap.data![value.toInt()].key;
+                            String name = snap.data![value.toInt()].name;
 
                             return Text(
                                 "${snap.data![value.toInt()].value.round()}\n${name.length > 3 ? name.substring(0, 3) : name}",
@@ -118,7 +119,7 @@ class _OverviewScreenState extends State<OverviewScreen> {
                                 // gradient: const LinearGradient(colors: [Colors.blue, Colors.purple]),
                                 toY: e.value.value,
                                 width: barWidth(snap.data!.length),
-                                color: calqColor,
+                                color: e.value.color,
                                 borderRadius: barRadiusTerms())
                           ]))
                       .toList(),
@@ -331,13 +332,13 @@ class _OverviewScreenState extends State<OverviewScreen> {
     });
   }
 
-  Future<List<Pair<String, double>>> getOverviewChartData() async {
-    List<Pair<String, double>> data = [];
+  Future<List<BarChartEntry>> getOverviewChartData() async {
+    List<BarChartEntry> data = [];
     var subjects = await DatabaseClass.Shared.getSubjects();
 
     for (Data_Subject sub in subjects) {
-      //let color = getSubjectColor(sub)
-      data.add(Pair(sub.name, await sub.getSubjectAverage()));
+      data.add(BarChartEntry(sub.name,
+          await Averages.getSubjectAverageWithoutYear(sub), sub.color));
     }
     return data;
   }
@@ -360,6 +361,14 @@ class _OverviewScreenState extends State<OverviewScreen> {
     }
     return arr.length < 2 ? [] : arr;
   }
+}
+
+class BarChartEntry {
+  String name = "???";
+  double value = 0.0;
+  Color color = calqColor;
+
+  BarChartEntry(this.name, this.value, this.color);
 }
 //Circle1: _averageText + _gradeText [_averagePercent]
 //Circle2: _blockCircleText [_blockPercent]

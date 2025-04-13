@@ -259,8 +259,9 @@ Future<int> generateBlockOne() async {
   }
 
   for (Data_Subject sub in subjects) {
-    List<Data_Test> subTests =
-        sub.getSortedTests(sortedBy: TestSortCriteria.onlyActiveTerms);
+    List<Data_Test> subTests = getSortedTests(
+        sub, await DatabaseClass.Shared.getSubjectTests(sub),
+        sortedBy: TestSortCriteria.onlyActiveTerms);
     if (subTests.isEmpty) {
       continue;
     }
@@ -395,13 +396,14 @@ Future<double> generalAverage({int year = -1}) async {
   double grades = 0.0;
 
   for (Data_Subject sub in allSubjects) {
-    if (sub.tests.isEmpty) {
+    List<Data_Test> allTests = await DatabaseClass.Shared.getSubjectTests(sub);
+    if (allTests.isEmpty) {
       continue;
     }
-    List<Data_Test> tests = sub.tests;
+    List<Data_Test> tests = allTests;
     if (year > 0) {
-      tests = sub
-          .getSortedTests(sortedBy: TestSortCriteria.onlyActiveTerms)
+      tests = getSortedTests(sub, allTests,
+              sortedBy: TestSortCriteria.onlyActiveTerms)
           .where((element) => element.year == year)
           .toList();
     }
@@ -418,4 +420,23 @@ Future<double> generalAverage({int year = -1}) async {
     return 0.0;
   }
   return grades / count;
+}
+
+/// Returns all Tests sorted By Criteria // TODO: test if sorting works
+List<Data_Test> getSortedTests(Data_Subject sub, List<Data_Test> tests,
+    {TestSortCriteria sortedBy = TestSortCriteria.date}) {
+  List<Data_Test> sortedTests = tests;
+  switch (sortedBy) {
+    case TestSortCriteria.name:
+      sortedTests.sort((a, b) => a.name.compareTo(b.name));
+      return sortedTests;
+    case TestSortCriteria.grade:
+      sortedTests.sort((a, b) => a.points.compareTo(b.points));
+      return sortedTests;
+    case TestSortCriteria.date:
+      sortedTests.sort((a, b) => a.date.compareTo(b.date));
+      return sortedTests;
+    case TestSortCriteria.onlyActiveTerms:
+      return sub.filterTests(sortedTests);
+  }
 }

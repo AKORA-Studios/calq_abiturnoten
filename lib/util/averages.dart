@@ -149,6 +149,29 @@ class Averages {
     return a / subjectCount;
   }
 
+  /// Returns the average of all grades from one subject
+  static Future<double> getSubjectAverageWithoutYear(Data_Subject sub) async {
+    List<Data_Test> tests = await DatabaseClass.Shared.getSubjectTests(sub);
+    if (tests.isEmpty) {
+      return 0.0;
+    }
+
+    double count = 0.0;
+    double subAverage = 0.0;
+
+    for (int e in [1, 2, 3, 4]) {
+      var yearTests = tests.where((element) => element.year == e).toList();
+      if (yearTests.isEmpty) {
+        continue;
+      }
+      count += 1;
+      subAverage += await testAverage(yearTests);
+    }
+    double average = (subAverage / count);
+    //var rounded = String(format: "%.2f", average)//.padding(toLength: 4, withPad: "0", startingAt: 0)
+    return double.parse(average.toStringAsFixed(2)) ?? 0.0;
+  }
+
   /// Returns the average of all grades from all subjects in a specific halfyear
   static Future<double> generalAverageForYear(int year) async {
     final allSubjects = await DatabaseClass.Shared.getSubjects();
@@ -191,7 +214,7 @@ class Averages {
     return ((17 - (number.abs())) / 3.0);
   }
 
-  /// Generates a convient String that shows the grades of the subject.
+  /// Generates a convenient String that shows the grades of the subject.
   static Future<String> averageString(Data_Subject sub) async {
     String str = "";
 
