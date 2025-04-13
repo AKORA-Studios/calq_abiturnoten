@@ -1,4 +1,5 @@
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
+import 'package:calq_abiturnoten/json/JSON_util.dart';
 import 'package:calq_abiturnoten/ui/Screens/settings/edit_subject_screen.dart';
 import 'package:calq_abiturnoten/ui/Screens/settings/edit_weight_screen.dart';
 import 'package:calq_abiturnoten/ui/Screens/settings/pdf_export_screen.dart';
@@ -147,8 +148,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         MaterialPageRoute(
                             builder: (context) => const EditWeightScreen()));
                   }),
-                  settingsOption("Demo Daten laden (WIP)", Colors.orange,
-                      Icons.warning_amber, () {}),
+                  settingsOption(
+                      "Demo Daten laden", Colors.orange, Icons.warning_amber,
+                      () {
+                    showDialog(
+                        context: context,
+                        builder: (ctx) {
+                          return loadDemoDataAlert();
+                        });
+                  }),
                   settingsOption("Daten löschen", Colors.red, Icons.delete, () {
                     showDialog(
                         context: context,
@@ -261,6 +269,40 @@ class _SettingsScreenState extends State<SettingsScreen> {
             });
           },
           child: const Text('Delete'),
+        ),
+      ],
+    );
+  }
+
+  Widget loadDemoDataAlert() {
+    return AlertDialog(
+      // To display the title it is optional
+      title: const Text('Demo Daten laden?'),
+      // Message which will be pop up on the screen
+      content:
+          const Text('Loading the demo data will delete all your current data'),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+          child: const Text('No!!!'),
+        ),
+        TextButton(
+          style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(Colors.red),
+              foregroundColor: MaterialStateProperty.all(Colors.white)),
+          onPressed: () {
+            DatabaseClass.Shared.deleteData().then((value) {
+              // TODO: laod json
+              JSONUtil().loadDemoData(context);
+              Navigator.of(context).pop();
+              setState(() {
+                _shouldUpdateView = !_shouldUpdateView;
+              });
+            });
+          },
+          child: const Text('Load'),
         ),
       ],
     );

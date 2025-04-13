@@ -156,17 +156,24 @@ class DatabaseClass {
   }
 
   // CREATE DATA
-  Future<void> createSubject(String name, String color, int lk) async {
-    await db.transaction((txn) async {
+  Future<int> createSubject(String name, String color, int lk,
+      {String inactiveYears = ""}) async {
+    int id = await db.transaction((txn) async {
       int id1 = await txn.rawInsert(
           'INSERT INTO Subject(name, color, exampoints, examtype, lk,inactiveYears, showinlinegraph) VALUES(?,?,?,?,?,?,?)',
-          [name, color, 0, 0, lk, "", 1]);
+          [name, color, 0, 0, lk, inactiveYears, 1]);
       print('Inserted Subject: $id1');
+      return id1;
     });
+    return id;
   }
 
   Future<void> createTest(int subjectID, String name, int points, int year,
       DateTime date, int selectedType) async {
+    if (subjectID < 0) {
+      print("No! Invalid Subejct ID");
+      return;
+    }
     if (name.isEmpty) {
       print("No! Invalid Test Name");
       return;
