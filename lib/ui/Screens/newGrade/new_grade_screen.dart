@@ -1,5 +1,6 @@
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
 import 'package:calq_abiturnoten/database/database.dart';
+import 'package:calq_abiturnoten/ui/components/util.dart';
 import 'package:flutter/material.dart';
 
 import '../../../database/Data_Type.dart';
@@ -26,8 +27,10 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
   @override
   void initState() {
     super.initState();
-    setState(() {
-      _selectedYear = widget.sub.lastActiveYear();
+    DatabaseClass.Shared.getSubjectTests(widget.sub).then((value) {
+      setState(() {
+        _selectedYear = lastActiveYear(value);
+      });
     });
   }
 

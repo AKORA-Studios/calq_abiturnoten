@@ -4,6 +4,7 @@ import 'package:calq_abiturnoten/database/Data_Test.dart';
 import 'package:calq_abiturnoten/database/Data_Type.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pair/pair.dart';
 
 import '../../database/database.dart';
 
@@ -439,4 +440,36 @@ List<Data_Test> getSortedTests(Data_Subject sub, List<Data_Test> tests,
     case TestSortCriteria.onlyActiveTerms:
       return sub.filterTests(sortedTests);
   }
+}
+
+// Returns <min, max> dates of all tests
+Pair<int, int> getDateBounds(List<Data_Test> tests) {
+  Pair<int, int> boundaries = Pair(DateTime.now().millisecondsSinceEpoch,
+      DateTime.now().millisecondsSinceEpoch);
+  if (tests.isEmpty) {
+    return boundaries;
+  }
+  tests.sort((a, b) => a.date.compareTo(b.date));
+  var max = tests.first.date.millisecondsSinceEpoch -
+      tests.last.date.millisecondsSinceEpoch;
+  boundaries = Pair(tests.last.date.millisecondsSinceEpoch, max);
+  return boundaries;
+}
+
+// Get all tests that are in this specific term
+List<Data_Test> getTermTests(List<Data_Test> tests, int term) {
+  return tests.where((element) => element.year == term).toList();
+}
+
+/// Returns last used term to auto select for new grades
+int lastActiveYear(List<Data_Test> tests) {
+  var num = 1;
+  for (var i = 0; i < 5; i++) {
+    var filteredTests = tests.where((element) => element.year == i);
+
+    if (filteredTests.isNotEmpty) {
+      num = i;
+    }
+  }
+  return num;
 }

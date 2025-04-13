@@ -295,9 +295,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               backgroundColor: MaterialStateProperty.all(Colors.red),
               foregroundColor: MaterialStateProperty.all(Colors.white)),
           onPressed: () {
-            DatabaseClass.Shared.deleteData().then((value) {
-              // TODO: laod json
-              JSONUtil().loadDemoData(context);
+            DatabaseClass.Shared.deleteData().then((value) async {
+              await JSONUtil().loadDemoData(context);
               Navigator.of(context).pop();
               setState(() {
                 _shouldUpdateView = !_shouldUpdateView;

@@ -4,6 +4,7 @@ import 'package:calq_abiturnoten/database/Data_Subject.dart';
 import 'package:calq_abiturnoten/database/Data_Test.dart';
 import 'package:calq_abiturnoten/database/Data_Type.dart';
 import 'package:calq_abiturnoten/util/averages.dart';
+import 'package:calq_abiturnoten/util/color_extension.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -27,6 +28,11 @@ class DatabaseClass {
   bool rainbowEnabled = true;
   bool hasFiveexams = true;
   int primaryType = -1;
+
+  // Cache
+  //id: subject
+  Map<int, Data_Subject> mappedSubjects = {};
+  Map<int, Map<int, Data_Test>> mappedTests = {};
 
   DatabaseClass() {
     print("Init Datase....");
@@ -102,6 +108,9 @@ class DatabaseClass {
   }
 
   Future<List<Data_Subject>> getSubjects() async {
+    if (mappedSubjects.isNotEmpty) {
+      return mappedSubjects.values.toList();
+    }
     List<Map<dynamic, dynamic>>? res2 = await fetchSubjects();
     List<Map<dynamic, dynamic>>? resTests = await fetchTests();
 
@@ -129,6 +138,9 @@ class DatabaseClass {
   }
 
   Future<List<Data_Test>> getSubjectTests(Data_Subject sub) async {
+    if (mappedTests[sub.id] != null) {
+      return mappedTests[sub.id]!.values.toList();
+    }
     List<Map<dynamic, dynamic>>? resTests = await fetchTests();
     List<Map<dynamic, dynamic>>? subjectTests =
         resTests?.where((element) => element["subject"] == sub.id).toList();
@@ -170,6 +182,9 @@ class DatabaseClass {
       print('Inserted Subject: $id1');
       return id1;
     });
+
+    mappedSubjects[id] = Data_Subject(
+        id, name, fromHex(color), 0, 0, lk == 1, inactiveYears, true);
     return id;
   }
 
@@ -183,12 +198,15 @@ class DatabaseClass {
       print("No! Invalid Test Name");
       return;
     }
-    await db.transaction((txn) async {
+    int newID = await db.transaction((txn) async {
       int id1 = await txn.rawInsert(
           'INSERT INTO Test(name, points, type, date, year,subject) VALUES(?,?,?,?,?,?)',
           [name, points, selectedType, date.toString(), year, subjectID]);
       print('Inserted Test: $id1');
+      return id1;
     });
+    mappedTests[subjectID]?[newID] =
+        Data_Test(newID, name, points, selectedType, date, year);
   }
 
   Future<void> createSettings() async {
@@ -290,9 +308,11 @@ class DatabaseClass {
         'UPDATE Subject SET color = ?, exampoints = ?, examtype = ?, lk = ?, inactiveYears = ?, name = ?, showinlinegraph = ? WHERE id = ?',
         newSub.toMapUpdate());
     print('Updated Settings: $count');
+    mappedSubjects[newSub.id] = newSub;
   }
 
   Future<void> updateTest(Data_Test newTest) async {
+    mappedTests[newTest.subject]?[newTest.id] = newTest;
     int count = await db.rawUpdate(
         'UPDATE Test SET name = ?, points = ?, type = ?, date = ?, year = ? WHERE id = ?',
         [

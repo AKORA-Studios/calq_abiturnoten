@@ -7,8 +7,9 @@ class Data_Test {
   late int type;
   late DateTime date;
   late int year;
+  late int subject;
 
-  Data_Test(this.id, this.name);
+  Data_Test(this.id, this.name, this.points, this.type, this.date, this.year);
 
   Data_Test.fromMap(Map<String, Object?> map) {
     id = int.parse(map["id"].toString());
@@ -17,6 +18,7 @@ class Data_Test {
     type = int.parse(map["type"].toString());
     date = dateFromString(map["date"].toString());
     year = int.parse(map["year"].toString());
+    subject = int.parse(map["subject"].toString());
   }
 
   Map<String, Object?> toMap() {

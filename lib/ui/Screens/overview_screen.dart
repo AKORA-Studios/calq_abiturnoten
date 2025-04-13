@@ -343,12 +343,14 @@ class _OverviewScreenState extends State<OverviewScreen> {
     return data;
   }
 
-  List<LineChartBarData> getLineChartData(List<Data_Subject> subjects) {
+  Future<List<LineChartBarData>> getLineChartData(
+      List<Data_Subject> subjects) async {
     List<LineChartBarData> arr = [];
 
     for (Data_Subject sub in subjects) {
-      Pair<int, int> subjectBounds = sub.getDateBounds();
-      var spotData = sub.tests.map((test) {
+      var value = await DatabaseClass.Shared.getSubjectTests(sub);
+      Pair<int, int> subjectBounds = getDateBounds(value);
+      var spotData = value.map((test) {
         var date = (test.date.millisecondsSinceEpoch - subjectBounds.key) /
             subjectBounds.value;
         return FlSpot(1 - date, test.points + 0.0);
