@@ -109,7 +109,12 @@ class DatabaseClass {
 
   Future<List<Data_Subject>> getSubjects() async {
     if (mappedSubjects.isNotEmpty) {
-      return mappedSubjects.values.toList();
+      List<Data_Subject> subs = mappedSubjects.values.toList();
+      subs.sort((a, b) => a.name.compareTo(b.name));
+      subs.sort((a, b) {
+        return b.lk ? 1 : -1;
+      });
+      return subs;
     }
     List<Map<dynamic, dynamic>>? res2 = await fetchSubjects();
     List<Map<dynamic, dynamic>>? resTests = await fetchTests();
@@ -134,6 +139,10 @@ class DatabaseClass {
     result.sort((a, b) {
       return b.lk ? 1 : -1;
     });
+    // update mapping
+    for (Data_Subject sub in result) {
+      mappedSubjects[sub.id] = sub;
+    }
     return result;
   }
 
@@ -376,11 +385,13 @@ class DatabaseClass {
   Future<void> deleteSubject(int id) async {
     int count = await db.rawDelete('DELETE FROM Subject WHERE id = ?', [id]);
     assert(count == 1);
+    mappedSubjects.remove(id);
   }
 
-  Future<void> deleteTest(int id) async {
+  Future<void> deleteTest(int id, int subID) async {
     int count = await db.rawDelete('DELETE FROM Test WHERE id = ?', [id]);
     assert(count == 1);
+    mappedTests[subID]?.remove(id);
   }
 
   Future<void> deleteSubjectTests(Data_Subject sub) async {

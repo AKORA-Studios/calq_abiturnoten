@@ -83,7 +83,8 @@ class _EditGradeScreenState extends State<EditGradeScreen> {
   }
 
   Future<void> deleteGrade() async {
-    await DatabaseClass.Shared.deleteTest(widget.test.id).then((value) {
+    await DatabaseClass.Shared.deleteTest(widget.test.id, widget.test.subject)
+        .then((value) {
       widget.callbackFunc();
       Navigator.pop(context);
     });

@@ -2,6 +2,8 @@ import 'package:calq_abiturnoten/database/Data_Settings.dart';
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
 import 'package:calq_abiturnoten/database/Data_Test.dart';
 import 'package:calq_abiturnoten/database/Data_Type.dart';
+import 'package:calq_abiturnoten/ui/components/styling.dart';
+import 'package:calq_abiturnoten/util/color_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:pair/pair.dart';
@@ -472,4 +474,41 @@ int lastActiveYear(List<Data_Test> tests) {
     }
   }
   return num;
+}
+
+// MARK: Rainbow Colors
+List<Color> pastelColors = [
+  "#ed8080",
+  "#edaf80",
+  "#edd980",
+  "#caed80",
+  "#90ed80",
+  "#80edb8",
+  "#80caed",
+  "#809ded",
+  "#9980ed",
+  "#ca80ed",
+  "#ed80e4",
+  "#ed80a4"
+].map((e) => fromHex(e)).toList();
+
+Color getPastelColorByIndex(int index) {
+  return pastelColors[index % (pastelColors.length - 1)];
+}
+
+// Returns the current Subjects Color based on its position in the list of all subjects
+Future<Color> getSubjectRainbowColor(Data_Subject sub) async {
+  if (!DatabaseClass.Shared.rainbowEnabled) {
+    return sub.color;
+  }
+
+  Color result = calqColor;
+  List<Data_Subject> subjects = await DatabaseClass.Shared.getSubjects();
+  for (int i = 0; i < subjects.length; i++) {
+    if (subjects[i].id == sub.id) {
+      result = getPastelColorByIndex(i);
+    }
+  }
+
+  return result;
 }

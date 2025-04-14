@@ -6,14 +6,10 @@ This is a work-in-progress
 
 ## To Be Implemented Features
 
-* [] Export/Import json
-* [] Rainbow Colors
-* [] Localization
-
-### TODO
-+ rainbow Colors
-+ impact segment new grades
-
+* [ ] Import json
+* [ ] Rainbow Colors
+* [ ] Localization
+* [ ] impact segment new grades
 
 ## Building APK
 ````bash
@@ -27,8 +23,8 @@ APK can be found in `projectFolder\build\app\outputs\apk\releases`
 
 | Plattform         |   Status    | Supported | 
 |--------------|:-----------:| :----: |
-| iOS |      -      | <a href="https://github.com/AKORA-Studios/Calq">CalqiOS</a> |
-| MacOS      |      -      |  <a href="https://github.com/AKORA-Studios/Calq">CalqiOS</a>|
+| iOS |      <a href="https://github.com/AKORA-Studios/Calq">CalqiOS</a>     | <a href="https://github.com/AKORA-Studios/Calq">CalqiOS</a> |
+| MacOS      |     <a href="https://github.com/AKORA-Studios/Calq">CalqiOS</a>      |  <a href="https://github.com/AKORA-Studios/Calq">CalqiOS</a>|
 | Android |     WIP     | :heavy_check_mark: |
 | Linux |      -      | :question: | 
 | Windows      |      -      |:question:|
