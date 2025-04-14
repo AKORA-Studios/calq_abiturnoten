@@ -116,8 +116,8 @@ class DatabaseClass {
     }
   }
 
-  Future<List<Data_Subject>> getSubjects() async {
-    if (mappedSubjects.isNotEmpty) {
+  Future<List<Data_Subject>> getSubjects({bool forceReload = false}) async {
+    if (mappedSubjects.isNotEmpty && !forceReload) {
       List<Data_Subject> subs = mappedSubjects.values.toList();
       subs.sort((a, b) => a.name.compareTo(b.name));
       subs.sort((a, b) {
@@ -363,25 +363,34 @@ class DatabaseClass {
 
     int count = await db.rawUpdate(
         'UPDATE Subject SET examtype = ? WHERE id = ?', [type, sub.id]);
-    print('Updated Exam: $count');
+    print('Updated Exam for year $type: $count');
+    await getSubjects(forceReload: true);
   }
 
   /// Remove Exam of type [type]
   Future<void> removeExam(int type) async {
     await resetExams(year: type);
     examPoints[type - 1] = 0;
+    await getSubjects(forceReload: true);
   }
 
   /// Update the Exam [points] of a [subject]
   Future<void> updateExamPoints(int points, Data_Subject sub) async {
     if (points > 15 || points < 0) {
-      print("Error updating Exampoints for _${sub.name}_! Out of range");
+      print(
+          "Error updating Exampoints for _${sub.name}_! Out of range Exampoints");
+      return;
+    }
+    if (sub.examtype > 5 || sub.examtype < 1) {
+      print(
+          "Error updating Exampoints for _${sub.name}_! Out of range Examtype: ${sub.examtype}");
       return;
     }
     int count = await db.rawUpdate(
         'UPDATE Subject SET exampoints = ? WHERE id = ?', [points, sub.id]);
-    print('Updated Exam points: $count');
+    print('Updated Exam points to $points for year ${sub.examtype}: $count');
     examPoints[sub.examtype - 1] = points;
+    await getSubjects(forceReload: true);
   }
 
 // DELETE DATA
@@ -462,6 +471,6 @@ class DatabaseClass {
     int count = await db.rawUpdate(
         'UPDATE Subject SET examtype = ?, exampoints = ? WHERE examtype = ?',
         args);
-    print('Reseted Exams: $count');
+    print('Removed Exams for year $year: $count');
   }
 }
