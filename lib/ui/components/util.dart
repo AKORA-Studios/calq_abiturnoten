@@ -2,8 +2,11 @@ import 'package:calq_abiturnoten/database/Data_Settings.dart';
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
 import 'package:calq_abiturnoten/database/Data_Test.dart';
 import 'package:calq_abiturnoten/database/Data_Type.dart';
+import 'package:calq_abiturnoten/ui/components/styling.dart';
+import 'package:calq_abiturnoten/util/color_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:pair/pair.dart';
 
 import '../../database/database.dart';
 
@@ -347,7 +350,7 @@ Future<double> testAverage(List<Data_Test> tests) async {
 
   for (Data_Type type in types) {
     List<Data_Test> filteredTests =
-        tests.where((element) => element.type == type.id).toList();
+        tests.where((element) => element.type == type.assignedID).toList();
     if (filteredTests.isNotEmpty) {
       double weight = type.weigth / 100;
       gradeWeights += weight;
@@ -439,4 +442,73 @@ List<Data_Test> getSortedTests(Data_Subject sub, List<Data_Test> tests,
     case TestSortCriteria.onlyActiveTerms:
       return sub.filterTests(sortedTests);
   }
+}
+
+// Returns <min, max> dates of all tests
+Pair<int, int> getDateBounds(List<Data_Test> tests) {
+  Pair<int, int> boundaries = Pair(DateTime.now().millisecondsSinceEpoch,
+      DateTime.now().millisecondsSinceEpoch);
+  if (tests.isEmpty) {
+    return boundaries;
+  }
+  tests.sort((a, b) => a.date.compareTo(b.date));
+  var max = tests.first.date.millisecondsSinceEpoch -
+      tests.last.date.millisecondsSinceEpoch;
+  boundaries = Pair(tests.last.date.millisecondsSinceEpoch, max);
+  return boundaries;
+}
+
+// Get all tests that are in this specific term
+List<Data_Test> getTermTests(List<Data_Test> tests, int term) {
+  return tests.where((element) => element.year == term).toList();
+}
+
+/// Returns last used term to auto select for new grades
+int lastActiveYear(List<Data_Test> tests) {
+  var num = 1;
+  for (var i = 0; i < 5; i++) {
+    var filteredTests = tests.where((element) => element.year == i);
+
+    if (filteredTests.isNotEmpty) {
+      num = i;
+    }
+  }
+  return num;
+}
+
+// MARK: Rainbow Colors
+List<Color> pastelColors = [
+  "#ed8080",
+  "#edaf80",
+  "#edd980",
+  "#caed80",
+  "#90ed80",
+  "#80edb8",
+  "#80caed",
+  "#809ded",
+  "#9980ed",
+  "#ca80ed",
+  "#ed80e4",
+  "#ed80a4"
+].map((e) => fromHex(e)).toList();
+
+Color getPastelColorByIndex(int index) {
+  return pastelColors[index % (pastelColors.length - 1)];
+}
+
+// Returns the current Subjects Color based on its position in the list of all subjects
+Future<Color> getSubjectRainbowColor(Data_Subject sub) async {
+  if (!DatabaseClass.Shared.rainbowEnabled) {
+    return sub.color;
+  }
+
+  Color result = calqColor;
+  List<Data_Subject> subjects = await DatabaseClass.Shared.getSubjects();
+  for (int i = 0; i < subjects.length; i++) {
+    if (subjects[i].id == sub.id) {
+      result = getPastelColorByIndex(i);
+    }
+  }
+
+  return result;
 }

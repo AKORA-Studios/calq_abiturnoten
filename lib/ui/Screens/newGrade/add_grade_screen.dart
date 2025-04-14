@@ -34,7 +34,7 @@ class _AddGradeScreenState extends State<AddGradeScreen> {
         ),
         body: SingleChildScrollView(
             child: Padding(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(4),
                 child: Column(
                   children: [
                     FutureBuilder(

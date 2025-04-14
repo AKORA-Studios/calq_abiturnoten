@@ -27,8 +27,10 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
   void initState() {
     super.initState();
 
-    setState(() {
-      _selectedYear = widget.sub.lastActiveYear();
+    DatabaseClass.Shared.getSubjectTests(widget.sub).then((value) {
+      setState(() {
+        _selectedYear = lastActiveYear(value);
+      });
     });
 
     DatabaseClass.Shared.getSubjectTests(widget.sub).then((value) {
@@ -230,7 +232,11 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
 
   List<FlSpot> chartData() {
     List<FlSpot> arr = [];
-    Pair<int, int> subjectBounds = widget.sub.getDateBounds();
+    Pair<int, int> subjectBounds = Pair(0, 0);
+
+    DatabaseClass.Shared.getSubjectTests(widget.sub).then((value) {
+      subjectBounds = getDateBounds(value);
+    });
 
     arr = _tests.where((element) => element.year == _selectedYear).map((test) {
       var date = (test.date.millisecondsSinceEpoch - subjectBounds.key) /

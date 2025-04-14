@@ -108,8 +108,9 @@ class Averages {
   /// Returns the average of all grades from one subject
   static Future<double> getSubjectAverage(Data_Subject sub, int year,
       [bool filterinactve = true]) async {
+    var allTests = await DatabaseClass.Shared.getSubjectTests(sub);
     var tests = filterinactve
-        ? sub.tests
+        ? allTests
         : await getAllSubjectTests(sub, TestSortCriteria.onlyActiveTerm);
     tests = tests.where((element) => element.year == year).toList();
 
@@ -130,10 +131,6 @@ class Averages {
     var subjectCount = allSubjects.length;
 
     for (var sub in allSubjects) {
-      if (sub.tests.isEmpty) {
-        subjectCount -= 1;
-        continue;
-      }
       List<Data_Test> tests =
           await getAllSubjectTests(sub, TestSortCriteria.onlyActiveTerm);
       if (tests.isEmpty) {
@@ -182,9 +179,6 @@ class Averages {
     double grades = 0.0;
 
     for (var sub in allSubjects) {
-      if (sub.tests.isEmpty) {
-        continue;
-      }
       List<Data_Test> tests2 =
           await getAllSubjectTests(sub, TestSortCriteria.onlyActiveTerm);
 
@@ -218,10 +212,6 @@ class Averages {
   static Future<String> averageString(Data_Subject sub) async {
     String str = "";
 
-    if (sub.tests.isEmpty) {
-      return "-- -- -- -- ";
-    }
-
     for (var i = 1; i < 5; i++) {
       List<Data_Test> arr2 = await getAllSubjectTests(sub);
       List<Data_Test> arr = arr2.where((element) => element.year == i).toList();
@@ -240,7 +230,7 @@ class Averages {
   /// Generates a convenient String that shows the grades of the subject.
   static Future<List<String>> getSubjectYearString(Data_Subject subject) async {
     List<String> str = ["-", "-", "-", "-", "#"];
-    var tests = subject.tests;
+    var tests = await DatabaseClass.Shared.getSubjectTests(subject);
     if (tests.isEmpty) {
       return str;
     }

@@ -2,7 +2,6 @@ import 'package:calq_abiturnoten/database/database.dart';
 import 'package:calq_abiturnoten/util/color_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:pair/pair.dart';
 
 import '../util/averages.dart';
 import 'Data_Test.dart';
@@ -18,7 +17,7 @@ class Data_Subject {
   late bool lk;
   late String inactiveYears;
   late bool showinlinegraph;
-  late List<Data_Test> tests;
+  // late List<Data_Test> tests;
 
   Data_Subject(this.id, this.name, this.color, this.exampoints, this.examtype,
       this.lk, this.inactiveYears, this.showinlinegraph);
@@ -33,7 +32,7 @@ class Data_Subject {
     lk = map["lk"] == 1;
     inactiveYears = map["inactiveYears"].toString();
     showinlinegraph = map["showinlinegraph"] == 1;
-    tests = testList.map((e) => Data_Test.fromMap(e)).toList();
+    //   tests = testList.map((e) => Data_Test.fromMap(e)).toList();
   }
 
   Map<String, Object?> toMap() {
@@ -85,19 +84,6 @@ class Data_Subject {
     inactiveYears = Averages.arrToString(years);
   }
 
-  /// Returns last used term to auto select for new grades
-  int lastActiveYear() {
-    var num = 1;
-    for (var i = 0; i < 5; i++) {
-      var filteredTests = tests.where((element) => element.year == i);
-
-      if (filteredTests.isNotEmpty) {
-        num = i;
-      }
-    }
-    return num;
-  }
-
   List<String> getInactiveTerms() {
     if (inactiveYears.isEmpty) {
       return [];
@@ -145,24 +131,6 @@ class Data_Subject {
     await DatabaseClass.Shared.updateSubject(this);
   }
 
-  List<Data_Test> getTermTests(int term) {
-    return tests.where((element) => element.year == term).toList();
-  }
-
-  // Returns <min, max> dates of all tests
-  Pair<int, int> getDateBounds() {
-    Pair<int, int> boundaries = Pair(DateTime.now().millisecondsSinceEpoch,
-        DateTime.now().millisecondsSinceEpoch);
-    if (tests.isEmpty) {
-      return boundaries;
-    }
-    tests.sort((a, b) => a.date.compareTo(b.date));
-    var max = tests.first.date.millisecondsSinceEpoch -
-        tests.last.date.millisecondsSinceEpoch;
-    boundaries = Pair(tests.last.date.millisecondsSinceEpoch, max);
-    return boundaries;
-  }
-
   // UTIL
   String toJSON(String jsonTests) {
     return "{\"name\": \"$name\", \"color\": \"${color.toHexString}\",\"inactiveYears\": \"$inactiveYears\",  \"lk\": $lk, \"subjecttests\": $jsonTests}";
@@ -170,6 +138,6 @@ class Data_Subject {
 
   @override
   String toString() {
-    return 'Data_Subject{name: $name, id: $id [${tests.length}]}';
+    return 'Data_Subject{name: $name, id: $id }';
   }
 }
