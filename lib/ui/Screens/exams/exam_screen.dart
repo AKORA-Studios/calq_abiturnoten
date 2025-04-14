@@ -49,7 +49,7 @@ class _ExamScreenState extends State<ExamScreen> {
                         onPressed: () async {
                           _viewModel.removeExam(sub, i);
                         },
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.delete,
                           color: Colors.red,
                         )),

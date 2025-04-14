@@ -310,7 +310,7 @@ class DatabaseClass {
       double roundedValue = double.parse(value.toStringAsFixed(1));
       int count = await db.rawUpdate(
           'UPDATE Gradetype SET weigth = ? WHERE id = ?', [roundedValue, key]);
-      print('Updated Gradetype ${key}´s value: $count');
+      print('Updated Gradetype $key´s value: $count');
     });
   }
 
