@@ -12,7 +12,7 @@ class OverviewScreen extends StatefulWidget {
 }
 
 class _OverviewScreenState extends State<OverviewScreen> {
-  OverViewViewModel _viewModel = OverViewViewModel();
+  final OverViewViewModel _viewModel = OverViewViewModel();
   bool _shouldUpdate = false;
 
   @override

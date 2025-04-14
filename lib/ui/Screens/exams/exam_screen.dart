@@ -31,8 +31,8 @@ class _ExamScreenState extends State<ExamScreen> {
   }
 
   Widget examView(int i) {
-    var sub = _viewModel.exams[i];
-    if (sub != null) {
+    if (_viewModel.exams[i] != null) {
+      var sub = _viewModel.exams[i]!;
       // updateBlock1Values(); // update them regularly
       return Card(
           child: Padding(
@@ -49,7 +49,7 @@ class _ExamScreenState extends State<ExamScreen> {
                         onPressed: () async {
                           _viewModel.removeExam(sub, i);
                         },
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.delete,
                           color: Colors.red,
                         )),

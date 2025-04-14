@@ -72,11 +72,9 @@ class ExamViewViewModel with ChangeNotifier {
   }
 
   void removeExam(Data_Subject sub, int i) async {
-    await DatabaseClass.Shared.removeExam(i);
     _exams.remove(i);
-    print(_exams[i]);
+    await DatabaseClass.Shared.removeExam(i);
     _examOptions.add(sub);
-
     updateBlock2Values();
 
     notifyListeners();

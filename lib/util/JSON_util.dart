@@ -45,7 +45,7 @@ class JSONUtil {
     var str =
         "{\"formatVersion\": 3, \"colorfulCharts\": ${DatabaseClass.Shared.rainbowEnabled}, \"hasFiveExams\": ${DatabaseClass.Shared.hasFiveexams},";
     str +=
-        "\"highlightedType\": \(primaryType), \"gradeTypes\": \(getTypesJSONData()), \(getExamJSONData()) \"usersubjects\": [";
+        "\"highlightedType\": (primaryType), \"gradeTypes\": (getTypesJSONData()), (getExamJSONData()) \"usersubjects\": [";
 // TODO: include types+ json verison
     List<Data_Subject> subjects = await DatabaseClass.Shared.getSubjects();
     int subCount = 0;

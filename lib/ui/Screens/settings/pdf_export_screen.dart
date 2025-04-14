@@ -157,8 +157,9 @@ class PDFData {
   List<PDFItem> items = [];
   List<PDFExam> exams = [];
 
+  @override
   String toString() {
-    return subjectsgrade + " (" + subjectpoints + ")";
+    return "$subjectsgrade ($subjectpoints)";
   }
 }
 

@@ -232,7 +232,7 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
 
   List<FlSpot> chartData() {
     List<FlSpot> arr = [];
-    Pair<int, int> subjectBounds = Pair(0, 0);
+    Pair<int, int> subjectBounds = const Pair(0, 0);
 
     DatabaseClass.Shared.getSubjectTests(widget.sub).then((value) {
       subjectBounds = getDateBounds(value);
