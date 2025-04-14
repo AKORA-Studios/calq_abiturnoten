@@ -1,4 +1,5 @@
 import 'package:calq_abiturnoten/database/database.dart';
+import 'package:calq_abiturnoten/ui/components/styling.dart';
 import 'package:calq_abiturnoten/util/color_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -62,7 +63,14 @@ class Data_Subject {
     ];
   }
 
-  List<String> getinactiveYears() {
+// Returns the current Subjects Color based on its position in the list of all subjects if rainbow is enabled
+  Color getColor() {
+    return DatabaseClass.Shared.rainbowEnabled
+        ? (DatabaseClass.Shared.mappedRainbow[id] ?? calqColor)
+        : color;
+  }
+
+  List<String> getInactiveYears() {
     if (inactiveYears.isEmpty) {
       return [];
     }
@@ -70,7 +78,7 @@ class Data_Subject {
   }
 
   void removeYear(int num) {
-    inactiveYears = Averages.arrToString(getinactiveYears()
+    inactiveYears = Averages.arrToString(getInactiveYears()
         .where((element) => element != num.toString())
         .toList());
   }
@@ -79,7 +87,7 @@ class Data_Subject {
     if (inactiveYears.contains(num.toString())) {
       return;
     }
-    List<String> years = getinactiveYears();
+    List<String> years = getInactiveYears();
     years.add(num.toString());
     inactiveYears = Averages.arrToString(years);
   }

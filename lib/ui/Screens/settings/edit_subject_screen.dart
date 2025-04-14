@@ -27,7 +27,7 @@ class _EditSubjectScreenState extends State<EditSubjectScreen> {
     setState(() {
       _subjectName = widget.sub.name;
       _isLK = widget.sub.lk;
-      _pickerColor = widget.sub.color;
+      _pickerColor = widget.sub.getColor();
     });
   }
 

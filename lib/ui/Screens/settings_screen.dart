@@ -124,7 +124,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         },
                       )),
                   settingsOptionWithWidget(
-                      "Regenbogen (WIP)",
+                      "Regenbogen",
                       Colors.blue,
                       Icons.bar_chart,
                       Switch(

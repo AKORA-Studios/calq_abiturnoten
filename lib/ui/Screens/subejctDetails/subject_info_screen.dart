@@ -59,7 +59,7 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
                           MaterialPageRoute(
                               builder: (context) => EditGradeScreen(
                                     test: e,
-                                    color: widget.sub.color,
+                                    color: widget.sub.getColor(),
                                     callbackFunc: () async {
                                       var x = await DatabaseClass.Shared
                                           .getSubjectTests(widget.sub);
@@ -122,7 +122,7 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
                                   color: widget.sub.inactiveYears
                                           .contains(_selectedYear.toString())
                                       ? Colors.grey.withOpacity(0.5)
-                                      : widget.sub.color.withOpacity(0.5)))
+                                      : widget.sub.getColor().withOpacity(0.5)))
                         ],
                       ),
                     ),
@@ -224,7 +224,7 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
           lineBarsData: [
             LineChartBarData(
                 spots: chartData(),
-                color: widget.sub.color,
+                color: widget.sub.getColor(),
                 dotData: const FlDotData(show: false))
           ]),
     );

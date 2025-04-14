@@ -7,7 +7,6 @@ This is a work-in-progress
 ## To Be Implemented Features
 
 * [ ] Import json
-* [ ] Rainbow Colors
 * [ ] Localization
 * [ ] impact segment new grades
 

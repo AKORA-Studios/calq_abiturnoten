@@ -117,8 +117,8 @@ class _ExamScreenState extends State<ExamScreen> {
                         Expanded(
                           flex: 19,
                           child: Slider(
-                              thumbColor: sub.color,
-                              activeColor: sub.color,
+                              thumbColor: sub.getColor(),
+                              activeColor: sub.getColor(),
                               min: 0,
                               label: '${sub.exampoints}',
                               divisions: 15,

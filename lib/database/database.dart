@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
 import 'package:calq_abiturnoten/database/Data_Test.dart';
@@ -8,6 +9,7 @@ import 'package:calq_abiturnoten/util/color_extension.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../ui/components/util.dart';
 import 'Data_Settings.dart';
 
 class DatabaseClass {
@@ -33,6 +35,7 @@ class DatabaseClass {
   //id: subject
   Map<int, Data_Subject> mappedSubjects = {};
   Map<int, Map<int, Data_Test>> mappedTests = {};
+  Map<int, Color> mappedRainbow = {};
 
   DatabaseClass() {
     print("Init Datase....");
@@ -107,6 +110,12 @@ class DatabaseClass {
     return result;
   }
 
+  void updateRainbowColors(List<Data_Subject> subjects) {
+    for (int i = 0; i < subjects.length; i++) {
+      mappedRainbow[subjects[i].id] = getPastelColorByIndex(i);
+    }
+  }
+
   Future<List<Data_Subject>> getSubjects() async {
     if (mappedSubjects.isNotEmpty) {
       List<Data_Subject> subs = mappedSubjects.values.toList();
@@ -114,6 +123,7 @@ class DatabaseClass {
       subs.sort((a, b) {
         return b.lk ? 1 : -1;
       });
+      updateRainbowColors(subs);
       return subs;
     }
     List<Map<dynamic, dynamic>>? res2 = await fetchSubjects();
@@ -139,7 +149,9 @@ class DatabaseClass {
     result.sort((a, b) {
       return b.lk ? 1 : -1;
     });
+
     // update mapping
+    mappedSubjects = {};
     for (Data_Subject sub in result) {
       mappedSubjects[sub.id] = sub;
     }
@@ -386,6 +398,7 @@ class DatabaseClass {
     int count = await db.rawDelete('DELETE FROM Subject WHERE id = ?', [id]);
     assert(count == 1);
     mappedSubjects.remove(id);
+    mappedTests.remove(id);
   }
 
   Future<void> deleteTest(int id, int subID) async {

@@ -243,7 +243,7 @@ class Averages {
         continue;
       }
 
-      if (!checkinactiveYears(subject.getinactiveYears(), i + 1)) {
+      if (!checkinactiveYears(subject.getInactiveYears(), i + 1)) {
         continue;
       }
       var points = int.parse((await testAverage(arr)).round().toString());
@@ -350,7 +350,7 @@ class Averages {
     var filteredTests = tests;
 
     for (var year in [1, 2, 3, 4]) {
-      if (!checkinactiveYears(subject.getinactiveYears(), year)) {
+      if (!checkinactiveYears(subject.getInactiveYears(), year)) {
         filteredTests =
             filteredTests.where((element) => element.year != year).toList();
       }
