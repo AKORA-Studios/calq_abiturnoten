@@ -14,7 +14,6 @@ class ExamScreen extends StatefulWidget {
 class _ExamScreenState extends State<ExamScreen> {
   ExamViewViewModel _viewModel = ExamViewViewModel();
   bool _shouldUpdate = false;
-  List<double> _sliderValues = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0];
 
   @override
   void initState() {
@@ -22,9 +21,6 @@ class _ExamScreenState extends State<ExamScreen> {
 
     _viewModel.updateData().then((value) {
       setState(() {
-        for (int i in [1, 2, 3, 4, 5]) {
-          _sliderValues[i] = (_viewModel.examPoints[i]! + 0.0);
-        }
         _shouldUpdate = !_shouldUpdate;
       });
     });
@@ -48,6 +44,7 @@ class _ExamScreenState extends State<ExamScreen> {
                     IconButton(
                         onPressed: () async {
                           _viewModel.removeExam(sub, i);
+                          setState(() {});
                         },
                         icon: const Icon(
                           Icons.delete,
@@ -72,17 +69,11 @@ class _ExamScreenState extends State<ExamScreen> {
                           label: '${_viewModel.examPoints[i]}',
                           divisions: 15,
                           max: 15,
-                          value: _sliderValues[i],
-                          // value: (_viewModel.examPoints[i] ?? 0) + 0.0,
+                          value: (_viewModel.examPoints[i] ?? 0) + 0.0,
                           onChangeEnd: (value) {
-                            setState(() {
-                              _sliderValues[i] = value;
-                            });
                             _viewModel.updateSlider(value, sub);
-                            // TODO: can set state be removed?
-                            /*  setState(() {
-                                  _shouldUpdate = !_shouldUpdate;
-                                });*/
+
+                            setState(() {});
                           },
                           onChanged: (value) {}),
                     )

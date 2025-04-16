@@ -8,7 +8,6 @@ class ExamViewViewModel with ChangeNotifier {
   double _block1Value = 0.0;
   double _block2Value = 0.0;
   int _maxBlock1Value = 600;
-  bool _shouldUpdate = false;
 
   List<Data_Subject> _examOptions = [];
   Map<int, Data_Subject> _exams = {};
@@ -19,7 +18,6 @@ class ExamViewViewModel with ChangeNotifier {
     for (int i = 1; i < 6; i++) {
       Data_Subject? sub = await getExam(i);
       if (sub != null) {
-        print("$i : ${sub.name}");
         _exams[i] = sub;
         _examPoints[i] = sub.exampoints;
       }
@@ -78,6 +76,7 @@ class ExamViewViewModel with ChangeNotifier {
     updateBlock2Values();
 
     notifyListeners();
+    _examPoints[i] = 0;
   }
 
   void updateSlider(double value, Data_Subject sub) async {
@@ -92,8 +91,6 @@ class ExamViewViewModel with ChangeNotifier {
 
   // Getter
   List<Data_Subject> get examOptions => _examOptions;
-
-  bool get shouldUpdate => _shouldUpdate;
 
   int get maxBlock1Value => _maxBlock1Value;
 
