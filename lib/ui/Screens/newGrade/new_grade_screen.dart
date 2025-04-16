@@ -144,7 +144,7 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                       children: [
                         Text("Punkte (${_testPoints.toInt()})"),
                         Slider(
-                          activeColor: widget.sub.color,
+                          activeColor: widget.sub.getColor(),
                           min: 0.0,
                           label: '${_testPoints.round()}',
                           divisions: 15,
@@ -163,7 +163,7 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                               backgroundColor:
-                                  widget.sub.color.withOpacity(0.5)),
+                                  widget.sub.getColor().withOpacity(0.5)),
                           onPressed: addGrade,
                           child: const Text("Note hinzufügen")),
                     )

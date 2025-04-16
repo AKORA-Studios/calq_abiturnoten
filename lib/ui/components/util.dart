@@ -2,7 +2,6 @@ import 'package:calq_abiturnoten/database/Data_Settings.dart';
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
 import 'package:calq_abiturnoten/database/Data_Test.dart';
 import 'package:calq_abiturnoten/database/Data_Type.dart';
-import 'package:calq_abiturnoten/ui/components/styling.dart';
 import 'package:calq_abiturnoten/util/color_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -82,7 +81,8 @@ Widget subjectRow(Data_Subject sub) {
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8))),
-              backgroundColor: MaterialStateProperty.all<Color>(sub.color)),
+              backgroundColor:
+                  MaterialStateProperty.all<Color>(sub.getColor())),
           onPressed: null,
           icon: const Icon(
             Icons.ac_unit,
@@ -103,7 +103,7 @@ Widget subjectRowWithTerms(Data_Subject sub, String b) {
         style: ButtonStyle(
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-            backgroundColor: MaterialStateProperty.all<Color>(sub.color)),
+            backgroundColor: MaterialStateProperty.all<Color>(sub.getColor())),
         onPressed: null,
         icon: const Icon(
           Icons.ac_unit,
@@ -135,7 +135,7 @@ Widget subjectRowWith2Action(
         style: ButtonStyle(
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
-            backgroundColor: MaterialStateProperty.all<Color>(sub.color)),
+            backgroundColor: MaterialStateProperty.all<Color>(sub.getColor())),
         onPressed: () {
           onTap();
         },
@@ -178,11 +178,11 @@ Widget testRow(Data_Test test, Data_Subject sub, Function() action) {
               height: 40.0,
               child: Container(
                 decoration: BoxDecoration(
-                    color: isPrimaryTpe ? sub.color : Colors.transparent,
+                    color: isPrimaryTpe ? sub.getColor() : Colors.transparent,
                     shape: BoxShape.rectangle,
                     borderRadius: const BorderRadius.all(Radius.circular(8.0)),
                     border: Border.all(
-                        color: sub.color, width: isPrimaryTpe ? 0 : 2)),
+                        color: sub.getColor(), width: isPrimaryTpe ? 0 : 2)),
                 child: Center(child: Text("${test.points}")),
               ),
             ),
@@ -195,30 +195,6 @@ Widget testRow(Data_Test test, Data_Subject sub, Function() action) {
           Text(dateFormatter(test.date))
         ],
       ));
-}
-
-// Terms
-
-Future<String> getActiveTermsGeneral() async {
-  var subjects = await DatabaseClass.Shared.getSubjects();
-
-  var inactiveCount = 0;
-  if (subjects.isNotEmpty) {
-    for (var sub in subjects) {
-      var arr = sub.inactiveYears.split("");
-      for (var num in arr) {
-        if (num == "") {
-          continue;
-        }
-        if (int.parse(num) > 0 && int.parse(num) < 5) {
-          inactiveCount += 1;
-        }
-      }
-    }
-  }
-  var activeCount = subjects.length * 4 - inactiveCount;
-
-  return "$activeCount von ${subjects.length * 4} Halbjahren aktiv";
 }
 
 // Final Exams
@@ -494,21 +470,4 @@ List<Color> pastelColors = [
 
 Color getPastelColorByIndex(int index) {
   return pastelColors[index % (pastelColors.length - 1)];
-}
-
-// Returns the current Subjects Color based on its position in the list of all subjects
-Future<Color> getSubjectRainbowColor(Data_Subject sub) async {
-  if (!DatabaseClass.Shared.rainbowEnabled) {
-    return sub.color;
-  }
-
-  Color result = calqColor;
-  List<Data_Subject> subjects = await DatabaseClass.Shared.getSubjects();
-  for (int i = 0; i < subjects.length; i++) {
-    if (subjects[i].id == sub.id) {
-      result = getPastelColorByIndex(i);
-    }
-  }
-
-  return result;
 }

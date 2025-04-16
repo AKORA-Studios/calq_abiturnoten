@@ -41,10 +41,8 @@ class OverViewViewModel with ChangeNotifier {
     var subjects = await DatabaseClass.Shared.getSubjects();
 
     for (Data_Subject sub in subjects) {
-      data.add(BarChartEntry(
-          sub.name,
-          await Averages.getSubjectAverageWithoutYear(sub),
-          await getSubjectRainbowColor(sub)));
+      data.add(BarChartEntry(sub.name,
+          await Averages.getSubjectAverageWithoutYear(sub), sub.getColor()));
     }
     return data;
   }
@@ -101,7 +99,7 @@ class OverViewViewModel with ChangeNotifier {
 
       arr.add(LineChartBarData(
           spots: spotData.length < 2 ? [] : spotData,
-          color: await getSubjectRainbowColor(sub),
+          color: sub.getColor(),
           dotData: const FlDotData(show: false)));
     }
     return arr.length < 2 ? [] : arr;
