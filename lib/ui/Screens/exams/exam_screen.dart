@@ -94,9 +94,11 @@ class _ExamScreenState extends State<ExamScreen> {
       return Card(
         child: Column(children: [
           ElevatedButton(
-              onPressed: () {
-                _showModal(i);
-              },
+              onPressed: _viewModel.examOptions.isEmpty
+                  ? null
+                  : () {
+                      _showModal(i);
+                    },
               child: const Text("Prüfung hinzufügen")),
           const Slider(
             min: 0,
