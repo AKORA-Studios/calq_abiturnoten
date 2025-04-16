@@ -197,30 +197,6 @@ Widget testRow(Data_Test test, Data_Subject sub, Function() action) {
       ));
 }
 
-// Terms
-
-Future<String> getActiveTermsGeneral() async {
-  var subjects = await DatabaseClass.Shared.getSubjects();
-
-  var inactiveCount = 0;
-  if (subjects.isNotEmpty) {
-    for (var sub in subjects) {
-      var arr = sub.inactiveYears.split("");
-      for (var num in arr) {
-        if (num == "") {
-          continue;
-        }
-        if (int.parse(num) > 0 && int.parse(num) < 5) {
-          inactiveCount += 1;
-        }
-      }
-    }
-  }
-  var activeCount = subjects.length * 4 - inactiveCount;
-
-  return "$activeCount von ${subjects.length * 4} Halbjahren aktiv";
-}
-
 // Final Exams
 Future<Data_Subject?> getExam(int type) async {
   List<Data_Subject> subjects = await DatabaseClass.Shared.getSubjects();

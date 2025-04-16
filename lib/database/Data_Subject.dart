@@ -70,15 +70,8 @@ class Data_Subject {
         : color;
   }
 
-  List<String> getInactiveYears() {
-    if (inactiveYears.isEmpty) {
-      return [];
-    }
-    return inactiveYears.split(" ");
-  }
-
   void removeYear(int num) {
-    inactiveYears = Averages.arrToString(getInactiveYears()
+    inactiveYears = Averages.arrToString(getInactiveTerms()
         .where((element) => element != num.toString())
         .toList());
   }
@@ -87,7 +80,7 @@ class Data_Subject {
     if (inactiveYears.contains(num.toString())) {
       return;
     }
-    List<String> years = getInactiveYears();
+    List<String> years = getInactiveTerms();
     years.add(num.toString());
     inactiveYears = Averages.arrToString(years);
   }
