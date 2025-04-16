@@ -1,3 +1,4 @@
+import 'package:calq_abiturnoten/ui/Screens/settings/edit_weight_vm.dart';
 import 'package:calq_abiturnoten/ui/components/styling.dart';
 import 'package:flutter/material.dart';
 
@@ -12,46 +13,23 @@ class EditWeightScreen extends StatefulWidget {
 }
 
 class _EditWeightScreenState extends State<EditWeightScreen> {
+  EditWeightViewModel _viewmodel = EditWeightViewModel();
   bool _shouldUpdate = false;
   bool _notInitialized = true;
-  int _primaryType = -1;
-  // Edit Weights
-  int _selectedWeightIndex = 0;
-  final List<String> _segments = ["10", "1", "0.1"];
-  String _errorText = "";
-  Map<int, double> _mappedWeights = {};
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      _primaryType = DatabaseClass.Shared.primaryType;
+    _viewmodel.updateData().then((value) {
+      setState(() {});
     });
   }
 
-  double getCurrentValue() {
-    return double.parse((_mappedWeights.values
-            .fold(0.0, (previousValue, element) => previousValue + element))
-        .toStringAsFixed(1));
-  }
-
   void saveWeightChanges() {
-    double finalValue = getCurrentValue();
-    if (finalValue < 0.0 || finalValue > 100.0) {
-      setState(() {
-        _errorText = "Value not in range 0...100";
-      });
-      return;
-    }
+    _viewmodel.saveWeightChanges();
 
-    if (finalValue != 100.0) {
-      setState(() {
-        _errorText = "Sum has to be 100.0";
-      });
-      return;
-    }
-
-    DatabaseClass.Shared.editTypeWeights(_mappedWeights).then((value) {
+    DatabaseClass.Shared.editTypeWeights(_viewmodel.mappedWeights)
+        .then((value) {
       Navigator.pop(context);
     });
   }
@@ -66,18 +44,9 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
             child: Padding(
                 padding: const EdgeInsets.all(8),
                 child: Column(children: [
-                  FutureBuilder(
-                      future: DatabaseClass.Shared.getTypes(),
-                      builder: (ctx, snap) {
-                        if (snap.hasError || snap.data == null) {
-                          return const Text("Smth went wrong");
-                        } else {
-                          return Column(
-                              children:
-                                  snap.data!.map((e) => typeRow(e)).toList());
-                        }
-                      }),
-                  //        ...widget.types.map((e) => typeRow(e)).toList(),
+                  Column(
+                      children:
+                          _viewmodel.types.map((e) => typeRow(e)).toList()),
                   ElevatedButton(
                       onPressed: () {
                         showDialog(
@@ -95,7 +64,7 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
 
   List<Widget> editWeight() {
     List<ButtonSegment<int>> buttons = [];
-    _segments.asMap().forEach((index, value) {
+    _viewmodel.segments.asMap().forEach((index, value) {
       buttons.add(ButtonSegment<int>(
         value: index,
         label: Text(value),
@@ -107,45 +76,43 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
         showSelectedIcon: false,
         style: calqSegmentedButtonStyle(),
         segments: buttons,
-        selected: <int>{_selectedWeightIndex},
+        selected: <int>{_viewmodel.selectedWeightIndex},
         onSelectionChanged: (Set<int> newSelection) {
-          setState(() {
-            _selectedWeightIndex = newSelection.first;
-          });
+          _viewmodel.selectedWeightIndex = newSelection.first;
+          setState(() {});
         },
       ),
-      FutureBuilder(
-          future: DatabaseClass.Shared.getTypes(),
-          builder: (ctx, snap) {
-            if (snap.hasError || snap.data == null) {
-              return const Text("Smth went wrong");
-            } else {
-              List<Widget> children = [];
-              snap.data!.asMap().forEach((index, e) {
-                if (_notInitialized) {
-                  _mappedWeights[e.id] = e.weigth;
-                }
-
-                children.add(typeEditRow(e));
-              });
-              // setState(() {
-              _notInitialized = false;
-              //   });
-
-              return Column(children: children);
-            }
-          }),
-      Text("Gesamt: ${getCurrentValue()}%"),
+      typeRows(),
+      _viewmodel.currentSum.roundToDouble() != 100.0
+          ? Text("Gesamt: ${_viewmodel.currentSum}%",
+              style: TextStyle(color: Colors.red))
+          : Text("Gesamt: ${_viewmodel.currentSum}%"),
       ElevatedButton(
           onPressed: () {
             saveWeightChanges();
           },
           child: const Text("Save Weight Changes")),
       Text(
-        _errorText,
+        _viewmodel.errorText,
         style: const TextStyle(color: Colors.red),
       )
     ];
+  }
+
+  Widget typeRows() {
+    List<Widget> children = [];
+    _viewmodel.types.asMap().forEach((index, e) {
+      if (_notInitialized) {
+        _viewmodel.mappedWeights[e.assignedID] = e.weigth;
+      }
+
+      children.add(typeEditRow(e));
+    });
+    // setState(() {
+    _notInitialized = false;
+    //   });
+
+    return Column(children: children);
   }
 
   Widget typeEditRow(Data_Type type) {
@@ -156,31 +123,18 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Text((_mappedWeights[type.id] ?? 0.0).toStringAsFixed(1)),
+            Text((_viewmodel.mappedWeights[type.assignedID] ?? 0.0)
+                .toStringAsFixed(1)),
             IconButton(
                 onPressed: () {
-                  double value = double.parse(_segments[_selectedWeightIndex]);
-                  if (getCurrentValue() - value < 0.0 ||
-                      (_mappedWeights[type.id] ?? 0.0) - value < 0.0) {
-                    return;
-                  }
-                  setState(() {
-                    _mappedWeights[type.id] = _mappedWeights[type.id]! - value;
-                  });
+                  _viewmodel.removeWeight(type);
+                  setState(() {});
                 },
                 icon: const Icon(Icons.remove)),
             IconButton(
                 onPressed: () {
-                  double value = double.parse(_segments[_selectedWeightIndex]);
-
-                  if (getCurrentValue() + value > 100.0) {
-                    return;
-                  }
-
-                  setState(() {
-                    _mappedWeights[type.id] =
-                        (_mappedWeights[type.id] ?? 0.0) + value;
-                  });
+                  _viewmodel.addWeight(type);
+                  setState(() {});
                 },
                 icon: const Icon(Icons.add))
           ],
@@ -202,15 +156,11 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
                 width: 30.0, // you can adjust the width as you need
                 child: IconButton(
                     onPressed: () {
-                      DatabaseClass.Shared.updatePrimaryType(type.assignedID)
-                          .then((value) {
-                        setState(() {
-                          _primaryType = DatabaseClass.Shared.primaryType;
-                        });
-                      });
+                      _viewmodel.favoriteType(type);
+                      setState(() {});
                     },
                     icon: Icon(Icons.star,
-                        color: _primaryType == type.assignedID
+                        color: _viewmodel.primaryType == type.assignedID
                             ? calqColor
                             : Colors.grey))),
             Container(
@@ -250,7 +200,7 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
               ],
             );
           } else {
-            return gradeTypeAlert(typeID);
+            return deleteTypeAlert(typeID);
           }
         });
   }
@@ -284,6 +234,7 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
             }
             DatabaseClass.Shared.addType(_textFieldController.text)
                 .then((value) {
+              _viewmodel.createType();
               setState(() {
                 _shouldUpdate = !_shouldUpdate;
               });
@@ -297,7 +248,7 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
     );
   }
 
-  Widget gradeTypeAlert(int typeID) {
+  Widget deleteTypeAlert(int typeID) {
     return AlertDialog(
       // To display the title it is optional
       title: const Text('Delete Grade Type'),
@@ -315,12 +266,9 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
               backgroundColor: MaterialStateProperty.all(Colors.red),
               foregroundColor: MaterialStateProperty.all(Colors.white)),
           onPressed: () {
-            DatabaseClass.Shared.deleteType(typeID).then((value) {
-              Navigator.of(context).pop();
-              setState(() {
-                _shouldUpdate = !_shouldUpdate;
-              });
-            });
+            _viewmodel.removeType(typeID);
+            Navigator.of(context).pop();
+            setState(() {});
           },
           child: const Text('Delete'),
         ),

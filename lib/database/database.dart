@@ -271,7 +271,10 @@ class DatabaseClass {
   }
 
   int getNewIDQwQ(List<int> ids) {
-    final yMax = ids.cast<num>().reduce(max);
+    num yMax = 0;
+    if (ids.isNotEmpty) {
+      yMax = ids.cast<num>().reduce(max);
+    }
 
     for (var i = 0; i < yMax; i++) {
       if (!ids.contains(i)) {
@@ -309,8 +312,9 @@ class DatabaseClass {
     map.forEach((key, value) async {
       double roundedValue = double.parse(value.toStringAsFixed(1));
       int count = await db.rawUpdate(
-          'UPDATE Gradetype SET weigth = ? WHERE id = ?', [roundedValue, key]);
-      print('Updated Gradetype $key´s value: $count');
+          'UPDATE Gradetype SET weigth = ? WHERE assignedID = ?',
+          [roundedValue, key]);
+      print('Updated Gradetype $key´s value: $value in $count');
     });
   }
 
