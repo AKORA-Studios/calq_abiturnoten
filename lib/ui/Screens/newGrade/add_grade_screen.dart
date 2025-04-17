@@ -1,4 +1,5 @@
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
+import 'package:calq_abiturnoten/database/Data_Test.dart';
 import 'package:flutter/material.dart';
 
 import '../../../database/database.dart';
@@ -17,11 +18,16 @@ class _AddGradeScreenState extends State<AddGradeScreen> {
     return TextButton(
         style: TextButton.styleFrom(
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0)),
-        onPressed: () {
+        onPressed: () async {
+          List<Data_Test> tests =
+              await DatabaseClass.Shared.getSubjectTests(sub);
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => NewGradeScreen(sub: sub)));
+                  builder: (context) => NewGradeScreen(
+                        sub: sub,
+                        tests: tests,
+                      )));
         },
         child: subjectRow(sub));
   }

@@ -1,4 +1,5 @@
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
+import 'package:calq_abiturnoten/database/Data_Test.dart';
 import 'package:calq_abiturnoten/database/database.dart';
 import 'package:calq_abiturnoten/ui/components/util.dart';
 import 'package:flutter/material.dart';
@@ -6,11 +7,13 @@ import 'package:flutter/material.dart';
 import '../../../database/Data_Type.dart';
 import '../../../util/date_formatter.dart';
 import '../../components/styling.dart';
+import '../../components/widget_components.dart';
 
 class NewGradeScreen extends StatefulWidget {
-  const NewGradeScreen({super.key, required this.sub});
+  const NewGradeScreen({super.key, required this.sub, required this.tests});
 
   final Data_Subject sub;
+  final List<Data_Test> tests;
 
   @override
   State<NewGradeScreen> createState() => _NewGradeScreenState();
@@ -24,6 +27,8 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
   double _testPoints = 0; // TODO: init average points for this term
   int _selectedTypeIndex = -1;
 
+  ImpactSegmentData _impactSegmentData = ImpactSegmentData();
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +37,7 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
         _selectedYear = lastActiveYear(value);
       });
     });
+    updateImpactSegment();
   }
 
   Future _selectDate(BuildContext context) async => showDatePicker(
@@ -70,6 +76,82 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
         .then((value) {
       Navigator.pop(context);
     });
+  }
+
+  Future<void> updateImpactSegment() async {
+    var data = ImpactSegmentData();
+    if (widget.tests.isEmpty) {
+      _impactSegmentData = data;
+      return;
+    }
+    print("a");
+    List<Data_Test> countedTests =
+        widget.tests.where((element) => element.year == _selectedYear).toList();
+    if (countedTests.isEmpty) {
+      _impactSegmentData = data;
+      return;
+    }
+    print("b");
+    int oldAverage = (await testAverage(countedTests)).round();
+    int worseLast = 99;
+    int betterLast = 0;
+    int sameLast = 99;
+
+    List<Data_Type> types = await DatabaseClass.Shared.getTypes();
+
+    // calculate new average
+    for (int i = 0; i < 15; i++) {
+      int newAverage = 0;
+      double gradeWeigths = 0.0;
+      List<double> avgArr = [];
+
+      for (Data_Type x in types) {
+        List<int> filtered = countedTests
+            .where((e) => e.type == x.assignedID)
+            .map((e) => e.points)
+            .toList();
+
+        double weigth = x.weigth / 100;
+        gradeWeigths += weigth;
+
+        if (x.assignedID == _selectedTypeIndex) {
+          filtered.add(i);
+        }
+
+        double avg = average(filtered);
+        avgArr.add(avg * weigth);
+      }
+
+      double num = (avgArr.reduce((a, b) => a + b)) / gradeWeigths;
+      newAverage = num.round();
+
+      // display numbers
+      var str = newAverage.toString();
+      // push colors
+      if (oldAverage > newAverage) {
+        if (worseLast == newAverage) {
+          str = " ";
+        }
+        data.colors[i] = Colors.red;
+        data.values[i] = str;
+        worseLast = newAverage;
+      } else if (newAverage > oldAverage) {
+        if (betterLast == newAverage) {
+          str = " ";
+        }
+        data.colors[i] = Colors.green;
+        data.values[i] = str;
+        betterLast = newAverage;
+      } else {
+        if (sameLast == oldAverage) {
+          str = " ";
+        }
+        sameLast = oldAverage;
+        data.colors[i] = Colors.grey;
+        data.values[i] = str;
+      }
+      _impactSegmentData = data;
+    }
   }
 
   @override
@@ -156,6 +238,12 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                             });
                           },
                         )
+                      ],
+                    )),
+                    card(Column(
+                      children: [
+                        Text("Noteneinfluss"),
+                        impactSegment(_impactSegmentData)
                       ],
                     )),
                     SizedBox(

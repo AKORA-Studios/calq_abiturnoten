@@ -186,3 +186,56 @@ Widget testRow(Data_Test test, Data_Subject sub, Function() action) {
         ],
       ));
 }
+
+// Impact Segment
+BoxDecoration? impactSegmentBoxDecoration(int i, Color color) {
+  if (i == 0) {
+    return BoxDecoration(
+        color: color,
+        borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(4.0), bottomLeft: Radius.circular(4.0)));
+  } else if (i > 13) {
+    return BoxDecoration(
+        color: color,
+        borderRadius: const BorderRadius.only(
+            topRight: Radius.circular(4.0), bottomRight: Radius.circular(4.0)));
+  }
+  return BoxDecoration(color: color);
+}
+
+Widget impactSegment(ImpactSegmentData data) {
+  List<Widget> arr = [];
+  List<Widget> coloredArr = [];
+
+  for (int i = 0; i < data.values.length; i++) {
+    arr.add(Center(child: Text(data.values[i])));
+
+    coloredArr.add(Expanded(
+        child: Container(
+      decoration: impactSegmentBoxDecoration(i, data.colors[i]),
+      child: Center(
+        child: Text(data.values[i]),
+      ),
+    )));
+  }
+  return Column(
+    children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: coloredArr,
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: arr.map((e) => Expanded(child: e)).toList(),
+      )
+    ],
+  );
+}
+
+// TODO: update data on gradetype and year change
+class ImpactSegmentData {
+  List<String> values = List<String>.filled(15, "?");
+  List<Color> colors = List<Color>.filled(15, Colors.purple);
+
+  ImpactSegmentData() {}
+}
