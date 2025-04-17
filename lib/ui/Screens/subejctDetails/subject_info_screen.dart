@@ -8,6 +8,7 @@ import '../../../database/Data_Subject.dart';
 import '../../../database/Data_Test.dart';
 import '../../components/styling.dart';
 import '../../components/util.dart';
+import '../../components/widget_components.dart';
 
 class SubjectInfoScreen extends StatefulWidget {
   const SubjectInfoScreen({super.key, required this.sub});

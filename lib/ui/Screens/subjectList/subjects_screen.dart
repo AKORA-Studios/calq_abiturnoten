@@ -1,8 +1,9 @@
 import 'package:calq_abiturnoten/ui/Screens/subejctDetails/subject_info_screen.dart';
 import 'package:calq_abiturnoten/ui/Screens/subjectList/subjects_vm.dart';
-import 'package:calq_abiturnoten/ui/components/util.dart';
 import 'package:calq_abiturnoten/util/averages.dart';
 import 'package:flutter/material.dart';
+
+import '../../components/widget_components.dart';
 
 class SubjectsScreen extends StatefulWidget {
   const SubjectsScreen({super.key});

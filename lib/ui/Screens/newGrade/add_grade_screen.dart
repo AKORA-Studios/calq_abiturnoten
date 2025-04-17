@@ -2,7 +2,7 @@ import 'package:calq_abiturnoten/database/Data_Subject.dart';
 import 'package:flutter/material.dart';
 
 import '../../../database/database.dart';
-import '../../components/util.dart';
+import '../../components/widget_components.dart';
 import 'new_grade_screen.dart';
 
 class AddGradeScreen extends StatefulWidget {

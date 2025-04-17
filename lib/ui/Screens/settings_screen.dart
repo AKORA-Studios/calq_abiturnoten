@@ -8,7 +8,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:share/share.dart';
 
 import '../../database/database.dart';
-import '../components/util.dart';
+import '../components/widget_components.dart';
 import 'settings/add_subject_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
