@@ -8,7 +8,8 @@ This is a work-in-progress
 
 * [ ] Import json
 * [ ] Localization
-* [ ] impact segment new grades
+* [ ] remove subjects form lineGraph
+* [ ] filter grades
 
 ## Building APK
 ````bash

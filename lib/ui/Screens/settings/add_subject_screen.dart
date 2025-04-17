@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:calq_abiturnoten/database/database.dart';
+import 'package:calq_abiturnoten/ui/components/styling.dart';
 import 'package:calq_abiturnoten/util/color_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
@@ -13,14 +16,23 @@ class AddSubjectScreen extends StatefulWidget {
 
 class _AddSubjectScreenState extends State<AddSubjectScreen> {
   Color _pickerColor = const Color(0xff443a49);
+  String _subjectName = "";
+  bool _isLK = false;
+  String _errorText = "";
+
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      _pickerColor =
+          Colors.primaries[Random().nextInt(Colors.primaries.length)];
+    });
+  }
 
   void changeColor(Color color) {
     setState(() => _pickerColor = color);
   }
-
-  String _subjectName = "";
-  bool _isLK = false;
-  String _errorText = "";
 
   Future<void> addSubject() async {
     if (_subjectName.isEmpty) {
@@ -51,7 +63,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
             child: Column(
               children: [
                 Text(_errorText, style: TextStyle(color: Colors.red)),
-                Row(
+                card(Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     const Text("Ist LK?"),
@@ -62,8 +74,8 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
                       onChanged: (value) => setState(() => _isLK = value),
                     ),
                   ],
-                ),
-                ElevatedButton(
+                )),
+                card(ElevatedButton(
                     onPressed: () {
                       showDialog(
                         context: context,
@@ -105,8 +117,8 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
                           'Fach Farbe',
                         )
                       ],
-                    )),
-                TextField(
+                    ))),
+                card(TextField(
                   onChanged: (value) {
                     setState(() {
                       _subjectName = value;
@@ -116,7 +128,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
                     //  border: OutlineInputBorder(),
                     hintText: 'Name des neuen Fachs',
                   ),
-                ),
+                )),
                 ElevatedButton(
                     onPressed: addSubject, child: const Text("Fach hinzufügen"))
               ],

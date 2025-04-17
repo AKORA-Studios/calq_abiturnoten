@@ -1,5 +1,6 @@
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
 import 'package:calq_abiturnoten/database/database.dart';
+import 'package:calq_abiturnoten/ui/components/styling.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
@@ -65,7 +66,7 @@ class _EditSubjectScreenState extends State<EditSubjectScreen> {
           child: Column(
             children: [
               Text(_errorText),
-              Row(
+              card(Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   const Text("Ist LK?"),
@@ -76,8 +77,8 @@ class _EditSubjectScreenState extends State<EditSubjectScreen> {
                     onChanged: (value) => setState(() => _isLK = value),
                   ),
                 ],
-              ),
-              ElevatedButton(
+              )),
+              card(ElevatedButton(
                   onPressed: () {
                     showDialog(
                       context: context,
@@ -119,8 +120,8 @@ class _EditSubjectScreenState extends State<EditSubjectScreen> {
                         'Fach Farbe',
                       )
                     ],
-                  )),
-              TextField(
+                  ))),
+              card(TextField(
                 onChanged: (value) {
                   setState(() {
                     _subjectName = value;
@@ -130,7 +131,7 @@ class _EditSubjectScreenState extends State<EditSubjectScreen> {
                   //  border: OutlineInputBorder(),
                   hintText: 'Neuer Name des Fachs',
                 ),
-              ),
+              )),
               ElevatedButton(
                   onPressed: updateSubject,
                   child: const Text("Fach aktualisieren"))
