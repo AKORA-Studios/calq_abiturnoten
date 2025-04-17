@@ -1,5 +1,6 @@
 import 'package:calq_abiturnoten/ui/components/util.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 import '../../database/Data_Subject.dart';
 import '../../database/Data_Test.dart';
@@ -214,7 +215,7 @@ Widget impactSegment(ImpactSegmentData data) {
         child: Container(
       decoration: impactSegmentBoxDecoration(i, data.colors[i]),
       child: Center(
-        child: Text(data.values[i]),
+        child: Text(i.toString()),
       ),
     )));
   }
@@ -232,10 +233,14 @@ Widget impactSegment(ImpactSegmentData data) {
   );
 }
 
-// TODO: update data on gradetype and year change
 class ImpactSegmentData {
-  List<String> values = List<String>.filled(15, "?");
-  List<Color> colors = List<Color>.filled(15, Colors.purple);
+  List<String> values = List<String>.filled(16, "?");
+  List<Color> colors = List<Color>.filled(16, Colors.grey.withOpacity(0.3));
 
   ImpactSegmentData() {}
+
+  @override
+  String toString() {
+    return 'ImpactSegmentData{values: $values, colors: ${colors.map((e) => e.toHexString())}}';
+  }
 }

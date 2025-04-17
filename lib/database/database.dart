@@ -405,6 +405,8 @@ class DatabaseClass {
     await db.rawQuery('DELETE FROM Appsettings;');
 
     await resetTypes();
+    mappedSubjects = {};
+    mappedTests = {};
   }
 
   Future<void> deleteSubject(int id) async {

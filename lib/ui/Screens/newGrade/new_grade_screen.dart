@@ -1,13 +1,12 @@
 import 'package:calq_abiturnoten/database/Data_Subject.dart';
 import 'package:calq_abiturnoten/database/Data_Test.dart';
-import 'package:calq_abiturnoten/database/database.dart';
-import 'package:calq_abiturnoten/ui/components/util.dart';
 import 'package:flutter/material.dart';
 
 import '../../../database/Data_Type.dart';
 import '../../../util/date_formatter.dart';
 import '../../components/styling.dart';
 import '../../components/widget_components.dart';
+import 'new_grade_vn.dart';
 
 class NewGradeScreen extends StatefulWidget {
   const NewGradeScreen({super.key, required this.sub, required this.tests});
@@ -20,24 +19,14 @@ class NewGradeScreen extends StatefulWidget {
 }
 
 class _NewGradeScreenState extends State<NewGradeScreen> {
-  String _gradeName = "";
-  int _selectedYear = 1;
-  DateTime _selectedDate = DateTime.now();
-  String errorText = "";
-  double _testPoints = 0; // TODO: init average points for this term
-  int _selectedTypeIndex = -1;
-
-  ImpactSegmentData _impactSegmentData = ImpactSegmentData();
+  NewGradeScreenViewModel _viewmodel = NewGradeScreenViewModel();
 
   @override
   void initState() {
     super.initState();
-    DatabaseClass.Shared.getSubjectTests(widget.sub).then((value) {
-      setState(() {
-        _selectedYear = lastActiveYear(value);
-      });
+    _viewmodel.updateData(widget.tests).then((value) {
+      setState(() {});
     });
-    updateImpactSegment();
   }
 
   Future _selectDate(BuildContext context) async => showDatePicker(
@@ -46,112 +35,20 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
         firstDate: DateTime(2000),
         lastDate: DateTime(2050),
       ).then((DateTime? selected) {
-        if (selected != null && selected != _selectedDate) {
-          setState(() => _selectedDate = selected);
+        if (selected != null && selected != _viewmodel.selectedDate) {
+          _viewmodel.selectedDate = selected;
+          setState(() {});
         }
       });
 
   Future<void> addGrade() async {
-    if (_gradeName.isEmpty) {
-      setState(() {
-        errorText = "Invalid Grade Name";
-      });
-      return;
-    }
-
-    if (_selectedTypeIndex < 0) {
-      setState(() {
-        errorText = "Pls select a grade type";
-      });
-      return;
-    }
-
-    await DatabaseClass.Shared.createTest(
-            widget.sub.id,
-            _gradeName,
-            _testPoints.toInt(),
-            _selectedYear,
-            _selectedDate,
-            _selectedTypeIndex)
-        .then((value) {
-      Navigator.pop(context);
-    });
-  }
-
-  Future<void> updateImpactSegment() async {
-    var data = ImpactSegmentData();
-    if (widget.tests.isEmpty) {
-      _impactSegmentData = data;
-      return;
-    }
-    print("a");
-    List<Data_Test> countedTests =
-        widget.tests.where((element) => element.year == _selectedYear).toList();
-    if (countedTests.isEmpty) {
-      _impactSegmentData = data;
-      return;
-    }
-    print("b");
-    int oldAverage = (await testAverage(countedTests)).round();
-    int worseLast = 99;
-    int betterLast = 0;
-    int sameLast = 99;
-
-    List<Data_Type> types = await DatabaseClass.Shared.getTypes();
-
-    // calculate new average
-    for (int i = 0; i < 15; i++) {
-      int newAverage = 0;
-      double gradeWeigths = 0.0;
-      List<double> avgArr = [];
-
-      for (Data_Type x in types) {
-        List<int> filtered = countedTests
-            .where((e) => e.type == x.assignedID)
-            .map((e) => e.points)
-            .toList();
-
-        double weigth = x.weigth / 100;
-        gradeWeigths += weigth;
-
-        if (x.assignedID == _selectedTypeIndex) {
-          filtered.add(i);
-        }
-
-        double avg = average(filtered);
-        avgArr.add(avg * weigth);
-      }
-
-      double num = (avgArr.reduce((a, b) => a + b)) / gradeWeigths;
-      newAverage = num.round();
-
-      // display numbers
-      var str = newAverage.toString();
-      // push colors
-      if (oldAverage > newAverage) {
-        if (worseLast == newAverage) {
-          str = " ";
-        }
-        data.colors[i] = Colors.red;
-        data.values[i] = str;
-        worseLast = newAverage;
-      } else if (newAverage > oldAverage) {
-        if (betterLast == newAverage) {
-          str = " ";
-        }
-        data.colors[i] = Colors.green;
-        data.values[i] = str;
-        betterLast = newAverage;
+    _viewmodel.addGrade(widget.sub).then((value) {
+      if (_viewmodel.errorText.isNotEmpty) {
+        setState(() {});
       } else {
-        if (sameLast == oldAverage) {
-          str = " ";
-        }
-        sameLast = oldAverage;
-        data.colors[i] = Colors.grey;
-        data.values[i] = str;
+        Navigator.pop(context);
       }
-      _impactSegmentData = data;
-    }
+    });
   }
 
   @override
@@ -168,16 +65,15 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                     card(Column(
                       children: [
                         Text(
-                          errorText,
+                          _viewmodel.errorText,
                           style: const TextStyle(
                               color: Colors.red, fontWeight: FontWeight.bold),
                         ),
                         const Text("Notenname"),
                         TextField(
                           onChanged: (value) {
-                            setState(() {
-                              _gradeName = value;
-                            });
+                            _viewmodel.gradeName = value;
+                            setState(() {});
                           },
                           decoration: const InputDecoration(
                             //  border: OutlineInputBorder(),
@@ -200,16 +96,17 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                                     value: e,
                                     label: Text('$e',
                                         style: TextStyle(
-                                            decoration: _selectedYear == e
-                                                ? TextDecoration.underline
-                                                : TextDecoration.none)),
+                                            decoration:
+                                                _viewmodel.selectedYear == e
+                                                    ? TextDecoration.underline
+                                                    : TextDecoration.none)),
                                   ))
                               .toList(),
-                          selected: <int>{_selectedYear},
+                          selected: <int>{_viewmodel.selectedYear},
                           onSelectionChanged: (Set<int> newSelection) {
-                            setState(() {
-                              _selectedYear = newSelection.first;
-                            });
+                            _viewmodel.updateImpactSegment(widget.tests);
+                            _viewmodel.selectedYear = newSelection.first;
+                            setState(() {});
                           },
                         ),
                         Row(
@@ -217,25 +114,25 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                             const Text("Datum"),
                             ElevatedButton(
                                 onPressed: () => _selectDate(context),
-                                child: Text(formatDate(_selectedDate)))
+                                child:
+                                    Text(formatDate(_viewmodel.selectedDate)))
                           ],
                         )
                       ],
                     )),
                     card(Column(
                       children: [
-                        Text("Punkte (${_testPoints.toInt()})"),
+                        Text("Punkte (${_viewmodel.testPoints.toInt()})"),
                         Slider(
                           activeColor: widget.sub.getColor(),
                           min: 0.0,
-                          label: '${_testPoints.round()}',
+                          label: '${_viewmodel.testPoints.round()}',
                           divisions: 15,
                           max: 15.0,
-                          value: _testPoints,
+                          value: _viewmodel.testPoints,
                           onChanged: (value) {
-                            setState(() {
-                              _testPoints = value;
-                            });
+                            _viewmodel.testPoints = value;
+                            setState(() {});
                           },
                         )
                       ],
@@ -243,7 +140,7 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                     card(Column(
                       children: [
                         Text("Noteneinfluss"),
-                        impactSegment(_impactSegmentData)
+                        impactSegment(_viewmodel.impactSegmentData)
                       ],
                     )),
                     SizedBox(
@@ -260,41 +157,42 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
   }
 
   Widget typeSelection() {
-    return FutureBuilder(
-        future: DatabaseClass.Shared.getTypes(),
-        builder: (ctx, snap) {
-          if (snap.hasError) {
-            return const Text("Smth went wrong ");
-          } else {
-            List<Data_Type> arr = snap.hasData ? snap.data! : [];
-            List<ButtonSegment<int>> buttons = [];
-            if (arr.isEmpty) {
-              return const Text("No Data :c");
-            }
+    List<Data_Type> arr = _viewmodel.types;
+    List<ButtonSegment<int>> buttons = [];
 
-            arr.asMap().forEach((index, e) {
-              buttons.add(ButtonSegment<int>(
-                value: e.assignedID,
-                label: Text('${e.name} \n[${e.assignedID}]',
-                    style: TextStyle(
-                        decoration: _selectedTypeIndex == index
-                            ? TextDecoration.underline
-                            : TextDecoration.none)),
-              ));
-            });
+    if (arr.isEmpty) {
+      return const Text("No Data :c");
+    }
 
-            return SegmentedButton<int>(
-              showSelectedIcon: false,
-              style: calqSegmentedButtonStyle(),
-              segments: buttons,
-              selected: <int>{_selectedTypeIndex},
-              onSelectionChanged: (Set<int> newSelection) {
-                setState(() {
-                  _selectedTypeIndex = newSelection.first;
-                });
-              },
-            );
-          }
+    arr.asMap().forEach((index, e) {
+      buttons.add(ButtonSegment<int>(
+        value: e.assignedID,
+        label: Text('${e.name} \n[${e.assignedID}]',
+            style: TextStyle(
+                decoration: _viewmodel.selectedTypeIndex == index
+                    ? TextDecoration.underline
+                    : TextDecoration.none)),
+      ));
+    });
+
+    if (_viewmodel.selectedTypeIndex < 0) {
+      _viewmodel.selectedTypeIndex = arr.first.assignedID;
+      _viewmodel.updateImpactSegment(widget.tests).then((value) {
+        setState(() {});
+      });
+    }
+
+    return SegmentedButton<int>(
+      showSelectedIcon: false,
+      style: calqSegmentedButtonStyle(),
+      segments: buttons,
+      selected: <int>{_viewmodel.selectedTypeIndex},
+      onSelectionChanged: (Set<int> newSelection) {
+        _viewmodel.selectedTypeIndex = newSelection.first;
+        _viewmodel.updateImpactSegment(widget.tests).then((value) {
+          setState(() {});
         });
+      },
+    );
   }
 }
