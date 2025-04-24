@@ -19,10 +19,14 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  final GlobalKey _alertKey = GlobalKey();
+  final GlobalKey _deleteAlertKey = GlobalKey();
+
   bool _rainbowEnabled = false;
   bool _hasFiveExams = false;
   bool _shouldUpdateView = false;
   String _versionString = "Version: ?? (Build: ??)";
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -92,169 +96,181 @@ class _SettingsScreenState extends State<SettingsScreen> {
         appBar: AppBar(
           title: const Text("Settings"),
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(10),
-          child: ListView(
+        body: IgnorePointer(
+            ignoring: _isLoading,
+            child: Stack(
+              children: [
+                _isLoading
+                    ? Center(child: CircularProgressIndicator())
+                    : SizedBox(),
+                settingsRow()
+              ],
+            )));
+  }
+
+  Widget settingsRow() {
+    return Padding(
+      padding: const EdgeInsets.all(10),
+      child: ListView(
+        children: [
+          Column(
             children: [
-              Column(
-                children: [
-                  const Text("Allgemein"),
-                  const Divider(),
-                  settingsOptionWithWidget(
-                      "Anzahl Abiturprüfungen",
-                      Colors.deepPurple,
-                      Icons.menu_book_sharp,
-                      SegmentedButton<bool>(
-                        showSelectedIcon: false,
-                        segments: [true, false]
-                            .map((e) => ButtonSegment<bool>(
-                                  value: e,
-                                  label: Text(
-                                    e ? "5" : "4",
-                                  ),
-                                ))
-                            .toList(),
-                        selected: <bool>{_hasFiveExams},
-                        onSelectionChanged: (Set<bool> newSelection) {
-                          setState(() {
-                            _hasFiveExams = newSelection.first;
-                            DatabaseClass.Shared.updateSettings(
-                                _rainbowEnabled, _hasFiveExams);
-                          });
-                        },
-                      )),
-                  settingsOptionWithWidget(
-                      "Regenbogen",
-                      Colors.blue,
-                      Icons.bar_chart,
-                      Switch(
-                          value: _rainbowEnabled,
-                          onChanged: (value) {
-                            // TODO update rainbow setting
-                            setState(() {
-                              _rainbowEnabled = value;
-                              DatabaseClass.Shared.updateSettings(
-                                  value, _hasFiveExams);
-                            });
-                          })),
-                  settingsOption("Noten importieren (WIP)", Colors.blue,
-                      Icons.folder_open, () {}),
-                  settingsOption("Noten exportieren", Colors.green, Icons.share,
-                      () {
-                    JSONUtil().exportJSON();
-                  }),
-                  settingsOption(
-                      "Wertung ändern", Colors.amber, Icons.filter_frames, () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const EditWeightScreen()));
-                  }),
-                  settingsOption(
-                      "Demo Daten laden", Colors.orange, Icons.warning_amber,
-                      () {
-                    showDialog(
-                        context: context,
-                        builder: (ctx) {
-                          return loadDemoDataAlert();
+              const Text("Allgemein"),
+              const Divider(),
+              settingsOptionWithWidget(
+                  "Anzahl Abiturprüfungen",
+                  Colors.deepPurple,
+                  Icons.menu_book_sharp,
+                  SegmentedButton<bool>(
+                    showSelectedIcon: false,
+                    segments: [true, false]
+                        .map((e) => ButtonSegment<bool>(
+                              value: e,
+                              label: Text(
+                                e ? "5" : "4",
+                              ),
+                            ))
+                        .toList(),
+                    selected: <bool>{_hasFiveExams},
+                    onSelectionChanged: (Set<bool> newSelection) {
+                      setState(() {
+                        _hasFiveExams = newSelection.first;
+                        DatabaseClass.Shared.updateSettings(
+                            _rainbowEnabled, _hasFiveExams);
+                      });
+                    },
+                  )),
+              settingsOptionWithWidget(
+                  "Regenbogen",
+                  Colors.blue,
+                  Icons.bar_chart,
+                  Switch(
+                      value: _rainbowEnabled,
+                      onChanged: (value) {
+                        // TODO update rainbow setting
+                        setState(() {
+                          _rainbowEnabled = value;
+                          DatabaseClass.Shared.updateSettings(
+                              value, _hasFiveExams);
                         });
-                  }),
-                  settingsOption("Daten löschen", Colors.red, Icons.delete, () {
-                    showDialog(
-                        context: context,
-                        builder: (ctx) {
-                          return deleteDataAlert();
-                        });
-                  }),
-                  settingsOption("Github", Colors.pink, Icons.info, () {
-                    Share.share(
-                        "https://github.com/AKORA-Studios/calq_abiturnoten",
-                        subject: "Calq Github Link");
-                  }),
-                  settingsOption("PDF Export (WIP)", Colors.purple,
-                      Icons.file_copy_outlined, () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const PDFExportScreen()));
-                  })
-                ],
-              ),
-              Column(
-                children: [
-                  const Text("Alle Fächer"),
-                  const Divider(),
-                  FutureBuilder(
-                      future: DatabaseClass.Shared.getSubjects(),
-                      builder: (ctx, snap) {
-                        if (snap.hasData) {
-                          return Column(
-                              children: snap.data!
-                                  .map((e) => subjectRowWith2Action(e, () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    EditSubjectScreen(
-                                                        sub: e,
-                                                        callbackFunc: () {
-                                                          setState(() {
-                                                            _shouldUpdateView =
-                                                                !_shouldUpdateView;
-                                                          });
-                                                        })));
-                                      }, () {
-                                        createDialogue(e);
-                                      }))
-                                  .toList());
-                        } else {
-                          return const SizedBox();
-                        }
-                      }),
-                  ElevatedButton(
-                      onPressed: () async {
-                        await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AddSubjectScreen(
-                                      callbackFunc: () {
-                                        setState(() {
-                                          _shouldUpdateView =
-                                              !_shouldUpdateView;
-                                        });
-                                      },
-                                    )));
-                      },
-                      child: const Text("Neues Fach hinzufügen"))
-                ],
-              ),
-              Column(
-                children: [
-                  const Text("Sonstiges"),
-                  const Divider(),
-                  Text(_versionString),
-                  TextButton(
-                      onPressed: () {
-                        showLicensePage(context: context);
-                      },
-                      child: const Text("Lizenzen"))
-                ],
-              )
+                      })),
+              settingsOption("Noten importieren (WIP)", Colors.blue,
+                  Icons.folder_open, () {}),
+              settingsOption("Noten exportieren", Colors.green, Icons.share,
+                  () {
+                JSONUtil().exportJSON();
+              }),
+              settingsOption(
+                  "Wertung ändern", Colors.amber, Icons.filter_frames, () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const EditWeightScreen()));
+              }),
+              settingsOption(
+                  "Demo Daten laden", Colors.orange, Icons.warning_amber, () {
+                showDialog(
+                    context: context,
+                    builder: (ctx) {
+                      return loadDemoDataAlert();
+                    });
+              }),
+              settingsOption("Daten löschen", Colors.red, Icons.delete, () {
+                showDialog(
+                    context: context,
+                    builder: (ctx) {
+                      return deleteDataAlert();
+                    });
+              }),
+              settingsOption("Github", Colors.pink, Icons.info, () {
+                Share.share("https://github.com/AKORA-Studios/calq_abiturnoten",
+                    subject: "Calq Github Link");
+              }),
+              settingsOption(
+                  "PDF Export (WIP)", Colors.purple, Icons.file_copy_outlined,
+                  () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const PDFExportScreen()));
+              })
             ],
           ),
-        ));
+          Column(
+            children: [
+              const Text("Alle Fächer"),
+              const Divider(),
+              FutureBuilder(
+                  future: DatabaseClass.Shared.getSubjects(),
+                  builder: (ctx, snap) {
+                    if (snap.hasData) {
+                      return Column(
+                          children: snap.data!
+                              .map((e) => subjectRowWith2Action(e, () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                EditSubjectScreen(
+                                                    sub: e,
+                                                    callbackFunc: () {
+                                                      setState(() {
+                                                        _shouldUpdateView =
+                                                            !_shouldUpdateView;
+                                                      });
+                                                    })));
+                                  }, () {
+                                    createDialogue(e);
+                                  }))
+                              .toList());
+                    } else {
+                      return const SizedBox();
+                    }
+                  }),
+              ElevatedButton(
+                  onPressed: () async {
+                    await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AddSubjectScreen(
+                                  callbackFunc: () {
+                                    setState(() {
+                                      _shouldUpdateView = !_shouldUpdateView;
+                                    });
+                                  },
+                                )));
+                  },
+                  child: const Text("Neues Fach hinzufügen"))
+            ],
+          ),
+          Column(
+            children: [
+              const Text("Sonstiges"),
+              const Divider(),
+              Text(_versionString),
+              TextButton(
+                  onPressed: () {
+                    showLicensePage(context: context);
+                  },
+                  child: const Text("Lizenzen"))
+            ],
+          )
+        ],
+      ),
+    );
   }
 
   Widget deleteDataAlert() {
     return AlertDialog(
-      // To display the title it is optional
+      key: _deleteAlertKey,
       title: const Text('Delete all Data'),
-      // Message which will be pop up on the screen
       content: const Text('Do you really want to delete all data?'),
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            if (_alertKey.currentContext != null) {
+              Navigator.of(context).pop();
+            }
           },
           child: const Text('No!!!'),
         ),
@@ -264,7 +280,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
               foregroundColor: MaterialStateProperty.all(Colors.white)),
           onPressed: () {
             DatabaseClass.Shared.deleteData().then((value) {
-              Navigator.of(context).pop();
+              if (_alertKey.currentContext != null) {
+                Navigator.of(context).pop();
+              }
               setState(() {
                 _shouldUpdateView = !_shouldUpdateView;
               });
@@ -278,15 +296,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Widget loadDemoDataAlert() {
     return AlertDialog(
-      // To display the title it is optional
+      key: _alertKey,
       title: const Text('Demo Daten laden?'),
-      // Message which will be pop up on the screen
       content:
           const Text('Loading the demo data will delete all your current data'),
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop();
+            if (_isLoading) {
+              return;
+            }
+            if (_alertKey.currentContext != null) {
+              Navigator.of(context).pop();
+            }
           },
           child: const Text('No!!!'),
         ),
@@ -295,10 +317,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
               backgroundColor: MaterialStateProperty.all(Colors.red),
               foregroundColor: MaterialStateProperty.all(Colors.white)),
           onPressed: () {
+            setState(() {
+              _isLoading = true;
+            });
             DatabaseClass.Shared.deleteData().then((value) async {
               await JSONUtil().loadDemoData(context);
-              Navigator.of(context).pop();
+              if (_alertKey.currentContext != null) {
+                Navigator.of(context).pop();
+              }
               setState(() {
+                _isLoading = false;
                 _shouldUpdateView = !_shouldUpdateView;
               });
             });
