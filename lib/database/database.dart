@@ -397,6 +397,17 @@ class DatabaseClass {
     await getSubjects(forceReload: true);
   }
 
+  /// Update the lineChart Setting  of a [subject]
+  Future<void> updateLineChartSettings(Data_Subject sub) async {
+    sub.showinlinegraph = !sub.showinlinegraph;
+
+    int count = await db.rawUpdate(
+        'UPDATE Subject SET showinlinegraph = ? WHERE id = ?',
+        [sub.showinlinegraph ? 1 : 0, sub.id]);
+    print('Updated Linechart Settings for ${sub.name}: $count');
+    mappedSubjects[sub.id] = sub;
+  }
+
 // DELETE DATA
   Future<void> deleteData() async {
     await db.rawQuery('DELETE FROM Subject;');

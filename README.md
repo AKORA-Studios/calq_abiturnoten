@@ -8,7 +8,6 @@ This is a work-in-progress
 
 * [ ] Import json
 * [ ] Localization
-* [ ] remove subjects form lineGraph
 * [ ] filter grades
 
 ## Building APK

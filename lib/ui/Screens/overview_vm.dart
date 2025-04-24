@@ -97,10 +97,12 @@ class OverViewViewModel with ChangeNotifier {
         return FlSpot(1 - date, test.points + 0.0);
       }).toList();
 
-      arr.add(LineChartBarData(
-          spots: spotData.length < 2 ? [] : spotData,
-          color: sub.getColor(),
-          dotData: const FlDotData(show: false)));
+      if (sub.showinlinegraph) {
+        arr.add(LineChartBarData(
+            spots: spotData.length < 2 ? [] : spotData,
+            color: sub.getColor(),
+            dotData: const FlDotData(show: false)));
+      }
     }
     return arr.length < 2 ? [] : arr;
   }
@@ -146,6 +148,11 @@ class OverViewViewModel with ChangeNotifier {
     return 60;
   }
 
+  Future<void> updateLineChart(Data_Subject sub) async {
+    await DatabaseClass.Shared.updateLineChartSettings(sub);
+    _lineChartData = await fetchLineChartData(_subjects);
+  }
+
 // Getter
   List<LineChartBarData> get lineChartData => _lineChartData;
 
@@ -164,4 +171,6 @@ class OverViewViewModel with ChangeNotifier {
   double get blockPercent => _blockPercent;
 
   List<BarChartGroupData> get termChartData => _termChartData;
+
+  List<Data_Subject> get subjects => _subjects;
 }
