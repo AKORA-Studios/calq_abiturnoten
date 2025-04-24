@@ -45,7 +45,12 @@ dependencies:
   share: ^2.0.4
   htmltopdfwidgets: ^1.0.3
   flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.3.11
 
+flutter_native_splash:
+  color: "#42a5fa"
+  image: "assets/icon/icon.png"
+  #background_image: "assets/icon/splash.png"
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +80,8 @@ flutter:
     - assets/pdf/row.html
     - assets/pdf/row2.html
     - assets/json/demo_data.json
+    - assets/icon/splash.png
+    - assets/icon/icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
