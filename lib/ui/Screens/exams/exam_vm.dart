@@ -35,18 +35,8 @@ class ExamViewViewModel with ChangeNotifier {
   }
 
   void updateBlock1Values() {
-    generatePossibleBlockOne().then((value) {
-      _maxBlock1Value = value;
-      notifyListeners();
-    });
-
     generateBlockOne().then((value) {
-      var newValue = (value / _maxBlock1Value);
-      if (newValue.isNaN || newValue.isFinite) {
-        return;
-      }
-
-      _block1Value = newValue;
+      _block1Value = value + 0.0;
       notifyListeners();
     });
   }

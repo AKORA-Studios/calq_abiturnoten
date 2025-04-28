@@ -175,7 +175,7 @@ class _ExamScreenState extends State<ExamScreen> {
                   valueColor: const AlwaysStoppedAnimation(calqColor),
                   value: _viewModel.block1Value.isNaN
                       ? 0.0
-                      : _viewModel.block1Value,
+                      : _viewModel.block1Value / 600,
                 ),
               ),
               const SizedBox(width: 20),
@@ -193,7 +193,7 @@ class _ExamScreenState extends State<ExamScreen> {
               Expanded(
                 flex: 2,
                 child: Text(
-                    "${((_viewModel.block1Value * _viewModel.maxBlock1Value).isNaN ? 0.0 : (_viewModel.block1Value * _viewModel.maxBlock1Value)).round().toString()} von ${_viewModel.maxBlock1Value}"),
+                    "${_viewModel.block1Value.round().toString()} von 600"),
               ),
               const SizedBox(width: 20),
               Expanded(
