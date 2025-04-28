@@ -104,7 +104,7 @@ class OverViewViewModel with ChangeNotifier {
             dotData: const FlDotData(show: false)));
       }
     }
-    return arr.length < 2 ? [] : arr;
+    return arr.length < 1 ? [] : arr;
   }
 
   Future<void> updateBlocks() async {
