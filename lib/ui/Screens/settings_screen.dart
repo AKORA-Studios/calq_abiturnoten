@@ -101,8 +101,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Stack(
               children: [
                 _isLoading
-                    ? Center(child: CircularProgressIndicator())
-                    : SizedBox(),
+                    ? const Center(child: CircularProgressIndicator())
+                    : const SizedBox(),
                 settingsRow()
               ],
             )));

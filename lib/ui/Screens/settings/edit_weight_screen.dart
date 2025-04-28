@@ -85,7 +85,7 @@ class _EditWeightScreenState extends State<EditWeightScreen> {
       typeRows(),
       _viewmodel.currentSum.roundToDouble() != 100.0
           ? Text("Gesamt: ${_viewmodel.currentSum}%",
-              style: TextStyle(color: Colors.red))
+              style: const TextStyle(color: Colors.red))
           : Text("Gesamt: ${_viewmodel.currentSum}%"),
       ElevatedButton(
           onPressed: () {

@@ -62,7 +62,7 @@ class _AddSubjectScreenState extends State<AddSubjectScreen> {
             padding: const EdgeInsets.all(10),
             child: Column(
               children: [
-                Text(_errorText, style: TextStyle(color: Colors.red)),
+                Text(_errorText, style: const TextStyle(color: Colors.red)),
                 card(Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [

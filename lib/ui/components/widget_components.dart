@@ -27,10 +27,7 @@ Widget settingsOption(
                         borderRadius: BorderRadius.circular(8))),
                 backgroundColor: MaterialStateProperty.all<Color>(color)),
             onPressed: null,
-            icon: Icon(
-              icon,
-              color: Colors.white,
-            ),
+            icon: Icon(icon, color: Colors.white),
           ),
           const SizedBox(width: 10),
           Text(title)
@@ -50,10 +47,7 @@ Widget settingsOptionWithWidget(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
             backgroundColor: MaterialStateProperty.all<Color>(color)),
         onPressed: null,
-        icon: Icon(
-          icon,
-          color: Colors.white,
-        ),
+        icon: Icon(icon, color: Colors.white),
       ),
       const SizedBox(width: 10),
       Text(title),
@@ -75,10 +69,7 @@ Widget subjectRow(Data_Subject sub) {
               backgroundColor:
                   MaterialStateProperty.all<Color>(sub.getColor())),
           onPressed: null,
-          icon: const Icon(
-            Icons.ac_unit,
-            color: Colors.white,
-          ),
+          icon: const Icon(Icons.ac_unit, color: Colors.white),
         ),
         const SizedBox(width: 10),
         Text(sub.name)
@@ -88,41 +79,31 @@ Widget subjectRow(Data_Subject sub) {
 }
 
 Widget subjectRowWithTerms(Data_Subject sub, String b) {
-  return Row(
-    children: [
-      IconButton.filled(
+  return Row(children: [
+    IconButton.filled(
         style: ButtonStyle(
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
             backgroundColor: MaterialStateProperty.all<Color>(sub.getColor())),
         onPressed: null,
-        icon: const Icon(
-          Icons.ac_unit,
-          color: Colors.white,
-        ),
-      ),
-      const SizedBox(width: 10),
-      Expanded(
-          child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(sub.name),
-          SizedBox(
-            width: 100,
-            child: Text(b.replaceAll(" ", "   ")),
-          )
-        ],
-      ))
-    ],
-  );
+        icon: const Icon(Icons.ac_unit, color: Colors.white)),
+    const SizedBox(width: 10),
+    Expanded(
+        child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(sub.name),
+        SizedBox(width: 100, child: Text(b.replaceAll(" ", "   ")))
+      ],
+    )),
+    const SizedBox(width: 10)
+  ]);
 }
 
 Widget subjectRowWith2Action(
     Data_Subject sub, Function onTap, Function onDelete) {
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      IconButton.filled(
+  return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+    IconButton.filled(
         style: ButtonStyle(
             shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8))),
@@ -130,28 +111,19 @@ Widget subjectRowWith2Action(
         onPressed: () {
           onTap();
         },
-        icon: const Icon(
-          Icons.ac_unit,
-          color: Colors.white,
-        ),
-      ),
-      TextButton(
-          onPressed: () {
-            onTap();
-          },
-          child: Row(
-            children: [
-              Text(sub.name),
-            ],
-          )),
-      const Spacer(),
-      IconButton(
-          onPressed: () {
-            onDelete();
-          },
-          icon: const Icon(Icons.delete, color: Colors.red))
-    ],
-  );
+        icon: const Icon(Icons.ac_unit, color: Colors.white)),
+    TextButton(
+        onPressed: () {
+          onTap();
+        },
+        child: Row(children: [Text(sub.name)])),
+    const Spacer(),
+    IconButton(
+        onPressed: () {
+          onDelete();
+        },
+        icon: const Icon(Icons.delete, color: Colors.red))
+  ]);
 }
 
 Widget testRow(Data_Test test, Data_Subject sub, Function() action) {
@@ -213,31 +185,22 @@ Widget impactSegment(ImpactSegmentData data) {
 
     coloredArr.add(Expanded(
         child: Container(
-      decoration: impactSegmentBoxDecoration(i, data.colors[i]),
-      child: Center(
-        child: Text(i.toString()),
-      ),
-    )));
+            decoration: impactSegmentBoxDecoration(i, data.colors[i]),
+            child: Center(child: Text(i.toString())))));
   }
-  return Column(
-    children: [
-      Row(
+  return Column(children: [
+    Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: coloredArr),
+    Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: coloredArr,
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: arr.map((e) => Expanded(child: e)).toList(),
-      )
-    ],
-  );
+        children: arr.map((e) => Expanded(child: e)).toList())
+  ]);
 }
 
 class ImpactSegmentData {
   List<String> values = List<String>.filled(16, "?");
   List<Color> colors = List<Color>.filled(16, Colors.grey.withOpacity(0.3));
 
-  ImpactSegmentData() {}
+  ImpactSegmentData();
 
   @override
   String toString() {

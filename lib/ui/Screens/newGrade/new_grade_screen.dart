@@ -139,7 +139,7 @@ class _NewGradeScreenState extends State<NewGradeScreen> {
                     )),
                     card(Column(
                       children: [
-                        Text("Noteneinfluss"),
+                        const Text("Noteneinfluss"),
                         impactSegment(_viewmodel.impactSegmentData)
                       ],
                     )),
