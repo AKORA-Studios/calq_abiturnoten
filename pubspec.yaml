@@ -51,6 +51,11 @@ flutter_native_splash:
   color: "#42a5fa"
   image: "assets/icon/icon.png"
   #background_image: "assets/icon/splash.png"
+  android_12:
+    image: assets/icon/bars.png # splash screen icon image
+    #branding: assets/icon/splash.png # subtitle image
+    #color: "#42a5f5"
+
 
 dev_dependencies:
   flutter_test:
