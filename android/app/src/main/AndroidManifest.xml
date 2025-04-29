@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="calq_abiturnoten"
+        android:label="Calq Abiturnoten"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
