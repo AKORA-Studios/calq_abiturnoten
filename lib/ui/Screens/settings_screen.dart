@@ -3,6 +3,7 @@ import 'package:calq_abiturnoten/ui/Screens/settings/edit_subject_screen.dart';
 import 'package:calq_abiturnoten/ui/Screens/settings/edit_weight_screen.dart';
 import 'package:calq_abiturnoten/ui/Screens/settings/pdf_export_screen.dart';
 import 'package:calq_abiturnoten/util/JSON_util.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:share/share.dart';
@@ -154,8 +155,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                               value, _hasFiveExams);
                         });
                       })),
-              settingsOption("Noten importieren (WIP)", Colors.blue,
-                  Icons.folder_open, () {}),
+              settingsOption(
+                  "Noten importieren (WIP)", Colors.blue, Icons.folder_open,
+                  () {
+                // TODO: alert?
+                _pickFile();
+              }),
               settingsOption("Noten exportieren", Colors.green, Icons.share,
                   () {
                 JSONUtil().exportJSON();
@@ -335,5 +340,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       ],
     );
+  }
+
+  void _pickFile() async {
+    final result = await FilePicker.platform.pickFiles(
+        allowMultiple: false,
+        type: FileType.custom,
+        allowedExtensions: ['json']);
+
+    if (result == null) return;
+    final file = result.files.first;
+    if (file.path == null) {
+      return;
+    }
+
+    await JSONUtil().loadFromPath(context, file.path!);
   }
 }

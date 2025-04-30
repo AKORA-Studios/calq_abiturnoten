@@ -46,6 +46,7 @@ dependencies:
   htmltopdfwidgets: ^1.0.3
   flutter_launcher_icons: ^0.13.1
   flutter_native_splash: ^2.3.11
+  file_picker: ^8.0.0+1
 
 flutter_native_splash:
   color: "#42a5fa"

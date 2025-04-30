@@ -15,6 +15,11 @@ class JSONUtil {
     await importJSON(data);
   }
 
+  Future<void> loadFromPath(BuildContext context, String path) async {
+    String data = await DefaultAssetBundle.of(context).loadString(path);
+    await importJSON(data);
+  }
+
   Future<void> exportJSON() async {
     var str =
         "{\"formatVersion\": 3, \"colorfulCharts\": ${DatabaseClass.Shared.rainbowEnabled}, \"hasFiveExams\": ${DatabaseClass.Shared.hasFiveexams},";
