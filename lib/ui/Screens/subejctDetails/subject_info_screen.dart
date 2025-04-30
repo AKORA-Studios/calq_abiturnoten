@@ -235,9 +235,7 @@ class _SubjectInfoScreenState extends State<SubjectInfoScreen> {
     List<FlSpot> arr = [];
     Pair<int, int> subjectBounds = const Pair(0, 0);
 
-    DatabaseClass.Shared.getSubjectTests(widget.sub).then((value) {
-      subjectBounds = getDateBounds(value);
-    });
+    subjectBounds = getDateBounds(_tests);
 
     arr = _tests.where((element) => element.year == _selectedYear).map((test) {
       var date = (test.date.millisecondsSinceEpoch - subjectBounds.key) /
