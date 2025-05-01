@@ -55,9 +55,79 @@ class JSONUtil {
   }
 
   // MARK: Import JSON
+  /// Import Version 3 JSON files - with Types
   Future<void> importJSON(String data) async {
     final jsonResult = jsonDecode(data);
+    int version = tryCast(jsonResult["formatVersion"]) ?? 0;
 
+    if (version >= 3) {
+      await importJSONV0(data);
+    }
+    // Version 1& 2 not supported
+    else {
+      await importJSONV0(data);
+    }
+  }
+
+  Future<void> importJSONV3(dynamic jsonResult) async {
+    DatabaseClass.Shared.hasFiveexams =
+        tryCast(jsonResult["hasFiveexams"]) ?? true;
+    DatabaseClass.Shared.rainbowEnabled =
+        tryCast(jsonResult["colorfulCharts"]) ?? true;
+    DatabaseClass.Shared.primaryType = tryCast(jsonResult["primaryType"]) ?? 0;
+
+    // types
+    List<int> ids = [];
+    int i = 0;
+    double typeWeights = 0.0;
+    for (dynamic type in jsonResult["gradeTypes"]) {
+      String name = tryCast(type["name"]) ?? "???";
+      int id = tryCast(type["id"]) ?? i;
+      double weight = tryCast(type["weight"]) ?? 0.0;
+      i += 1;
+
+      if (weight < 0.0) {
+        weight = 0.0;
+      }
+      if (weight + typeWeights >= 100.0) {
+        weight = 0.0;
+      }
+      typeWeights += weight;
+
+      await DatabaseClass.Shared.createType(name, weight, id);
+      ids.add(id);
+    }
+
+    for (dynamic sub in jsonResult["usersubjects"]) {
+      String name = tryCast(sub["name"]) ?? "???";
+      String color = tryCast(sub["color"]) ?? "ededed";
+      bool lk = tryCast(sub["lk"]) ?? false;
+      String inactiveYears = tryCast(sub["inactiveYears"]) ?? "";
+
+      await DatabaseClass.Shared.createSubject(name, color, lk ? 1 : 0,
+              inactiveYears: inactiveYears)
+          .then((subID) async {
+        for (dynamic test in sub["subjecttests"]) {
+          String name = tryCast(test["name"]) ?? "???";
+          int points = tryCast(test["grade"]) ?? 0;
+          int year = tryCast(test["year"]) ?? 0;
+          int gradeType = tryCast(test["type"]) ?? ids.first ?? 0;
+          String dateString = tryCast(test["date"]) ?? "";
+          int date = int.parse(dateString);
+
+          if (!ids.contains(gradeType)) {
+            gradeType = ids.first ?? 0;
+          }
+
+          await DatabaseClass.Shared.createTest(subID, name, points, year,
+              DateTime.fromMillisecondsSinceEpoch(date * 1000), gradeType);
+        }
+      });
+    }
+  }
+
+  /// Import default JSON File - just Subjects
+  Future<void> importJSONV0(dynamic jsonResult) async {
     DatabaseClass.Shared.hasFiveexams = true;
     DatabaseClass.Shared.rainbowEnabled = true;
 
