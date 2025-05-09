@@ -343,17 +343,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   void _pickFile() async {
-    final result = await FilePicker.platform.pickFiles(
-        allowMultiple: false,
-        type: FileType.custom,
-        allowedExtensions: ['json']);
+    DatabaseClass.Shared.deleteData().then((value) async {
+      final result = await FilePicker.platform.pickFiles(
+          allowMultiple: false,
+          type: FileType.custom,
+          allowedExtensions: ['json']);
 
-    if (result == null) return;
-    final file = result.files.first;
-    if (file.path == null) {
-      return;
-    }
+      if (result == null) return;
+      final file = result.files.first;
+      if (file.path == null) {
+        return;
+      }
 
-    await JSONUtil().loadFromPath(context, file.path!);
+      await JSONUtil().loadFromPath(context, file.path!);
+    });
   }
 }
