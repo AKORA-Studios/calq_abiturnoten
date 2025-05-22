@@ -8,7 +8,6 @@ This is a work-in-progress
 
 * [ ] Import json
 * [ ] Localization
-* [ ] filter grades
 
 ## Building APK
 ````bash
